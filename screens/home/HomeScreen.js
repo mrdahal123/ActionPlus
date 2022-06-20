@@ -67,7 +67,8 @@ export default function HomeScreen({ navigation }) {
                             style={styles.continueButtonStyle}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    alert("all Service type will be available soon")
+                                    // alert("all Service type will be available soon")
+                                    navigation.navigate("Booking")
                                 }}>
                                 <Text style={{ ...Fonts.whiteColor16Bold }}>See all</Text>
                             </TouchableOpacity>

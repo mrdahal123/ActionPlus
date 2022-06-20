@@ -23,6 +23,10 @@ export const styles = StyleSheet.create({
         padding:10,
         backgroundColor:Colors.themeColor,
     },
+    // choseOption:{
+    //     flexDirection:'row',
+
+    // },
     textInput: {
         backgroundColor: Colors.whiteColor,
         marginTop: 30,
@@ -44,6 +48,7 @@ export const styles = StyleSheet.create({
     },
     continueButtonStyle: {
         marginTop: 20,
+        flexDirection:'row',
         paddingHorizontal: 20,
         paddingVertical: 12,
         alignItems:'center',

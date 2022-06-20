@@ -16,6 +16,7 @@ import BookingHistory from '../../screens/BookingHistory/BookingHistory';
 import BookingDetails from '../../screens/BookingDetails/BookingDetails';
 import Profile from '../../screens/Profile/Profile';
 import PrivacyPolicy from '../../screens/Profile/PrivacyPolicy';
+import Booking from '../../screens/BookingDetails/Booking';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ const StackNav = () => {
             <Stack.Screen  name="BookingDetails" component={BookingDetails} />
             <Stack.Screen  name="Profile" component={Profile} />
             <Stack.Screen  options={{headerShown:true,title:'Privacy And Policy'}} name="PrivacyPolicy" component={PrivacyPolicy} />
+            <Stack.Screen    name="Booking" component={Booking} />
             {/* <Stack.Screen options={{headerShown:true,title:'Booking Details',}} name="BookingDetails" component={BookingDetails} /> */}
 
         </Stack.Navigator>

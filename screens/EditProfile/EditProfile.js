@@ -5,15 +5,17 @@ import {
     Image,
     TouchableOpacity,
     ScrollView,
-    Modal
+    Modal,
+    Pressable
 } from 'react-native'
 import React, { Component, useState } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { styles } from './EditProfile.style'
 import CustomTextInput from '../../Components/CustomTextInput';
-// import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const EditProfile = ({ navigation }) => {
     const [name, setName] = useState('')
@@ -23,28 +25,29 @@ const EditProfile = ({ navigation }) => {
     const [image, setImage] = useState('');
     const [modalVisible, setModalVisible] = useState(false)
 
-    // const pickImage = {
-    //     ImagePicker.openPicker({
-    //         width: 300,
-    //         height: 400,
-    //         cropping: true
-    //     }).then(image => {
-    //         console.log(image);
+    const pickImage = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true
+        }).then(image => {
+            console.log(image);
+            setImage(image.path)
+            setModalVisible(false);
+        });
+    };
 
-    //         setImage(image)
-    //     });
-    // };
-
-    // const openCamera = {
-    //     ImagePicker.openCamera({
-    //         width: 300,
-    //         height: 400,
-    //         cropping: true,
-    //     }).then(image => {
-    //         console.log(image);
-    //         setImage(image)
-    //     });
-    // }
+    const openCamera = () => {
+        ImagePicker.openCamera({
+            width: 300,
+            height: 400,
+            cropping: true,
+        }).then(image => {
+            console.log(image);
+            setImage(image.path)
+            setModalVisible(false);
+        });
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
             <ScrollView>
@@ -80,9 +83,29 @@ const EditProfile = ({ navigation }) => {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}>
-                                    <TouchableOpacity onPress={()=>{pickImage()}}>Gallery</TouchableOpacity>
-                                    <TouchableOpacity onPress={()=>{openCamera()}}>Camera</TouchableOpacity>
+                                <View style={{ flexDirection: 'row',marginBottom:15 }}>
+                                    <LinearGradient
+                                        colors={['#F9B551', '#F87B2C']}
+                                        style={[styles.continueButtonStyle, { minWidth: '40%', justifyContent: 'space-between' }]}>
+                                        <TouchableOpacity
+                                            onPress={() => { pickImage() }}>
+                                            <Text style={{ ...Fonts.whiteColor16Bold }}>Gallery</Text>
+                                        </TouchableOpacity>
+                                        <FontAwesome name="photo" size={24} color='#fff' />
+                                    </LinearGradient>
+                                    <LinearGradient
+                                        onPress
+                                        colors={['#F9B551', '#F87B2C']}
+                                        style={[styles.continueButtonStyle, { minWidth: '40%', justifyContent: 'space-between', }]}>
+                                        <TouchableOpacity
+                                            onPress={() => { openCamera() }}>
+                                            <Text style={{ ...Fonts.whiteColor16Bold }}>Camera</Text>
+                                        </TouchableOpacity>
+                                        <FontAwesome5 name="camera" size={24} color="#fff" onPress={() => { openCamera() }} />
+
+                                    </LinearGradient>
                                 </View>
+                            </View>
                         </Pressable>
                     </Modal>
 
