@@ -55,7 +55,7 @@ const EditProfile = ({ navigation }) => {
                 <View>
                     <Text style={{ ...Fonts.blackColor24Bold, textAlign: 'center', marginTop: 80 }}>Edit profile</Text>
                     {image == '' ? (
-                        <Image source={require('../../Assets/images/user/user_6.jpg')} style={styles.profile} />
+                        <Image source={require('../../Assets/images/user/user_9.jpg')} style={styles.profile} />
                     ) : <Image source={{ uri: image }} style={styles.profile} />}
 
                     <TouchableOpacity onPress={() => { setModalVisible(true) }} style={styles.cameraIcon}>

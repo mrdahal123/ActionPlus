@@ -20,7 +20,7 @@ const Profile = ({ navigation }) => {
       <ScrollView style={{ flex: 1, marginBottom: 5 }}>
         <View>
           <Text style={{ ...Fonts.blackColor24Bold, textAlign: 'center', marginTop: 20 }}>profile</Text>
-          <Image source={require('../../Assets/images/user/user_5.jpg')} style={styles.profile} />
+          <Image source={require('../../Assets/images/user/user_9.jpg')} style={styles.profile} />
           <TouchableOpacity onPress={() => {
             navigation.navigate('EditProfile')
           }} style={styles.cameraIcon}>
@@ -36,7 +36,11 @@ const Profile = ({ navigation }) => {
           <Text>Notification</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
-        <Text style={{ ...Fonts.blackColor16Bold, padding: 18, color: '#696969' }}>ABOUT</Text>
+        <TouchableOpacity onPress={() => { navigation.navigate("BookingHistory") }} style={styles.container}>
+          <Text>Booking Details</Text>
+          <AntDesign name="right" size={24} color="#696969" />
+        </TouchableOpacity>
+        <Text style={styles.textHeader}>ABOUT</Text>
         <TouchableOpacity style={styles.container} onPress={() => { navigation.navigate("PrivacyPolicy") }}>
           <Text>Privacy Policy</Text>
           <AntDesign name="right" size={24} color="#696969" />
@@ -45,7 +49,7 @@ const Profile = ({ navigation }) => {
           <Text>Terms of use</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
-        <Text style={{ ...Fonts.blackColor16Bold, padding: 18, color: '#696969' }}>App</Text>
+        <Text style={styles.textHeader}>App</Text>
         <TouchableOpacity style={styles.container}>
           <Text>Support </Text>
           <AntDesign name="right" size={24} color="#696969" />
@@ -119,5 +123,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: Sizes.fixPadding * 2.0,
   },
+  textHeader:{
+     ...Fonts.blackColor16Bold, padding: 18, color: '#696969' 
+  }
 })
 export default Profile

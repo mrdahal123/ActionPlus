@@ -97,7 +97,7 @@ const AddnewAddress = ({ navigation }) => {
                     }}
                     onSubmit={values => {
 
-                        
+
                         if (values) {
                             navigation.navigate('SelectAdd', {
                                 data: values
@@ -119,7 +119,18 @@ const AddnewAddress = ({ navigation }) => {
                         isValid,
                     }) => (
                         <>
-                            <View style={styles.textInput}>
+                            <CustomTextInput
+                                icon={ <FontAwesome5 name="user-alt" size={24} color="black" />}
+                                placeholder="Confirm password"
+                                value={values.confirmPassword}
+                                iconType='icon'
+                                type='password'
+                                onChangeText={handleChange('confirmPassword')}
+                                onBlur={handleBlur('confirmPassword')}
+                                isErrors={errors.confirmPassword}
+                                isTouched={touched.confirmPassword}
+                            />
+                            {/* <View style={styles.textInput}>
                                 <FontAwesome5 name="user-alt" size={24} color="black" />
                                 <TextInput
                                     style={{ marginLeft: 10, width: '90%' }}
@@ -130,7 +141,7 @@ const AddnewAddress = ({ navigation }) => {
                                     }
                                     onBlur={handleBlur('FirstName')}
                                 />
-                            </View>
+                            </View> */}
                             {errors.FirstName && touched.FirstName && (
                                 <View
                                     style={{
@@ -383,9 +394,9 @@ const AddnewAddress = ({ navigation }) => {
 
                                 <LinearGradient
                                     colors={['#F9B551', '#F87B2C']}
-                                    style={[styles.continueButtonStyle, { minWidth: 30,opacity:values.addType=='Home'? 1:0.7 }]}>
-                                    <TouchableOpacity onPress={() =>
-                                       { setFieldValue('addType', 'Home')
+                                    style={[styles.continueButtonStyle, { minWidth: 30, opacity: values.addType == 'Home' ? 1 : 0.7 }]}>
+                                    <TouchableOpacity onPress={() => {
+                                        setFieldValue('addType', 'Home')
                                     }
                                     }>
                                         <Text style={{ ...Fonts.whiteColor16Bold }}>Home</Text>
@@ -393,7 +404,7 @@ const AddnewAddress = ({ navigation }) => {
                                 </LinearGradient>
                                 <LinearGradient
                                     colors={['#F9B551', '#F87B2C']}
-                                    style={[styles.continueButtonStyle, { minWidth: 30,opacity:values.addType=='Work'? 1:0.7 }]}>
+                                    style={[styles.continueButtonStyle, { minWidth: 30, opacity: values.addType == 'Work' ? 1 : 0.7 }]}>
                                     <TouchableOpacity onPress={() =>
                                         setFieldValue('addType', 'Work')
                                     }>
@@ -402,7 +413,7 @@ const AddnewAddress = ({ navigation }) => {
                                 </LinearGradient>
                                 <LinearGradient
                                     colors={['#F9B551', '#F87B2C']}
-                                    style={[styles.continueButtonStyle, { minWidth: 30,opacity:values.addType=='Other'? 1:0.7 }]}>
+                                    style={[styles.continueButtonStyle, { minWidth: 30, opacity: values.addType == 'Other' ? 1 : 0.7 }]}>
                                     <TouchableOpacity onPress={() =>
                                         setFieldValue('addType', 'Other')
                                     }>
@@ -450,7 +461,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.whiteColor,
         marginTop: 30,
         marginBottom: 10,
-        padding: 15,
+        padding: 5,
         width: '90%',
         flexDirection: 'row',
         justifyContent: 'space-around',

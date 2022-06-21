@@ -19,6 +19,7 @@ import { Colors, Fonts, Sizes } from "../../constant/style";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import Feather from 'react-native-vector-icons/FontAwesome5'
 import { useFocusEffect } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -179,6 +180,9 @@ const SelectAdd = ({ navigation, route }) => {
                                             <Ionicons name="location-sharp" size={24} color="black" />
                                             <Text style={{ marginLeft: 10 }}>{item.city}</Text>
                                         </View>
+                                        <Feather name="edit" size={24} color={Colors.themeColor} style={{alignSelf:'flex-end',marginRight:20}} onPress={()=> {
+                                            setIsModalVisible(true)
+                                        }} />
                                     </TouchableOpacity>
                                 </>
                             )

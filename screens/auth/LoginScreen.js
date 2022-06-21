@@ -81,6 +81,7 @@ const LoginScreen = ({ navigation }) => {
                             onChangeText={handleChange('mobileNumber')}
                             onBlur={handleBlur('mobileNumber')}
                             value={values.mobileNumber}
+                            maxLength={10}
                         />
                         {errors.mobileNumber && touched.mobileNumber && (
                             <View

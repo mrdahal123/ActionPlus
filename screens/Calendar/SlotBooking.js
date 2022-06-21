@@ -12,7 +12,7 @@ import {
     TextInput,
     FlatList
 } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import { FontAwesome } from '@expo/vector-icons';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -20,12 +20,16 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import LinearGradient from 'react-native-linear-gradient';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
+import { date } from 'yup';
 
 const SlotBooking = ({ navigation }) => {
 
     const [bookingTime, setBookingTime] = useState('')
-    const [bookingDate, setBookingDate] = useState('')
+    const [bookingDate, setBookingDate] = useState(new Date())
     const [checked, setChecked] = useState(false)
+
+    // const [newTime, setNewTime] = useState()
+    const [time, setTime] = useState()
 
     const handleSubmit = () => {
         if (bookingDate !== '' && bookingTime !== '') {
@@ -38,36 +42,50 @@ const SlotBooking = ({ navigation }) => {
         console.log(bookingDate, bookingTime)
     }
 
-    const time = [{
-        "id": "1",
-        "time": "08:00 AM",
-        "status": "Booked",
-    },
-    {
-        "id": "2",
-        "time": "09:00 AM",
-    },
-    {
-        "id": "3",
-        "time": "10:00 AM",
-    },
-    {
-        "id": "4",
-        "time": "11:00 AM",
-    },
-    {
-        "id": "5",
-        "time": "04:00 AM",
-    },
-    {
-        "id": "6",
-        "time": "05:00 PM",
-    },
-    { "id": "7", "time": "06:00 PM", },
-    { "id": "8", "time": "07:00 PM", },
-    { "id": "9", "time": "08:00 PM", },
+    // useEffect(() => {
+    //     let dt = moment();
+    //     dt.format("hh:mm a")
+    //     let formatedTime = (moment(dt, "HH:mm:ss").format("hh:mm A"))
 
-    ]
+    //     setNewTime(formatedTime)
+    // }, [])
+
+    const createTImeSlot = useCallback((start, end) => {
+        var startTime = moment(start, 'HH:mm');
+        var endTime = moment(end, 'HH:mm');
+        
+        if( endTime.isBefore(startTime) ){
+          endTime.add(1, 'day');
+        }
+      
+        var timeStops = [];
+      
+        while(startTime <= endTime){
+          timeStops.push(new moment(startTime).format('HH:mm'));
+          startTime.add(60, 'minutes');
+        }
+        return timeStops;
+    }, []);
+
+
+    useEffect(() => {
+        var slots ;
+        let today = moment().format("MMM Do YY");
+        let checkdate = moment(bookingDate).format("MMM Do YY");
+        let now = moment().endOf('hour');
+        now = now.add(1, 'minutes').format("hh:mm");
+
+        if(checkdate === today){
+            slots = createTImeSlot(now, '20:00');
+        }else{
+            slots = createTImeSlot('08:00', '20:00');
+        }
+
+        setTime(slots);
+        console.log('slots', slots);
+
+    }, [bookingDate])
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
             <StatusBar backgroundColor={Colors.themeColor} />
@@ -84,6 +102,7 @@ const SlotBooking = ({ navigation }) => {
                     <View style={styles.calenderContainer}>
                         <CalendarPicker
                             onDateChange={(date) => setBookingDate(moment(date).format("MMM Do YY"))}
+                            minDate={new date()}
                             // onMonthChange={(month)=> (new Date(month))}
                             disabledDatesTextStyle={{ fontWeight: "700" }}
                             previousTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 15 }}
@@ -94,7 +113,7 @@ const SlotBooking = ({ navigation }) => {
                             selectedDayTextStyle={{ color: "#fff", fontWeight: '700' }}
                         />
                     </View>
-                    <Text style={{ ...Fonts.blackColor20Bold, padding: 15 }}>-12 Slots Available</Text>
+                    <Text style={{ ...Fonts.blackColor20Bold, padding: 15 }}>Slots Available For Booking</Text>
                     <FlatList
                         scrollEnabled={false}
                         data={time}
@@ -102,12 +121,16 @@ const SlotBooking = ({ navigation }) => {
                         keyExtractor={({ item, index }) => index}
                         renderItem={({ item, index }) => {
 
+
                             return (
-                                <TouchableOpacity onPress={() => {
-                                    setBookingTime(item.time)
-                                    setChecked(item.id)
-                                }} style={[styles.TimeButton, { backgroundColor: checked == item.id ? '#F9B551' : "#fff" }]}>
-                                    <Text style={{ color: checked == item.id ? '#fff' : '#000' }}>{item.time}</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setBookingTime(item)
+                                        setChecked(item)
+                                    }}
+                                    // disabled={item.id == dateIndex ? true :false}
+                                    style={[styles.TimeButton, { backgroundColor: checked == item ? '#F9B551' : "#fff" }]}>
+                                    <Text style={{ color: checked == item ? '#fff' : '#000' }}>{moment(item, 'HH:mm').format("hh:mm a")}</Text>
                                 </TouchableOpacity>
                             )
                         }
@@ -143,7 +166,7 @@ const styles = StyleSheet.create({
         borderColor: "#efefef",
         backgroundColor: '#fff',
         padding: 5,
-        shadowColor: "#000",
+        shadowColor: "#F9B551",
         shadowOffset: {
             width: 0,
             height: 5,
@@ -154,18 +177,19 @@ const styles = StyleSheet.create({
     },
     TimeButton: {
         padding: 15,
-        marginLeft: 30,
+        alignItems: 'center',
         marginVertical: 10,
-        alignSelf: 'center',
+        marginHorizontal: 15,
+        // alignSelf: 'center',
         backgroundColor: '#fff',
         borderRadius: 10,
-        shadowColor: "#000",
+        shadowColor: "#F9B551",
         shadowOffset: {
             width: 0,
             height: 5,
         },
         shadowOpacity: 0.34,
-        shadowRadius: 6.27,
+        shadowRadius: 2.27,
         elevation: 5,
     },
     continueButtonStyle: {

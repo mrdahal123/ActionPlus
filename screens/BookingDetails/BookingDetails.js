@@ -15,28 +15,30 @@ import {
 } from 'react-native'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 
 const BookingDetails = ({ route, navigation }) => {
     const [id, setId] = useState('')
-    useEffect(() => {
-        let userBookingId = route.params.userBookingId
-        setId(userBookingId)
-        console.log(userBookingId);
-    }, [])
+    // useEffect(() => {
+    //     let userBookingId = route.params.userBookingId
+    //     setId(userBookingId)
+    //     console.log(userBookingId);
+    // }, [])
 
     // const payment =[{
 
     // }]
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, padding: 20 }}>
-            <View style={{ flexDirection: 'row', }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
+            <View style={{ flexDirection: 'row', padding:10 }}>
                 <AntDesign name="arrowleft" size={24} color="black" style={{ padding: 2, }} onPress={() => { navigation.goBack() }} />
                 <Text style={{ ...Fonts.blackColor20Bold, marginLeft: '25%' }}>Booking Details</Text>
             </View>
-            <View style={{ marginTop: 40 }}>
-                <Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551', }}># {id.id}</Text>
-                <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}>{id.DateTime}</Text>
+          <View style={{flex:1,padding:15}}>
+          <View style={{ marginTop: 20 }}>
+                <Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551', }}># MRN893813</Text>
+                <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}> Today at 01:00 PM</Text>
             </View>
             <View style={{ marginVertical: 30, }}>
                 <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', }}>Booking Address</Text>
@@ -71,11 +73,8 @@ const BookingDetails = ({ route, navigation }) => {
             </View>
             <View style={{ borderTopWidth: 1, borderTopColor: '#696969', marginTop: 15 }} />
 
-            <TouchableOpacity style={{width:'100%',backgroundColor:'#ffe0e5',borderRadius:8,flexDirection:'row',padding:20,marginVertical:15}}>
-                <Image
-                    source={require('../../Assets/images/banner/faq.png')}
-                    style={{ width: 30.0, height: 30.0 }}
-                />
+            <TouchableOpacity style={styles.support}>
+                 <MaterialCommunityIcons name='comment-question' size={24} color='#FF0000' />
                 <Text style={{ ...Fonts.blackColor20Bold, color: '#000',marginLeft:10 }}>Need Support</Text>
             </TouchableOpacity>
             <LinearGradient
@@ -86,6 +85,7 @@ const BookingDetails = ({ route, navigation }) => {
                         <Text style={{ ...Fonts.whiteColor16Bold }}>Re-Book</Text>
                     </TouchableOpacity>
                 </LinearGradient>
+          </View>
         </SafeAreaView>
     )
 }
@@ -94,7 +94,6 @@ export default BookingDetails
 
 const styles = StyleSheet.create({
     continueButtonStyle: {
-       
         paddingHorizontal: 20,
         paddingVertical: 12,
         alignItems:'center',
@@ -103,6 +102,6 @@ const styles = StyleSheet.create({
         alignSelf: "flex-end",
         borderRadius: 25,
         justifyContent: 'center',
-       
     },
+    support:{width:'100%',backgroundColor:'#ffe0e5',borderRadius:8,flexDirection:'row',padding:20,marginVertical:15,alignItems:'center'}
 })

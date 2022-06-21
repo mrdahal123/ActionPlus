@@ -184,19 +184,19 @@ const BookingHistory = ({ navigation }) => {
                         return (
                             <View>
                                 <TouchableOpacity onPress={() => {
-                                    navigation.navigate("BookingDetails", {
-                                        userBookingId: item
-                                    })
+                                    navigation.navigate("Booking")
                                 }} style={styles.card}>
                                     <Image source={item.image} style={styles.boxImage} />
-                                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', }}>
-                                        <Text style={{ ...Fonts.blackColor20Bold, }}>{item.type}</Text>
+
+                                    <View style={{ width: '50%', }}>
+                                        <Text style={{ ...Fonts.blackColor17Bold, textAlign: 'left' }}>{item.type}</Text>
                                         <Text style={{ color: '#F9B551', marginVertical: 5 }}>ID : {item.id}</Text>
                                         <Text style={{ color: '#696969' }}>{item.DateTime}</Text>
                                     </View>
-                                    {/* <Image source={item.image} style={styles.boxImage} /> */}
+
                                     <AntDesign name="right" size={24} color="#000" />
                                 </TouchableOpacity>
+
                             </View>
                         )
                     }} />
