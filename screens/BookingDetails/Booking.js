@@ -14,6 +14,7 @@ import { Colors, Fonts, Sizes } from "../../constant/style";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import NavigationHeaders from '../../Components/NavigationHeaders';
 
 const Booking = ({ navigation }) => {
     const bookingDetails = [
@@ -51,10 +52,11 @@ const Booking = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
             <ScrollView style={styles.wrapper}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
+            <NavigationHeaders onPress={()=>{navigation.goBack()}} title='Booking'/>
+                {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
                     <AntDesign name="arrowleft" size={24} color="black" onPress={() => { navigation.goBack() }} />
                     <Text style={{ ...Fonts.blackColor20Bold, textAlign: 'center', marginRight: '35%' }}>Booking</Text>
-                </View>
+                </View> */} 
                 {/* <FlatList
                     data={bookingDetails}
                     keyExtractor={({ item, index }) => index}
@@ -81,9 +83,9 @@ const Booking = ({ navigation }) => {
                     </Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
                         <Text style={{ ...Fonts.blackColor16Bold, }}>1 service</Text>
-                        <Text><Text style={{ color: '#F9B551', }}>₹</Text> 29.06</Text>
+                        <Text  style={{color:'#000'}}><Text style={{ color: '#F9B551', }}>₹</Text> 29.06</Text>
                     </View>
-                    <Text>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
+                    <Text style={{color:'#000'}}>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.booking} onPress={() => { navigation.navigate('BookingDetails') }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
@@ -98,9 +100,10 @@ const Booking = ({ navigation }) => {
                     </Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
                         <Text style={{ ...Fonts.blackColor16Bold, }}>1 service</Text>
-                        <Text><Text style={{ color: '#F9B551', }}>₹</Text> 39.06</Text>
+                        <Text  style={{color:'#000'}}> 
+                            <Text style={{ color: '#F9B551', }}>₹</Text> 39.06</Text>
                     </View>
-                    <Text>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
+                    <Text style={{color:'#000'}}>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.booking} onPress={() => { navigation.navigate('BookingDetails') }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
@@ -117,9 +120,9 @@ const Booking = ({ navigation }) => {
                     </Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
                         <Text style={{ ...Fonts.blackColor16Bold, }}>1 service</Text>
-                        <Text><Text style={{ color: '#F9B551', }}>₹</Text> 25.06</Text>
+                        <Text  style={{color:'#000'}}><Text style={{ color: '#F9B551', }}>₹</Text> 25.06</Text>
                     </View>
-                    <Text>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
+                    <Text style={{color:'#000'}}>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.booking} onPress={() => { navigation.navigate('BookingDetails') }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
@@ -136,9 +139,9 @@ const Booking = ({ navigation }) => {
                     </Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
                         <Text style={{ ...Fonts.blackColor16Bold, }}>1 service</Text>
-                        <Text><Text style={{ color: '#F9B551', }}>₹</Text> 25.06</Text>
+                        <Text  style={{color:'#000'}}><Text style={{ color: '#F9B551', }}>₹</Text> 25.06</Text>
                     </View>
-                    <Text>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
+                    <Text style={{color:'#000'}}>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { navigation.navigate('BookingDetails') }} style={styles.booking}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
@@ -155,9 +158,9 @@ const Booking = ({ navigation }) => {
                     </Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
                         <Text style={{ ...Fonts.blackColor16Bold, }}>1 service</Text>
-                        <Text><Text style={{ color: '#F9B551', }}>₹</Text> 25.06</Text>
+                        <Text style={{color:'#000'}}><Text style={{ color: '#F9B551', }}>₹</Text> 25.06</Text>
                     </View>
-                    <Text>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
+                    <Text style={{color:'#000'}}>Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
@@ -169,7 +172,7 @@ export default Booking
 const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
-        padding: 15,
+        paddingHorizontal: 10,
     },
     booking: {
         width: '100%',

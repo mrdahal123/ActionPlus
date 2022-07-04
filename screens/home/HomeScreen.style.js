@@ -35,11 +35,18 @@ export const styles = StyleSheet.create({
         shadowRadius: 6.27,
         elevation: 10,
     },
-    imgBanner: {
-        width: '100%',
-        alignItems: 'center',
-        alignSelf: 'center',
-        marginVertical: 10
+    imgBanner:{
+        width:350,
+        height:200,
+        alignSelf:'center',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+        elevation: 10,
     },
     textInput: {
         backgroundColor: Colors.whiteColor,
@@ -59,6 +66,7 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.34,
         shadowRadius: 6.27,
         elevation: 10,
+        color:'#000'
     },
     continueButtonStyle: {
         paddingHorizontal: 20,

@@ -18,6 +18,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import LinearGradient from 'react-native-linear-gradient';
+import NavigationHeaders from '../../Components/NavigationHeaders';
 
 const MaidService = ({ navigation }) => {
 
@@ -46,9 +47,19 @@ const MaidService = ({ navigation }) => {
       image: require('../../Assets/images/Services/sofa-cleaning.jpg'),
       type: "Sofa Cleaning ",
     },
+    {
+      image: require('../../Assets/images/Services/carpet-cleaning.jpg'),
+      type: "Carpet Cleaning",
+    },
+    {
+      image: require('../../Assets/images/Services/sofa-cleaning.jpg'),
+      type: "Sofa Cleaning ",
+    },
   ]
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
+     <ScrollView nestedScrollEnabled={true}>
+     <NavigationHeaders onPress={()=>{navigation.goBack()}} title="Professional Cleaning Service"/>
       <View style={{ flex: 1 }}>
         <FlatList
           data={maidService}
@@ -69,6 +80,7 @@ const MaidService = ({ navigation }) => {
           }}
         />
       </View>
+     </ScrollView>
     </SafeAreaView>
   )
 }

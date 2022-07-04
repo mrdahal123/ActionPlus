@@ -12,7 +12,8 @@ import {
     TextInput,
     FlatList,
     Modal,
-    Pressable
+    Pressable,
+    ActivityIndicator
 } from 'react-native'
 import React, { Component, useState, useEffect } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
@@ -26,6 +27,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import LinearGradient from 'react-native-linear-gradient';
+import axios from "axios";
 
 
 const SelectAdd = ({ navigation, route }) => {
@@ -46,6 +48,7 @@ const SelectAdd = ({ navigation, route }) => {
     }]);
     const [IsModalVisible, setIsModalVisible] = useState(false);
     const [formData, setFormData] = useState([]);
+    const [loader, setLoader] = useState(false)
 
     const EditAddress = Yup.object().shape({
         FirstName: Yup.string()
@@ -79,519 +82,531 @@ const SelectAdd = ({ navigation, route }) => {
             .required("select your address type")
     });
 
+    const Address = () => {
+        setLoader(true)
+        axios.post('https://api.ontestapp.com/api/bookings/get_all_bookings_customer', {
+            "b_c_name": "ashok",
+            "b_c_date": "12-06-2022",
+            "b_c_time": "12:06",
+            "b_c_service_id": "786545",
+            "b_c_seat_address": "arekere",
+            "b_c_city": "lucknow",
+            "b_c_pin_code": "221272",
+            "b_c_floor": "5th",
+            "b_c_flat_number": "105",
+            "b_c_state": "uttar pradesh",
+            "b_c_phone_number": "8703375634",
+            "b_c_amount": "1500"
+        })
+            .then(response => {
+                setLoader(false)
+                console.log(response.data.data);
+                let responseApi = response.data.data
+                responseApi.map((element) => {
+                    setFormData(element)
+                })
+                setFormData(responseApi)
+            })
+            .catch(error => {
+                setLoader(false)
+                console.log(error);
 
-    // const newAdd =route.params?.data ?? {};
-    // {
-    //     formData.length > 0 ? 
-    // } 
-
-
-    // let arrValue= [newAdd.data]
-    // console.log("arrValue", route.params?.data)
-    // console.log("arrValue", newadd)
-
-    // const address = [{
-    //     "FirstName": 'saurav',
-    //     "PhoneNumber": "987654310",
-    //     "city": "Postmaster , Dummani B.O, Chitradurga,Karnataka ,India (IN),Pin Code :-577531",
-    // },
-    // {
-    //     "FirstName": 'amit',
-    //     "PhoneNumber": "987654380",
-    //     "city": "Postmaster , Dummani B.O, Chitradurga,Karnataka ,India (IN),Pin Code :-577531",
-    // },
-    // {
-    //     "FirstName": 'diwas',
-    //     "PhoneNumber": "987654370",
-    //     "city": "Postmaster , Dummani B.O, Chitradurga,Karnataka ,India (IN),Pin Code :-577531",
-    // }]
-
-
-    // useFocusEffect(
-    //     React.useCallback(() => {
-
-    //         if (formData.length > 0) {
-    //             let newAddress = address.concat(formData)
-    //             setfinalArr(newAddress)
-    //             console.log("newAddress", newAddress);
-    //         }
-    //         else {
-    //             setfinalArr(address)
-    //         }
-
-    //     }, [])
-    // );
-
-
-
-
-    // console.log("newAddArrnewAddArrnewAddArr",finalArr)
+            })
+    }
+    useEffect(() => {
+        Address()
+    }, [])
     return (
+        loader == true ? (
+           <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+             <ActivityIndicator  size={'large'} />
+           </View>
+        ) : (
+            <>
+                <SafeAreaView style={{ flex: 1, }}>
+                    {/* <StatusBar backgroundColor={Colors.primaryColor} /> */}
+                    <ImageBackground
+                        source={require('../../Assets/images/banner/background.png')}
+                        style={{ flex: 1, padding: 10, backgroundColor: Colors.whiteColor }}>
+                        <AntDesign name="arrowleft" size={24} color="black" style={{ marginTop: 30, }} onPress={() => {
+                            navigation.goBack()
+                        }} />
 
+                        <Image
+                            source={require('../../Assets/images/banner/logo-top.jpg')}
+                            style={styles.appLogoStyle}
+                            resizeMode="contain"
+                        />
 
-        <SafeAreaView style={{ flex: 1, }}>
-            {/* <StatusBar backgroundColor={Colors.primaryColor} /> */}
-            <ImageBackground
-                source={require('../../Assets/images/banner/background.png')}
-                style={{ flex: 1, padding: 10, backgroundColor: Colors.whiteColor }}>
-                <AntDesign name="arrowleft" size={24} color="black" style={{ marginTop: 30, }} onPress={() => {
-                    navigation.goBack()
-                }} />
-
-                <Image
-                    source={require('../../Assets/images/banner/logo-top.jpg')}
-                    style={styles.appLogoStyle}
-                    resizeMode="contain"
-                />
-
-                <Text style={{
-                    ...Fonts.blackColor18Bold,
-                    textAlign: 'center',
-                    marginTop: 10
-                }}>
-                    Select Address
-                </Text>
-                <ScrollView showsVerticalScrollIndicator={false}>
-
-                    <FlatList
-                        scrollEnabled={false}
-                        data={finalArr}
-                        keyExtractor={({ item, index }) => index}
-                        renderItem={({ item, index }) => {
-                            return (
-                                <>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            navigation.navigate("BookingSuccess")
-                                        }}
-                                        style={styles.AddContainer}>
-                                        {item.addType && <Text style={{ textAlign: 'center' }}>Address Type ({item.addType})</Text>}
-                                        <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
-                                            <FontAwesome name="user" size={24} color="black" />
-                                            <Text style={{ marginLeft: 10 }}>{item.FirstName}</Text>
-
-
-                                        </View>
-                                        <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
-                                            <FontAwesome name="phone" size={24} color="black" />
-                                            <Text style={{ marginLeft: 10 }}>{item.PhoneNumber}</Text>
-                                        </View>
-                                        <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
-                                            <Ionicons name="location-sharp" size={24} color="black" />
-                                            <Text style={{ marginLeft: 10 }}>{item.city}</Text>
-                                        </View>
-                                        <Feather name="edit" size={24} color={Colors.themeColor} style={{alignSelf:'flex-end',marginRight:20}} onPress={()=> {
-                                            setIsModalVisible(true)
-                                        }} />
-                                    </TouchableOpacity>
-                                </>
-                            )
-                        }}
-                    />
-                    <TouchableOpacity
-                        onPress={() =>
-                            setIsModalVisible(true)
-                            // navigation.navigate('AddnewAddress')
-                        }
-                        style={[styles.AddContainer, { borderWidth: 1, borderStyle: 'dashed', alignItems: 'center', paddingVertical: 40 }]}>
-
-                        <AntDesign name="plus" size={24} color="black" />
-                        <Text>Add New Adress</Text>
-
-                    </TouchableOpacity>
-
-                </ScrollView>
-
-                <Modal transparent={true} visible={IsModalVisible}>
-                    <ScrollView
-                        style={{
-                            backgroundColor: '#000000aa',
-                            flex: 1,
+                        <Text style={{
+                            ...Fonts.blackColor18Bold,
+                            textAlign: 'center',
+                            marginTop: 10
                         }}>
-                        <View
-                            style={{
-                                backgroundColor: '#fff',
-                                flex: 1,
-                                padding: 20,
-                                borderRadius: 0,
-                                width: '100%',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}>
+                            Select Address
+                        </Text>
+                        <ScrollView showsVerticalScrollIndicator={false}>
 
-                            <Formik
-                                validationSchema={EditAddress}
-                                initialValues=
-                                {{
-                                    FirstName: '',
-                                    LastName: '',
-                                    PhoneNumber: '',
-                                    email: '',
-                                    houseNo: '',
-                                    socitey: '',
-                                    area: '',
-                                    city: '',
-                                    pinCode: '',
-                                    state: '',
-                                    addType: '',
-                                }}
-                                onSubmit={values => {
-
-
-
-                                    if (values) {
-
-                                        setfinalArr((prev) => [...prev,values])
-                                        
-                                        setIsModalVisible(false);
-                                       
-                                    }
-                                    else {
-                                        alert("something went wrong")
-                                        return;
-                                    }
-                                }}>
-                                {({
-                                    handleChange,
-                                    handleBlur,
-                                    handleSubmit,
-                                    setFieldValue,
-                                    values,
-                                    errors,
-                                    touched,
-                                    isValid,
-                                }) => (
-                                    <>
-                                        <Text style={{
-                                            ...Fonts.blackColor18Bold,
-                                            textAlign: 'center',
-                                            marginTop: 10
-                                        }}>Edit Address</Text>
-                                        <View style={styles.textInput}>
-                                            <FontAwesome5 name="user-alt" size={24} color="black" />
-                                            <TextInput
-                                                style={{ marginLeft: 10, width: '90%' }}
-                                                placeholder="First Name"
-                                                value={values.FirstName}
-                                                onChangeText={
-                                                    handleChange('FirstName')
-                                                }
-                                                onBlur={handleBlur('FirstName')}
-                                            />
-                                        </View>
-                                        {errors.FirstName && touched.FirstName && (
-                                            <View
-                                                style={{
-                                                    width: '90%',
-                                                    alignSelf: 'center',
-                                                    paddingTop: 10,
-                                                }}>
-                                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                                    {errors.FirstName}
-                                                </Text>
-                                            </View>
-                                        )}
-                                        <View style={styles.textInput}>
-                                            <FontAwesome5 name="user-alt" size={24} color="black" />
-                                            <TextInput
-                                                style={{ marginLeft: 10, width: '90%' }}
-
-                                                placeholder="Last Name"
-                                                value={values.LastName}
-                                                onChangeText={
-                                                    handleChange('LastName')
-                                                }
-                                                onBlur={handleBlur('LastName')}
-                                            />
-                                        </View>
-                                        {errors.LastName && touched.LastName && (
-                                            <View
-                                                style={{
-                                                    width: '90%',
-                                                    alignSelf: 'center',
-                                                    paddingTop: 10,
-                                                }}>
-                                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                                    {errors.LastName}
-                                                </Text>
-                                            </View>
-                                        )}
-                                        <View style={styles.textInput}>
-                                            <FontAwesome5 name="phone-alt" size={24} color="black" />
-                                            <TextInput
-                                                style={{ marginLeft: 10, width: '90%' }}
-
-                                                placeholder="Phone Number"
-                                                value={values.PhoneNumber}
-                                                onChangeText={
-                                                    handleChange('PhoneNumber')
-                                                }
-                                                onBlur={handleBlur('PhoneNumber')}
-                                            />
-                                        </View>
-                                        {errors.PhoneNumber && touched.PhoneNumber && (
-                                            <View
-                                                style={{
-                                                    width: '90%',
-                                                    alignSelf: 'center',
-                                                    paddingTop: 10,
-                                                }}>
-                                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                                    {errors.PhoneNumber}
-                                                </Text>
-                                            </View>
-                                        )}
-                                        <View style={styles.textInput}>
-                                            <MaterialCommunityIcons name="email-multiple" size={24} color="black" />
-                                            <TextInput
-                                                style={{ marginLeft: 10, width: '90%' }}
-
-                                                placeholder="Email Address"
-                                                value={values.email}
-                                                onChangeText={
-                                                    handleChange('email')
-                                                }
-                                                onBlur={handleBlur('email')}
-                                            />
-                                        </View>
-                                        {errors.email && touched.email && (
-                                            <View
-                                                style={{
-                                                    width: '90%',
-                                                    alignSelf: 'center',
-                                                    paddingTop: 10,
-                                                }}>
-                                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                                    {errors.email}
-                                                </Text>
-                                            </View>
-                                        )}
-                                        <View style={styles.textInput}>
-                                            <FontAwesome5 name="house-user" size={24} color="black" />
-                                            <TextInput
-                                                style={{ marginLeft: 10, width: '90%' }}
-
-                                                placeholder="House No / Flat No / Floor "
-                                                value={values.houseNo}
-                                                onChangeText={
-                                                    handleChange('houseNo')
-                                                }
-                                                onBlur={handleBlur('houseNo')}
-                                            />
-                                        </View>
-                                        {errors.houseNo && touched.houseNo && (
-                                            <View
-                                                style={{
-                                                    width: '90%',
-                                                    alignSelf: 'center',
-                                                    paddingTop: 10,
-                                                }}>
-                                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                                    {errors.houseNo}
-                                                </Text>
-                                            </View>
-                                        )}
-                                        <View style={styles.textInput}>
-                                            <MaterialCommunityIcons name="sign-direction" size={24} color="black" />
-                                            <TextInput
-                                                style={{ marginLeft: 10, width: '90%' }}
-
-                                                placeholder="Society /Street Name"
-                                                value={values.socitey}
-                                                onChangeText={
-                                                    handleChange('socitey')
-                                                }
-                                                onBlur={handleBlur('socitey')}
-                                            />
-                                        </View>
-                                        {errors.socitey && touched.socitey && (
-                                            <View
-                                                style={{
-                                                    width: '90%',
-                                                    alignSelf: 'center',
-                                                    paddingTop: 10,
-                                                }}>
-                                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                                    {errors.socitey}
-                                                </Text>
-                                            </View>
-                                        )}
-                                        <View style={styles.textInput}>
-                                            <Ionicons name="location-sharp" size={24} color="black" />
-                                            <TextInput
-                                                style={{ marginLeft: 10, width: '90%' }}
-
-                                                placeholder="Area"
-                                                value={values.area}
-                                                onChangeText={
-                                                    handleChange('area')
-                                                }
-                                                onBlur={handleBlur('area')}
-                                            />
-                                        </View>
-                                        {errors.area && touched.area && (
-                                            <View
-                                                style={{
-                                                    width: '90%',
-                                                    alignSelf: 'center',
-                                                    paddingTop: 10,
-                                                }}>
-                                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                                    {errors.area}
-                                                </Text>
-                                            </View>
-                                        )}
-                                        <View style={{ width: '90%', flexDirection: 'row', alignSelf: 'center', justifyContent: 'space-between' }}>
-
-                                            <View style={[styles.textInput, { width: '45%' }]}>
-                                                <FontAwesome5 name="city" size={24} color="black" />
-                                                <TextInput
-                                                    style={{ marginLeft: 10, width: '40%' }}
-
-                                                    placeholder="City"
-                                                    value={values.city}
-                                                    onChangeText={
-                                                        handleChange('city')
+                            <FlatList
+                                scrollEnabled={false}
+                                data={finalArr}
+                                keyExtractor={({ item, index }) => index}
+                                renderItem={({ item, index }) => {
+                                    return (
+                                        <>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    if (formData.length == 0) {
+                                                        alert("something went 0")
                                                     }
-                                                    onBlur={handleBlur('city')}
-                                                />
-                                            </View>
-
-
-                                            <View style={[styles.textInput, { width: '45%' }]}>
-                                                <Ionicons name="star-half-sharp" size={24} color="black" />
-                                                <TextInput
-                                                    style={{ marginLeft: 10, width: '40%' }}
-
-                                                    placeholder="Pincode"
-                                                    value={values.pinCode}
-                                                    onChangeText={handleChange('pinCode')}
-                                                    onBlur={handleBlur('pinCode')}
-                                                />
-
-                                            </View>
-
-                                        </View>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '90%', alignSelf: 'center' }}>
-
-
-                                            {errors.city && touched.city && (
-                                                <View
-                                                    style={{
-                                                        width: '45%',
-                                                        alignSelf: 'center',
-                                                        paddingTop: 10,
-                                                    }}>
-                                                    <Text style={{ fontSize: 12, color: 'red' }}>
-                                                        {errors.city}
-                                                    </Text>
+                                                    else {
+                                                        navigation.navigate("BookingSuccess", {
+                                                            data: formData
+                                                        })
+                                                    }
+                                                    // console.log("formData",formData)
+                                                }}
+                                                style={styles.AddContainer}>
+                                                {item.addType && <Text style={{ textAlign: 'center' }}>Address Type ({item.addType})</Text>}
+                                                <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
+                                                    <FontAwesome name="user" size={24} color="black" />
+                                                    <Text style={{ marginLeft: 10, color: "#000" }}>{item.FirstName}</Text>
                                                 </View>
-                                            )}
-                                            {errors.pinCode && touched.pinCode && (
-                                                <View
-                                                    style={{
-                                                        width: '50%',
-                                                        alignSelf: 'center',
-                                                        paddingTop: 10,
-                                                    }}>
-                                                    <Text style={{ fontSize: 12, color: 'red' }}>
-                                                        {errors.pinCode}
-                                                    </Text>
+                                                <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
+                                                    <FontAwesome name="phone" size={24} color="black" />
+                                                    <Text style={{ marginLeft: 10, color: "#000" }}>{item.PhoneNumber}</Text>
                                                 </View>
-                                            )}
-                                        </View>
-
-                                        <View style={styles.textInput}>
-                                            <FontAwesome5 name="font-awesome-flag" size={24} color="black" />
-                                            <TextInput
-                                                style={{ marginLeft: 10, width: '90%' }}
-                                                placeholder="State"
-                                                value={values.state}
-                                                onChangeText={
-                                                    handleChange('state')
-                                                }
-                                                onBlur={handleBlur('state')}
-                                            />
-                                        </View>
-                                        {errors.state && touched.state && (
-                                            <View
-                                                style={{
-                                                    width: '90%',
-                                                    alignSelf: 'center',
-                                                    paddingTop: 10,
-                                                }}>
-                                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                                    {errors.state}
-                                                </Text>
-                                            </View>
-                                        )}
-
-
-                                        <View style={styles.checkButton}>
-
-                                            <LinearGradient
-                                                colors={['#F9B551', '#F87B2C']}
-                                                style={[styles.continueButtonStyle, { minWidth: 30, opacity: values.addType == 'Home' ? 1 : 0.7 }]}>
-                                                <TouchableOpacity onPress={() => {
-                                                    setFieldValue('addType', 'Home')
-                                                }
-                                                }>
-                                                    <Text style={{ ...Fonts.whiteColor16Bold }}>Home</Text>
-                                                </TouchableOpacity>
-                                            </LinearGradient>
-                                            <LinearGradient
-                                                colors={['#F9B551', '#F87B2C']}
-                                                style={[styles.continueButtonStyle, { minWidth: 30, opacity: values.addType == 'Work' ? 1 : 0.7 }]}>
-                                                <TouchableOpacity onPress={() =>
-                                                    setFieldValue('addType', 'Work')
-                                                }>
-                                                    <Text style={{ ...Fonts.whiteColor16Bold }}>Work</Text>
-                                                </TouchableOpacity>
-                                            </LinearGradient>
-                                            <LinearGradient
-                                                colors={['#F9B551', '#F87B2C']}
-                                                style={[styles.continueButtonStyle, { minWidth: 30, opacity: values.addType == 'Other' ? 1 : 0.7 }]}>
-                                                <TouchableOpacity onPress={() =>
-                                                    setFieldValue('addType', 'Other')
-                                                }>
-                                                    <Text style={{ ...Fonts.whiteColor16Bold }}>Other</Text>
-                                                </TouchableOpacity>
-                                            </LinearGradient>
-
-                                        </View>
-                                        {errors.addType && touched.addType && (
-                                            <View
-                                                style={{
-                                                    width: '90%',
-                                                    alignSelf: 'center',
-                                                    paddingTop: 10,
-                                                }}>
-                                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                                    {errors.addType}
-                                                </Text>
-                                            </View>
-                                        )}
-
-                                        <LinearGradient
-                                            colors={['#F9B551', '#F87B2C']}
-                                            style={styles.continueButtonStyle}>
-                                            <TouchableOpacity onPress={(e) => {
-                                                console.log('errors');
-                                                console.log('errors', errors);
-                                                handleSubmit(e)
-                                            }}>
-                                                <Text style={{ ...Fonts.whiteColor16Bold }}>Save</Text>
+                                                <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
+                                                    <Ionicons name="location-sharp" size={24} color="black" />
+                                                    <Text style={{ marginLeft: 10, color: "#000" }}>{item.city}</Text>
+                                                </View>
+                                                <Feather name="edit" size={24} color={Colors.themeColor} style={{ alignSelf: 'flex-end', marginRight: 20 }} onPress={() => {
+                                                    setIsModalVisible(true)
+                                                }} />
                                             </TouchableOpacity>
-                                        </LinearGradient>
-                                    </>
-                                )}
-                            </Formik>
+                                        </>
+                                    )
+                                }}
+                            />
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setIsModalVisible(true)
+                                    // navigation.navigate('AddnewAddress')
+                                }
+                                style={[styles.AddContainer, { borderWidth: 1, borderStyle: 'dashed', alignItems: 'center', paddingVertical: 40 }]}>
 
-                        </View>
-                    </ScrollView>
-                </Modal>
-            </ImageBackground>
-        </SafeAreaView>
+                                <AntDesign name="plus" size={24} color="black" />
+                                <Text>Add New Adress</Text>
+
+                            </TouchableOpacity>
+
+                        </ScrollView>
+
+                        <Modal transparent={true} visible={IsModalVisible}>
+                            <ScrollView
+                                style={{
+                                    backgroundColor: '#000000aa',
+                                    flex: 1,
+                                }}>
+                                <View
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        flex: 1,
+                                        padding: 20,
+                                        borderRadius: 0,
+                                        width: '100%',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}>
+
+                                    <Formik
+                                        validationSchema={EditAddress}
+                                        initialValues=
+                                        {{
+                                            FirstName: '',
+                                            LastName: '',
+                                            PhoneNumber: '',
+                                            email: '',
+                                            houseNo: '',
+                                            socitey: '',
+                                            area: '',
+                                            city: '',
+                                            pinCode: '',
+                                            state: '',
+                                            addType: '',
+                                        }}
+                                        onSubmit={values => {
+
+
+
+                                            if (values) {
+
+                                                setfinalArr((prev) => [...prev, values])
+
+                                                setIsModalVisible(false);
+
+                                            }
+                                            else {
+                                                alert("something went wrong")
+                                                return;
+                                            }
+                                        }}>
+                                        {({
+                                            handleChange,
+                                            handleBlur,
+                                            handleSubmit,
+                                            setFieldValue,
+                                            values,
+                                            errors,
+                                            touched,
+                                            isValid,
+                                        }) => (
+                                            <>
+                                                <Text style={{
+                                                    ...Fonts.blackColor18Bold,
+                                                    textAlign: 'center',
+                                                    marginTop: 10
+                                                }}>Edit Address</Text>
+                                                <View style={styles.textInput}>
+                                                    <FontAwesome5 name="user-alt" size={24} color="black" />
+                                                    <TextInput
+                                                        style={styles.inputStyle}
+                                                        placeholderTextColor={'#000'}
+                                                        placeholder="First Name"
+                                                        value={values.FirstName}
+                                                        onChangeText={
+                                                            handleChange('FirstName')
+                                                        }
+                                                        onBlur={handleBlur('FirstName')}
+                                                    />
+                                                </View>
+                                                {errors.FirstName && touched.FirstName && (
+                                                    <View
+                                                        style={{
+                                                            width: '90%',
+                                                            alignSelf: 'center',
+                                                            paddingTop: 10,
+                                                        }}>
+                                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                                            {errors.FirstName}
+                                                        </Text>
+                                                    </View>
+                                                )}
+                                                <View style={styles.textInput}>
+                                                    <FontAwesome5 name="user-alt" size={24} color="black" />
+                                                    <TextInput
+                                                        style={styles.inputStyle}
+                                                        placeholderTextColor={'#000'}
+                                                        placeholder="Last Name"
+                                                        value={values.LastName}
+                                                        onChangeText={
+                                                            handleChange('LastName')
+                                                        }
+                                                        onBlur={handleBlur('LastName')}
+                                                    />
+                                                </View>
+                                                {errors.LastName && touched.LastName && (
+                                                    <View
+                                                        style={{
+                                                            width: '90%',
+                                                            alignSelf: 'center',
+                                                            paddingTop: 10,
+                                                        }}>
+                                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                                            {errors.LastName}
+                                                        </Text>
+                                                    </View>
+                                                )}
+                                                <View style={styles.textInput}>
+                                                    <FontAwesome5 name="phone-alt" size={24} color="black" />
+                                                    <TextInput
+                                                        style={styles.inputStyle}
+                                                        keyboardType={'number-pad'}
+                                                        maxLength={10}
+                                                        placeholderTextColor={'#000'}
+                                                        placeholder="Phone Number"
+                                                        value={values.PhoneNumber}
+                                                        onChangeText={
+                                                            handleChange('PhoneNumber')
+                                                        }
+                                                        onBlur={handleBlur('PhoneNumber')}
+                                                    />
+                                                </View>
+                                                {errors.PhoneNumber && touched.PhoneNumber && (
+                                                    <View
+                                                        style={{
+                                                            width: '90%',
+                                                            alignSelf: 'center',
+                                                            paddingTop: 10,
+                                                        }}>
+                                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                                            {errors.PhoneNumber}
+                                                        </Text>
+                                                    </View>
+                                                )}
+                                                <View style={styles.textInput}>
+                                                    <MaterialCommunityIcons name="email-multiple" size={24} color="black" />
+                                                    <TextInput
+                                                        style={styles.inputStyle}
+                                                        keyboardType={'email-address'}
+                                                        placeholderTextColor={'#000'}
+                                                        placeholder="Email Address"
+                                                        value={values.email}
+                                                        onChangeText={
+                                                            handleChange('email')
+                                                        }
+                                                        onBlur={handleBlur('email')}
+                                                    />
+                                                </View>
+                                                {errors.email && touched.email && (
+                                                    <View
+                                                        style={{
+                                                            width: '90%',
+                                                            alignSelf: 'center',
+                                                            paddingTop: 10,
+                                                        }}>
+                                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                                            {errors.email}
+                                                        </Text>
+                                                    </View>
+                                                )}
+                                                <View style={styles.textInput}>
+                                                    <FontAwesome5 name="house-user" size={24} color="black" />
+                                                    <TextInput
+                                                        style={styles.inputStyle}
+                                                        keyboardType={'twitter'}
+                                                        placeholder="House No / Flat No / Floor "
+                                                        placeholderTextColor={'#000'}
+                                                        value={values.houseNo}
+                                                        onChangeText={
+                                                            handleChange('houseNo')
+                                                        }
+                                                        onBlur={handleBlur('houseNo')}
+                                                    />
+                                                </View>
+                                                {errors.houseNo && touched.houseNo && (
+                                                    <View
+                                                        style={{
+                                                            width: '90%',
+                                                            alignSelf: 'center',
+                                                            paddingTop: 10,
+                                                        }}>
+                                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                                            {errors.houseNo}
+                                                        </Text>
+                                                    </View>
+                                                )}
+                                                <View style={styles.textInput}>
+                                                    <MaterialCommunityIcons name="sign-direction" size={24} color="black" />
+                                                    <TextInput
+                                                        style={styles.inputStyle}
+                                                        placeholderTextColor={'#000'}
+                                                        placeholder="Society /Street Name"
+                                                        value={values.socitey}
+                                                        onChangeText={
+                                                            handleChange('socitey')
+                                                        }
+                                                        onBlur={handleBlur('socitey')}
+                                                    />
+                                                </View>
+                                                {errors.socitey && touched.socitey && (
+                                                    <View
+                                                        style={{
+                                                            width: '90%',
+                                                            alignSelf: 'center',
+                                                            paddingTop: 10,
+                                                        }}>
+                                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                                            {errors.socitey}
+                                                        </Text>
+                                                    </View>
+                                                )}
+                                                <View style={styles.textInput}>
+                                                    <Ionicons name="location-sharp" size={24} color="black" />
+                                                    <TextInput
+                                                        style={styles.inputStyle}
+                                                        placeholderTextColor={'#000'}
+                                                        placeholder="Area"
+                                                        value={values.area}
+                                                        onChangeText={
+                                                            handleChange('area')
+                                                        }
+                                                        onBlur={handleBlur('area')}
+                                                    />
+                                                </View>
+                                                {errors.area && touched.area && (
+                                                    <View
+                                                        style={{
+                                                            width: '90%',
+                                                            alignSelf: 'center',
+                                                            paddingTop: 10,
+                                                        }}>
+                                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                                            {errors.area}
+                                                        </Text>
+                                                    </View>
+                                                )}
+                                                <View style={{ width: '90%', flexDirection: 'row', alignSelf: 'center', justifyContent: 'space-between' }}>
+
+                                                    <View style={[styles.textInput, { width: '45%' }]}>
+                                                        <FontAwesome5 name="city" size={24} color="black" />
+                                                        <TextInput
+                                                            style={styles.inputStyle}
+                                                            placeholderTextColor={'#000'}
+                                                            placeholder="City"
+                                                            value={values.city}
+                                                            onChangeText={
+                                                                handleChange('city')
+                                                            }
+                                                            onBlur={handleBlur('city')}
+                                                        />
+                                                    </View>
+
+
+                                                    <View style={[styles.textInput, { width: '45%' }]}>
+                                                        <Ionicons name="star-half-sharp" size={24} color="black" />
+                                                        <TextInput
+                                                            style={styles.inputStyle}
+                                                            keyboardType={'number-pad'}
+                                                            tex
+                                                            maxLength={6}
+                                                            placeholder="Pincode"
+                                                            placeholderTextColor={'#000'}
+                                                            value={values.pinCode}
+                                                            onChangeText={handleChange('pinCode')}
+                                                            onBlur={handleBlur('pinCode')}
+                                                        />
+
+                                                    </View>
+
+                                                </View>
+                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '90%', alignSelf: 'center' }}>
+
+
+                                                    {errors.city && touched.city && (
+                                                        <View
+                                                            style={{
+                                                                width: '45%',
+                                                                alignSelf: 'center',
+                                                                paddingTop: 10,
+                                                            }}>
+                                                            <Text style={{ fontSize: 12, color: 'red' }}>
+                                                                {errors.city}
+                                                            </Text>
+                                                        </View>
+                                                    )}
+                                                    {errors.pinCode && touched.pinCode && (
+                                                        <View
+                                                            style={{
+                                                                width: '50%',
+                                                                alignSelf: 'center',
+                                                                paddingTop: 10,
+                                                            }}>
+                                                            <Text style={{ fontSize: 12, color: 'red' }}>
+                                                                {errors.pinCode}
+                                                            </Text>
+                                                        </View>
+                                                    )}
+                                                </View>
+
+                                                <View style={styles.textInput}>
+                                                    <FontAwesome5 name="font-awesome-flag" size={24} color="black" />
+                                                    <TextInput
+                                                        style={styles.inputStyle}
+                                                        placeholder="State"
+                                                        placeholderTextColor={'#000'}
+                                                        value={values.state}
+                                                        onChangeText={
+                                                            handleChange('state')
+                                                        }
+                                                        onBlur={handleBlur('state')}
+                                                    />
+                                                </View>
+                                                {errors.state && touched.state && (
+                                                    <View
+                                                        style={{
+                                                            width: '90%',
+                                                            alignSelf: 'center',
+                                                            paddingTop: 10,
+                                                        }}>
+                                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                                            {errors.state}
+                                                        </Text>
+                                                    </View>
+                                                )}
+
+
+                                                <View style={styles.checkButton}>
+
+                                                    <LinearGradient
+                                                        colors={['#F9B551', '#F87B2C']}
+                                                        style={[styles.continueButtonStyle, { minWidth: 30, opacity: values.addType == 'Home' ? 1 : 0.7 }]}>
+                                                        <TouchableOpacity onPress={() => {
+                                                            setFieldValue('addType', 'Home')
+                                                        }
+                                                        }>
+                                                            <Text style={{ ...Fonts.whiteColor16Bold }}>Home</Text>
+                                                        </TouchableOpacity>
+                                                    </LinearGradient>
+                                                    <LinearGradient
+                                                        colors={['#F9B551', '#F87B2C']}
+                                                        style={[styles.continueButtonStyle, { minWidth: 30, opacity: values.addType == 'Work' ? 1 : 0.7 }]}>
+                                                        <TouchableOpacity onPress={() =>
+                                                            setFieldValue('addType', 'Work')
+                                                        }>
+                                                            <Text style={{ ...Fonts.whiteColor16Bold }}>Work</Text>
+                                                        </TouchableOpacity>
+                                                    </LinearGradient>
+                                                    <LinearGradient
+                                                        colors={['#F9B551', '#F87B2C']}
+                                                        style={[styles.continueButtonStyle, { minWidth: 30, opacity: values.addType == 'Other' ? 1 : 0.7 }]}>
+                                                        <TouchableOpacity onPress={() =>
+                                                            setFieldValue('addType', 'Other')
+                                                        }>
+                                                            <Text style={{ ...Fonts.whiteColor16Bold }}>Other</Text>
+                                                        </TouchableOpacity>
+                                                    </LinearGradient>
+
+                                                </View>
+                                                {errors.addType && touched.addType && (
+                                                    <View
+                                                        style={{
+                                                            width: '90%',
+                                                            alignSelf: 'center',
+                                                            paddingTop: 10,
+                                                        }}>
+                                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                                            {errors.addType}
+                                                        </Text>
+                                                    </View>
+                                                )}
+
+                                                <LinearGradient
+                                                    colors={['#F9B551', '#F87B2C']}
+                                                    style={styles.continueButtonStyle}>
+                                                    <TouchableOpacity onPress={(e) => {
+                                                        console.log('errors');
+                                                        console.log('errors', errors);
+                                                        handleSubmit(e)
+                                                    }}>
+                                                        <Text style={{ ...Fonts.whiteColor16Bold }}>Save</Text>
+                                                    </TouchableOpacity>
+                                                </LinearGradient>
+                                            </>
+                                        )}
+                                    </Formik>
+
+                                </View>
+                            </ScrollView>
+                        </Modal>
+                    </ImageBackground>
+                </SafeAreaView>
+
+            </>
+        )
+
+
+
     )
 }
 
@@ -656,21 +671,17 @@ const styles = StyleSheet.create({
         shadowRadius: 6.27,
         elevation: 10,
     },
-    // continueButtonStyle: {
-    //     paddingHorizontal: 20,
-    //     paddingVertical: 12,
-    //     alignItems: 'center',
-    //     minWidth: '30%',
-    //     alignSelf: "flex-end",
-    //     borderRadius: 25,
-    //     justifyContent: 'center',
-    //     marginHorizontal: 20,
-    // },
     checkButton: {
         flexDirection: 'row',
         width: '90%',
         justifyContent: 'space-around',
         alignSelf: 'center',
         marginVertical: 10,
+    },
+    inputStyle: {
+        marginLeft: 20,
+        width: '80%',
+        alignItems: 'center',
+        color: '#000'
     }
 })

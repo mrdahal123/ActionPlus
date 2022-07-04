@@ -29,7 +29,7 @@ const SlotBooking = ({ navigation }) => {
     const [checked, setChecked] = useState(false)
 
     // const [newTime, setNewTime] = useState()
-    const [time, setTime] = useState()
+    const [time, setTime] = useState('')
 
     const handleSubmit = () => {
         if (bookingDate !== '' && bookingTime !== '') {
@@ -53,37 +53,40 @@ const SlotBooking = ({ navigation }) => {
     const createTImeSlot = useCallback((start, end) => {
         var startTime = moment(start, 'HH:mm');
         var endTime = moment(end, 'HH:mm');
-        
-        if( endTime.isBefore(startTime) ){
-          endTime.add(1, 'day');
+
+        if (endTime.isBefore(startTime)) {
+            endTime.add(1, 'day');
         }
-      
+
         var timeStops = [];
-      
-        while(startTime <= endTime){
-          timeStops.push(new moment(startTime).format('HH:mm'));
-          startTime.add(60, 'minutes');
+
+        while (startTime <= endTime) {
+            timeStops.push(new moment(startTime).format('HH:mm'));
+            startTime.add(60, 'minutes');
         }
         return timeStops;
     }, []);
 
 
     useEffect(() => {
-        var slots ;
+        var slots;
         let today = moment().format("MMM Do YY");
         let checkdate = moment(bookingDate).format("MMM Do YY");
         let now = moment().endOf('hour');
-        now = now.add(1, 'minutes').format("hh:mm");
 
-        if(checkdate === today){
+        now = now.add(1, 'minutes').format("HH:mm");
+
+        console.log('bookingDate', bookingDate);
+        console.log(checkdate);
+        console.log(today);
+
+        if (checkdate === today) {
             slots = createTImeSlot(now, '20:00');
-        }else{
+        } else {
             slots = createTImeSlot('08:00', '20:00');
         }
 
         setTime(slots);
-        console.log('slots', slots);
-
     }, [bookingDate])
 
     return (
@@ -101,13 +104,14 @@ const SlotBooking = ({ navigation }) => {
 
                     <View style={styles.calenderContainer}>
                         <CalendarPicker
-                            onDateChange={(date) => setBookingDate(moment(date).format("MMM Do YY"))}
+                            onDateChange={(date) => setBookingDate(date)}
                             minDate={new date()}
                             // onMonthChange={(month)=> (new Date(month))}
-                            disabledDatesTextStyle={{ fontWeight: "700" }}
+                            customDayHeaderStyles={{color:"red"}}    
                             previousTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 15 }}
                             nextTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 15 }}
                             selectedDayColor={'#F9B551'}
+                            // showDayStragglers={{color:'red'}}
                             selectedDayStyle={{ backgroundColor: '#F9B551' }}
                             selectedDayTextColor="red"
                             selectedDayTextStyle={{ color: "#fff", fontWeight: '700' }}
@@ -120,8 +124,6 @@ const SlotBooking = ({ navigation }) => {
                         numColumns={3}
                         keyExtractor={({ item, index }) => index}
                         renderItem={({ item, index }) => {
-
-
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
@@ -130,6 +132,7 @@ const SlotBooking = ({ navigation }) => {
                                     }}
                                     // disabled={item.id == dateIndex ? true :false}
                                     style={[styles.TimeButton, { backgroundColor: checked == item ? '#F9B551' : "#fff" }]}>
+                                    {/* <Text style={{ color: checked == item ? '#fff' : '#000' }}>{item}</Text> */}
                                     <Text style={{ color: checked == item ? '#fff' : '#000' }}>{moment(item, 'HH:mm').format("hh:mm a")}</Text>
                                 </TouchableOpacity>
                             )
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
         padding: 15,
         alignItems: 'center',
         marginVertical: 10,
-        marginHorizontal: 15,
+        marginHorizontal: 18,
         // alignSelf: 'center',
         backgroundColor: '#fff',
         borderRadius: 10,

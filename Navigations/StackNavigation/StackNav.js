@@ -17,6 +17,10 @@ import BookingDetails from '../../screens/BookingDetails/BookingDetails';
 import Profile from '../../screens/Profile/Profile';
 import PrivacyPolicy from '../../screens/Profile/PrivacyPolicy';
 import Booking from '../../screens/BookingDetails/Booking';
+import AllService from '../../screens/AllServices/AllServices';
+import Tutor from '../../screens/AllServices/Tutor';
+import Cook from '../../screens/AllServices/Cook';
+import Massage from '../../screens/AllServices/Massage';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,17 +36,22 @@ const StackNav = () => {
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="SlotBooking" component={SlotBooking} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
-            <Stack.Screen options={{headerShown:true,title:'Professional Cleaning Service'}}  name="MaidService" component={MaidService} />
-            <Stack.Screen  name="ElectricianService" component={ElectricianService} />
-            <Stack.Screen  name="PlumberService" component={PlumberService}/>
-            <Stack.Screen  name="BookingSuccess" component={BookingSuccess} />
-            <Stack.Screen options={{headerShown:true,title:'Edit address',}} name="AddnewAddress" component={AddnewAddress} />
-            <Stack.Screen options={{headerShown:true,title:'Booking History',}} name="BookingHistory" component={BookingHistory} />
-            <Stack.Screen  name="BookingDetails" component={BookingDetails} />
-            <Stack.Screen  name="Profile" component={Profile} />
-            <Stack.Screen  options={{headerShown:true,title:'Privacy And Policy'}} name="PrivacyPolicy" component={PrivacyPolicy} />
-            <Stack.Screen    name="Booking" component={Booking} />
-            {/* <Stack.Screen options={{headerShown:true,title:'Booking Details',}} name="BookingDetails" component={BookingDetails} /> */}
+            <Stack.Screen name="MaidService" component={MaidService} />
+
+            <Stack.Screen name="ElectricianService" component={ElectricianService} />
+            <Stack.Screen name="PlumberService" component={PlumberService} />
+            <Stack.Screen name="BookingSuccess" component={BookingSuccess} />
+            <Stack.Screen options={{ headerShown: true, title: 'Edit address', }} name="AddnewAddress" component={AddnewAddress} />
+            <Stack.Screen name="BookingHistory" component={BookingHistory} />
+            <Stack.Screen name="BookingDetails" component={BookingDetails} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen options={{ headerShown: true, title: 'Privacy And Policy', }} name="PrivacyPolicy" component={PrivacyPolicy} />
+            <Stack.Screen name="Booking" component={Booking} />
+            <Stack.Screen name="AllService" component={AllService} />
+            <Stack.Screen name="Tutor" component={Tutor} />
+            <Stack.Screen name="Cook" component={Cook} />
+            <Stack.Screen name="Massage" component={Massage} />
+
 
         </Stack.Navigator>
 

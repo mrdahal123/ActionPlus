@@ -130,7 +130,8 @@
 import React, { Component, useState } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { StyleSheet, Text, View, SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native'
+import NavigationHeaders from '../../Components/NavigationHeaders';
 
 const BookingHistory = ({ navigation }) => {
 
@@ -174,8 +175,8 @@ const BookingHistory = ({ navigation }) => {
     ]
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
-            <View style={{ flex: 1 }}>
-
+            <ScrollView nestedScrollEnabled ={true} style={{ flex: 1 }}>
+            <NavigationHeaders onPress={()=>{navigation.goBack()}} title='Booking History'/>
                 <FlatList
                     data={bookingData}
                     keyExtractor={({ item, index }) => index}
@@ -201,7 +202,7 @@ const BookingHistory = ({ navigation }) => {
                         )
                     }} />
 
-            </View>
+            </ScrollView>
         </SafeAreaView>
     )
 }

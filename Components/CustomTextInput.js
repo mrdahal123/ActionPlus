@@ -12,6 +12,8 @@ const CustomTextInput = ({
     isTouched,
     style,
     iconType = 'image',
+    placeholderTextColor,
+    keyboardType,
     ...props
 }) => {
     return (
@@ -20,10 +22,12 @@ const CustomTextInput = ({
             <View style={styles.textInput}>
                 {icon && iconType === 'image' ? <Image source={icon} style={{ width: 25, height: 25, resizeMode: 'contain', }} /> : icon}
                 <TextInput
-                    style={{ width: '100%' }}
+                    style={{ width: '100%',color:'#000' }}
                     secureTextEntry={type == 'password' ? true : false}
                     placeholder={placeholder}
                     value={value}
+                    placeholderTextColor={placeholderTextColor}
+                    keyboardType={keyboardType}
                     onChangeText={(text) => {
                         onChangeText(text)
                     }}

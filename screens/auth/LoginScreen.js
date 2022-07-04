@@ -11,15 +11,44 @@ import {
     ImageBackground,
     TextInput,
     KeyboardAvoidingView,
+    ActivityIndicator,
 } from 'react-native'
 import React, { Component, useState } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import LinearGradient from 'react-native-linear-gradient';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup'
+import * as Yup from 'yup';
+import axios from "axios";
 
 const LoginScreen = ({ navigation }) => {
+    const [mobileNum, setMobileNum] = useState('')
+    const [loader, setLoader] = useState(false)
+
+    const handleLogin = (values) => {
+        setLoader(true)
+        let data = {
+            "user_mobile_number": "+91" + values.mobileNumber
+        }
+        console.log("data", data);
+        axios.post('https://api.ontestapp.com/api/auth/send_otp', data)
+            .then(response => {
+                setLoader(false)
+                console.log(response.data.status);
+                if (response.data.status === "success") {
+                    navigation.navigate('OtpScreen', {
+                        num: values.mobileNumber
+                    })
+                }
+                else {
+                    alert("something went wrong")
+                }
+            })
+            .catch(error => {
+                setLoader(false)
+                console.log(error);
+            })
+    }
 
     const SignInSchema = Yup.object().shape({
         mobileNumber: Yup.string()
@@ -31,96 +60,108 @@ const LoginScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
-            <StatusBar backgroundColor={Colors.themeColor} />
-            <Image
-                source={require('../../Assets/images/banner/graphic.png')}
-                style={{ width: 200, height: 200, resizeMode: "contain", position: 'absolute', right: -30, }} />
-            <Image
-                source={require('../../Assets/images/banner/logo-top.jpg')}
-                style={styles.appLogoStyle}
-                resizeMode='contain'/>
+            {loader == true ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
 
-            {/* SignIn Text */}
+                    <ActivityIndicator size={'large'} color={Colors.themeColor} />
+                </View>
+            ) : (
+                <>
+                    <StatusBar backgroundColor={Colors.themeColor} />
+                    <Image
+                        source={require('../../Assets/images/banner/graphic.png')}
+                        style={{ width: 200, height: 200, resizeMode: "contain", position: 'absolute', right: -30, }} />
+                    <Image
+                        source={require('../../Assets/images/banner/logo-top.jpg')}
+                        style={styles.appLogoStyle}
+                        resizeMode='contain' />
 
-            <Text style={{
-                ...Fonts.grayColor18Bold,
-                textAlign: 'center',
-                marginTop: 60
-            }}>
-                Signin with phone number
-            </Text>
+                    {/* SignIn Text */}
 
-            {/* Input */}
-            <Formik
-                validationSchema={SignInSchema}
-                initialValues={{ mobileNumber: '' }}
-                onSubmit={values => {
-                    console.log(values);
-                    if (values) {
-                        navigation.navigate('OtpScreen')
-                    }
-                    else {
-                        alert("something went wrong")
-                        return;
-                    }
-                }}>
-                {({
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    values,
-                    errors,
-                    touched,
-                    isValid,
-                }) => (
-                    <View>
-                        <TextInput
-                            style={styles.textInput}
-                            placeholder="Phone Number"
-                            keyboardType='phone-pad'
-                            onChangeText={handleChange('mobileNumber')}
-                            onBlur={handleBlur('mobileNumber')}
-                            value={values.mobileNumber}
-                            maxLength={10}
-                        />
-                        {errors.mobileNumber && touched.mobileNumber && (
-                            <View
-                                style={{
-                                    width: '90%',
-                                    alignSelf: 'center',
-                                    paddingTop: 10,
-                                }}>
-                                <Text style={{ fontSize: 12, color: 'red' }}>
-                                    {errors.mobileNumber}
-                                </Text>
+                    <Text style={{
+                        ...Fonts.grayColor18Bold,
+                        textAlign: 'center',
+                        marginTop: 60
+                    }}>
+                        Signin with phone number
+                    </Text>
+
+                    {/* Input */}
+                    <Formik
+                        validationSchema={SignInSchema}
+                        initialValues={{ mobileNumber: '' }}
+                        onSubmit={values => {
+                            handleLogin(values)
+                            // console.log(values);
+                            // if (values) {
+                            //     Address()
+                            //     // navigation.navigate('OtpScreen')
+                            // }
+                            // else {
+                            //     alert("something went wrong")
+                            //     return;
+                            // }
+                        }}>
+                        {({
+                            handleChange,
+                            handleBlur,
+                            handleSubmit,
+                            values,
+                            errors,
+                            touched,
+                            isValid,
+                        }) => (
+                            <View>
+                                <TextInput
+                                    style={styles.textInput}
+                                    placeholder="Phone Number"
+                                    placeholderTextColor={'#000'}
+                                    keyboardType='phone-pad'
+                                    onChangeText={
+
+                                        handleChange('mobileNumber')}
+                                    onBlur={handleBlur('mobileNumber')}
+                                    value={values.mobileNumber}
+                                    maxLength={10}
+                                />
+                                {errors.mobileNumber && touched.mobileNumber && (
+                                    <View
+                                        style={{
+                                            width: '90%',
+                                            alignSelf: 'center',
+                                            paddingTop: 10,
+                                        }}>
+                                        <Text style={{ fontSize: 12, color: 'red' }}>
+                                            {errors.mobileNumber}
+                                        </Text>
+                                    </View>
+                                )}
+                                <LinearGradient
+                                    colors={['#F9B551', '#F87B2C']}
+                                    style={styles.continueButtonStyle}>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            handleSubmit()}>
+                                        <Text style={{ ...Fonts.whiteColor16Bold }}>Continue</Text>
+                                    </TouchableOpacity>
+                                </LinearGradient>
                             </View>
                         )}
-                        <LinearGradient
-                            colors={['#F9B551', '#F87B2C']}
-                            style={styles.continueButtonStyle}>
-                            <TouchableOpacity
-                                onPress={() =>
-                                    handleSubmit()}>
-                                <Text style={{ ...Fonts.whiteColor16Bold }}>Continue</Text>
-                            </TouchableOpacity>
-                        </LinearGradient>
-                    </View>
-                )}
-            </Formik>
+                    </Formik>
 
-            {/* OTP Text */}
+                    {/* OTP Text */}
 
-            <Text style={{
-                ...Fonts.blackColor16Bold,
-                textAlign: 'center',
-                marginTop: 35
-            }}>
-                We’ll send otp for verification
-            </Text>
+                    <Text style={{
+                        ...Fonts.blackColor16Bold,
+                        textAlign: 'center',
+                        marginTop: 35
+                    }}>
+                        We’ll send otp for verification
+                    </Text>
 
-            {/* Facebook and Google Buttons */}
+                    {/* Facebook and Google Buttons */}
 
-            {/* <TouchableOpacity style={styles.loginWithGoogleButtonStyle}>
+                    {/* <TouchableOpacity style={styles.loginWithGoogleButtonStyle}>
                 <Image
                     source={require('../../Assets/images/google.jpg')}
                     style={{ width: 30.0, height: 30.0, }}
@@ -141,7 +182,10 @@ const LoginScreen = ({ navigation }) => {
                 <AntDesign name="arrowright" size={24} color="#000" />
             </TouchableOpacity> */}
 
-            {/* End */}
+                    {/* End */}
+                </>
+            )}
+
         </SafeAreaView >
     )
 }
@@ -151,6 +195,7 @@ const styles = StyleSheet.create({
     textInput: {
         backgroundColor: Colors.whiteColor,
         marginTop: 30,
+        color: '#000',
         padding: 15,
         width: '90%',
         alignSelf: 'center',

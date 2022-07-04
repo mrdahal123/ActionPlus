@@ -1,10 +1,22 @@
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import { Colors, Fonts, Sizes } from "../../constant/style";
 
-const BookingSuccess = ({ navigation }) => {
+const BookingSuccess = ({ route, navigation }) => {
+    const [userId, seUsertId] = useState('')
+    // console.log("sdfd",route.params.data)
+    useEffect(() => {
+        let responseApi = route.params.data
+        console.log(responseApi);
+       responseApi && responseApi.map(item => {
+            let id = item._id
+            console.log("id", id);
+            seUsertId(id)
+        })
+    }, [])
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
             <Image
@@ -15,6 +27,7 @@ const BookingSuccess = ({ navigation }) => {
 
             <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', position: 'absolute', top: '62%', alignSelf: 'center' }}>
                 <Text style={{ ...Fonts.blackColor20Bold, marginVertical: 5 }}>Booking Success</Text>
+                <Text style={{ ...Fonts.grayColor18Bold, marginVertical: 5,textAlign:'center' }}>Your Booking Id is {"\n"}{userId}</Text>
                 <Text style={{ ...Fonts.blackColor16Bold, textAlign: 'center' }}>Thank you for your booking! our {'\n'} representative will contact You shortly</Text>
                 <LinearGradient
                     colors={['#F9B551', '#F87B2C']}

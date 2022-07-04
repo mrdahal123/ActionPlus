@@ -29,37 +29,37 @@ const Profile = ({ navigation }) => {
         </View>
 
         <TouchableOpacity style={styles.container}>
-          <Text>Favroite</Text>
+          <Text style={styles.textBody}>Favroite</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.container}>
-          <Text>Notification</Text>
+          <Text style={styles.textBody} >Notification</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => { navigation.navigate("BookingHistory") }} style={styles.container}>
-          <Text>Booking Details</Text>
+          <Text style={styles.textBody}>Booking Details</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <Text style={styles.textHeader}>ABOUT</Text>
         <TouchableOpacity style={styles.container} onPress={() => { navigation.navigate("PrivacyPolicy") }}>
-          <Text>Privacy Policy</Text>
+          <Text style={styles.textBody}>Privacy Policy</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.container}>
-          <Text>Terms of use</Text>
+          <Text style={styles.textBody}>Terms of use</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <Text style={styles.textHeader}>App</Text>
         <TouchableOpacity style={styles.container}>
-          <Text>Support </Text>
+          <Text style={styles.textBody}>Support </Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.container}>
-          <Text>Report a Bug</Text>
+          <Text style={styles.textBody}>Report a Bug</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.container}>
-          <Text>App Version 1.0</Text>
+          <Text style={styles.textBody}>App Version 1.0</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <LinearGradient
@@ -125,6 +125,9 @@ const styles = StyleSheet.create({
   },
   textHeader:{
      ...Fonts.blackColor16Bold, padding: 18, color: '#696969' 
+  },
+  textBody:{
+    ...Fonts.blackColor14Bold, color: '#696969' 
   }
 })
 export default Profile

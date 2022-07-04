@@ -20,7 +20,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 const EditProfile = ({ navigation }) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [lastName, setLastName] = useState('')
     const [phone, setPhone] = useState('')
     const [image, setImage] = useState('');
     const [modalVisible, setModalVisible] = useState(false)
@@ -83,7 +83,7 @@ const EditProfile = ({ navigation }) => {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}>
-                                <View style={{ flexDirection: 'row',marginBottom:15 }}>
+                                <View style={{ flexDirection: 'row', marginBottom: 15 }}>
                                     <LinearGradient
                                         colors={['#F9B551', '#F87B2C']}
                                         style={[styles.continueButtonStyle, { minWidth: '40%', justifyContent: 'space-between' }]}>
@@ -112,7 +112,8 @@ const EditProfile = ({ navigation }) => {
                 </View>
                 <CustomTextInput
                     icon={require('../../Assets/images/banner/name.png')}
-                    placeholder="User Name"
+                    placeholder="First Name"
+                    placeholderTextColor={'#000'}
                     value={name}
                     onChangeText={(text) => {
                         setName(text)
@@ -122,8 +123,21 @@ const EditProfile = ({ navigation }) => {
                 />
 
                 <CustomTextInput
+                    icon={require('../../Assets/images/banner/name.png')}
+                    placeholder="Last Name"
+                    placeholderTextColor={'#000'}
+                    value={lastName}
+                    onChangeText={(text) => {
+                        setLastName(text)
+                    }}
+                // isErrors={errors.email}
+                // isTouched={touched.email}
+                />
+
+                <CustomTextInput
                     icon={require('../../Assets/images/banner/email.png')}
                     placeholder="Email"
+                    placeholderTextColor={'#000'}
                     value={email}
                     keyboardType={'email-address'}
                     onChangeText={(text) => {
@@ -135,23 +149,16 @@ const EditProfile = ({ navigation }) => {
                 <CustomTextInput
                     icon={require('../../Assets/images/banner/phone.png')}
                     placeholder="Phone Number"
+                    placeholderTextColor={'#000'}
                     value={phone}
                     onChangeText={(text) => {
                         setPhone(text)
                     }}
+                    keyboardType={'number-pad'}
                 // isErrors={errors.email}
                 // isTouched={touched.email}
                 />
-                <CustomTextInput
-                    icon={require('../../Assets/images/banner/password.png')}
-                    placeholder="Phone Number"
-                    value={phone}
-                    onChangeText={(text) => {
-                        setPhone(text)
-                    }}
-                // isErrors={errors.email}
-                // isTouched={touched.email}
-                />
+
 
                 <LinearGradient
                     colors={['#F9B551', '#F87B2C']}

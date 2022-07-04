@@ -22,11 +22,13 @@ const ElectricianService = ({navigation}) => {
         ...Fonts.grayColor20Bold,
         textAlign: 'center',
         marginVertical:20,
-      }}>Electrician Service are currently {"\n"} not  available in Your 
+      }}>
+        {/* Electrician  */}
+        Service are currently {"\n"} not  available in Your 
       Area</Text>
 
       <Image
-        source={require('../../Assets/images/service-include/electrician.jpg')}
+        source={require('../../Assets/images/service-include/common.png')}
         style={styles.image}
         resizeMode='contain'
       />
@@ -55,6 +57,6 @@ const styles = StyleSheet.create({
    flexGrow:1,
     resizeMode:'contain',
     alignSelf:'center',
-    marginBottom:200
+    marginBottom:200,
   }
 })

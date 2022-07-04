@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, Image, StatusBar } from 'react-na
 import { Colors, Fonts } from '../../constant/style';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
-const PlumberService = ({navigation}) => {
+const Cook = ({navigation}) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <StatusBar backgroundColor={Colors.themeColor} />
@@ -18,13 +18,13 @@ const PlumberService = ({navigation}) => {
         style={styles.appLogoStyle}
         resizeMode='contain'
       />
-      <Text style={{
+     <Text style={{
         ...Fonts.grayColor20Bold,
         textAlign: 'center',
         marginVertical:20,
-      }}>
-        {/* Plumbing */}
-       Services are  currently {"\n"} not available in Your Area</Text>
+      }}>Services are currently {"\n"} not  available in Your 
+      Area</Text>
+
 
       <Image
         source={require('../../Assets/images/service-include/common.png')}
@@ -35,7 +35,7 @@ const PlumberService = ({navigation}) => {
   )
 }
 
-export default PlumberService
+export default Cook
 
 const styles = StyleSheet.create({
   container: {

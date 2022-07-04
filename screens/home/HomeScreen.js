@@ -55,10 +55,11 @@ export default function HomeScreen({ navigation }) {
                         <TouchableOpacity style={styles.logo}>
                             <Ionicons name="ios-location-sharp" size={30} color="#fff"  />
                         </TouchableOpacity>
-                        <View style={{ flexDirection: 'column', marginRight: '30%' }}>
-                            <Text style={{ ...Fonts.blackColor18Bold, }}>location</Text>
-                            <Text style={{ ...Fonts.grayColor16Bold, }}>{location.lat}</Text>
-                            <Text style={{ ...Fonts.grayColor16Bold, }}>{location.long}</Text>
+                        <View style={{ flexDirection: 'column', marginRight: '35%' }}>
+                            <Text style={{ ...Fonts.blackColor20Bold, }}>Location</Text>
+                            <Text style={{ ...Fonts.grayColor16Bold, }}>Chennai</Text>
+                            {/* <Text style={{ ...Fonts.grayColor16Bold, }}>{location.lat}</Text>
+                            <Text style={{ ...Fonts.grayColor16Bold, }}>{location.long}</Text> */}
                         </View>
 
                         {/* <FontAwesome5 name="history" size={30} color="#F9B551" onPress={() => { navigation.navigate("BookingHistory") }} /> */}
@@ -80,6 +81,7 @@ export default function HomeScreen({ navigation }) {
                             setSearch(text)
                         }}
                         value={search}
+                        placeholderTextColor={'#000'}
                     />
 
                     <View style={[styles.location, { justifyContent: 'space-between', }]}>
@@ -92,7 +94,7 @@ export default function HomeScreen({ navigation }) {
                             <TouchableOpacity
                                 onPress={() => {
                                     // alert("all Service type will be available soon")
-                                    navigation.navigate("Booking")
+                                    navigation.navigate("AllService")
                                 }}>
                                 <Text style={{ ...Fonts.whiteColor16Bold }}>See all</Text>
                             </TouchableOpacity>
@@ -117,12 +119,12 @@ export default function HomeScreen({ navigation }) {
                     </View>
 
                     {/* Banner */}
-                    <View style={styles.imgBanner}><Image source={require('../../Assets/images/banner/ad1.png')} resizeMode={'contain'} /></View>
+                   <Image source={require('../../Assets/images/banner/action+banner1.png')} style={styles.imgBanner} resizeMode={'contain'} />
 
-                    <Text style={{ ...Fonts.blackColor20Bold, marginBottom: 10 }}>Best offers</Text>
+                    <Text style={{ ...Fonts.blackColor20Bold }}>Best offers</Text>
 
                     {/* Banner */}
-                    <View style={styles.imgBanner}><Image source={require('../../Assets/images/banner/best-offer.png')} resizeMode={'contain'} /></View>
+                  <Image source={require('../../Assets/images/banner/action+banner2.png')} style={styles.imgBanner} resizeMode={'contain'} />
                 </View>
             </ScrollView>
         </SafeAreaView>
