@@ -15,7 +15,7 @@ import {
     Pressable,
     ActivityIndicator
 } from 'react-native'
-import React, { Component, useState, useEffect } from 'react'
+import React, { Component, useState, useEffect,useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -28,9 +28,13 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from "axios";
-
+import AuthContext from '../../Context/AuthContext';
 
 const SelectAdd = ({ navigation, route }) => {
+
+    const { authContext, appState } = useContext(AuthContext);
+    console.log(appState.data)
+
     const [finalArr, setfinalArr] = useState([{
         "FirstName": 'saurav',
         "PhoneNumber": "987654310",
@@ -118,9 +122,9 @@ const SelectAdd = ({ navigation, route }) => {
     }, [])
     return (
         loader == true ? (
-           <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-             <ActivityIndicator  size={'large'} />
-           </View>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size={'large'} />
+            </View>
         ) : (
             <>
                 <SafeAreaView style={{ flex: 1, }}>
@@ -218,6 +222,9 @@ const SelectAdd = ({ navigation, route }) => {
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                     }}>
+                                        <AntDesign name="arrowleft" size={24} color="black" style={{alignSelf:'flex-start' }}  onPress={() => {
+                                            setIsModalVisible(false)
+                                        }} />
 
                                     <Formik
                                         validationSchema={EditAddress}

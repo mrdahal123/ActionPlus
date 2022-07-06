@@ -9,44 +9,48 @@ import {
     Alert,
     ActivityIndicator,
 } from 'react-native'
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import LinearGradient from 'react-native-linear-gradient';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
-import axios from 'axios'
+import axios from 'axios';
+import AuthContext from '../../Context/AuthContext';
+import AuthService from '../Service/AuthService';
 
 const OtpScreen = ({ route, navigation }) => {
     const [Otp, setOTP] = useState('')
     const [loader, setLoader] = useState(false)
     let mobNum = route.params.num
     console.log(mobNum);
-
+    const { authContext, AppUserData } = useContext(AuthContext);
     const VerifyOtp = () => {
-        setLoader(true)
+        // setLoader(true)
         let data = {
             "user_mobile_number": "+91" + mobNum,
             "user_otp": Otp
         }
         console.log("data", data);
-        axios.post('https://api.ontestapp.com/api/auth/verify_otp', data)
-            .then(response => {
+
+        AuthService.Post('verify_otp', data)
+            .then(Response => {
                 setLoader(false)
-                console.log(response.data);
-                if (response.data.status === "success") {
-                    navigation.navigate('HomeScreen');
+                console.log("response", Response)
+                if (Response.status === "success") {
+                    authContext.signIn({
+                        data: Response.data[0]
+                    })
+                    // navigation.navigate('HomeScreen');
                 }
                 else {
-                    Alert.alert(response.data.message)
-                    // setTimeout(() => {
-                    //     navigation.goBack();
-                    // }, 1000)
+                    Alert.alert(Response.message)
                 }
             })
             .catch(error => {
                 setLoader(false)
                 console.log(error);
             })
+
     }
 
     const moveTo = () => {

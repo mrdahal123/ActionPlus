@@ -27,13 +27,13 @@ const Stack = createNativeStackNavigator();
 const StackNav = () => {
     return (
 
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={HomeScreen}>
 
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            {/* <Stack.Screen name="LoginScreen" component={LoginScreen} />
             <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-            <Stack.Screen name="OtpScreen" component={OtpScreen} />
-            <Stack.Screen name="SelectAdd" component={SelectAdd} />
+            <Stack.Screen name="OtpScreen" component={OtpScreen} /> */}
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen name="SelectAdd" component={SelectAdd} />
             <Stack.Screen name="SlotBooking" component={SlotBooking} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
             <Stack.Screen name="MaidService" component={MaidService} />

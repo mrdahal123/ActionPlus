@@ -21,6 +21,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
 import { date } from 'yup';
+import NavigationHeaders from '../../Components/NavigationHeaders';
 
 const SlotBooking = ({ navigation }) => {
 
@@ -100,14 +101,15 @@ const SlotBooking = ({ navigation }) => {
                         flexGrow: 1,
                         paddingVertical: 20,
                     }}>
-                    <Text style={{ ...Fonts.blackColor20Bold, textAlign: 'center', marginTop: 50 }}>Select date and time</Text>
+                    <NavigationHeaders onPress={() => { navigation.goBack() }} title="Select date and time" />
+                    {/* <Text style={{ ...Fonts.blackColor20Bold, textAlign: 'center', marginTop: 50 }}></Text> */}
 
                     <View style={styles.calenderContainer}>
                         <CalendarPicker
                             onDateChange={(date) => setBookingDate(date)}
                             minDate={new date()}
                             // onMonthChange={(month)=> (new Date(month))}
-                            customDayHeaderStyles={{color:"red"}}    
+                            customDayHeaderStyles={{ color: "red" }}
                             previousTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 15 }}
                             nextTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 15 }}
                             selectedDayColor={'#F9B551'}

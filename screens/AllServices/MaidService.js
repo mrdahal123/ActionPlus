@@ -10,18 +10,47 @@ import {
   ScrollView,
   ImageBackground,
   TextInput,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native'
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useEffect,useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import { FontAwesome } from '@expo/vector-icons';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import LinearGradient from 'react-native-linear-gradient';
 import NavigationHeaders from '../../Components/NavigationHeaders';
+import axios from 'axios';
+import * as ApiService from '../../Utils/Utils';
+import AuthContext from '../../Context/AuthContext';
 
 const MaidService = ({ navigation }) => {
 
+
+  const { authContext, appState } = useContext(AuthContext);
+  const [loader, setLoader] = useState(false)
+  const [serviceType, setServiceType] = useState('')
+
+  const getAllService = () => {
+    setLoader(true)
+    let data = {
+      "category_id": "1"
+    }
+    ApiService.PostMethode('get_services_by_category_id', data)
+      .then(response => {
+        console.log(response.data.data);
+        setLoader(false)
+        let apiValue = response.data.data
+        setServiceType(apiValue)
+      })
+      .catch(error => {
+        setLoader(false)
+        console.log(error);
+      })
+  }
+  useEffect(() => {
+    getAllService()
+  }, [])
   const maidService = [
     {
       image: require('../../Assets/images/Services/full-home-cleaning.jpg'),
@@ -58,29 +87,36 @@ const MaidService = ({ navigation }) => {
   ]
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
-     <ScrollView nestedScrollEnabled={true}>
-     <NavigationHeaders onPress={()=>{navigation.goBack()}} title="Professional Cleaning Service"/>
-      <View style={{ flex: 1 }}>
-        <FlatList
-          data={maidService}
-          keyExtractor={({ item, index }) => index}
-          renderItem={({ item, index }) => {
-            return (
+      {loader == true ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+          <ActivityIndicator size={30} color={Colors.themeColor} />
+        </View>
+      ) : (
+        <>
+          <ScrollView nestedScrollEnabled={true}>
+            <NavigationHeaders onPress={() => { navigation.goBack() }} title="Professional Cleaning Service" />
+            <View style={{ flex: 1 }}>
+              <FlatList
+                data={serviceType}
+                keyExtractor={({ item, index }) => index}
+                renderItem={({ item, index }) => {
+                  return (
 
-              <TouchableOpacity onPress={() => {
-                navigation.navigate("SlotBooking")
-              }} style={styles.card}>
-                <Image source={item.image} style={styles.boxImage} />
-                <View style={{width:'50%',}}>
-                <Text style={{ ...Fonts.blackColor17Bold, textAlign: 'left' }}>{item.type}</Text>
-                </View>
-                <Feather name="chevron-right" size={24} color="black"/>
-              </TouchableOpacity>
-            )
-          }}
-        />
-      </View>
-     </ScrollView>
+                    <TouchableOpacity onPress={() => {
+                      navigation.navigate("SlotBooking")
+                    }} style={styles.card}>
+                      <Image source={require('../../Assets/images/banner/action.png')} style={styles.boxImage} />
+                      <View style={{ width: '50%', }}>
+                        <Text style={{ ...Fonts.blackColor17Bold, textAlign: 'left' }}>{item.service_name}</Text>
+                      </View>
+                      <Feather name="chevron-right" size={24} color="black" />
+                    </TouchableOpacity>
+                  )
+                }}
+              />
+            </View>
+          </ScrollView>
+        </>)}
     </SafeAreaView>
   )
 }
@@ -108,8 +144,8 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   boxImage: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     resizeMode: 'contain',
     borderRadius: 10
   }

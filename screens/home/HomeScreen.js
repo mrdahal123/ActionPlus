@@ -12,7 +12,7 @@ import {
     TextInput,
     Alert
 } from 'react-native'
-import React, { Component, useState, useEffect } from 'react'
+import React, { Component, useState, useEffect,useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
@@ -20,8 +20,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import { styles } from './HomeScreen.style';
 import CustomTextInput from '../../Components/CustomTextInput';
 import Geolocation from '@react-native-community/geolocation';
-
+import AuthContext from '../../Context/AuthContext';
 export default function HomeScreen({ navigation }) {
+
+    const { authContext, appState } = useContext(AuthContext);
+    console.log(appState.data)
 
     useEffect(() => {
         getUserCurrentLocation()
@@ -74,7 +77,7 @@ export default function HomeScreen({ navigation }) {
                     </View>
 
 
-                    <TextInput
+                    {/* <TextInput
                         style={styles.textInput}
                         placeholder="Search"
                         onChangeText={(text) => {
@@ -82,7 +85,7 @@ export default function HomeScreen({ navigation }) {
                         }}
                         value={search}
                         placeholderTextColor={'#000'}
-                    />
+                    /> */}
 
                     <View style={[styles.location, { justifyContent: 'space-between', }]}>
                         <Text style={{ ...Fonts.blackColor20Bold, }}>

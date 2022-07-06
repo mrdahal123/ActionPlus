@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { API_SERVICES_URL } from '../ApiService/ApiService';
+import { API_SERVICES_URL } from '../ApiService/Api';
 
 export const PostMethode = async (url, data, token) => {
     let PostUrl = API_SERVICES_URL + url;

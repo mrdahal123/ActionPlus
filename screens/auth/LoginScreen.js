@@ -13,17 +13,21 @@ import {
     KeyboardAvoidingView,
     ActivityIndicator,
 } from 'react-native'
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import LinearGradient from 'react-native-linear-gradient';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import * as ApiService from '../../Utils/Utils';
+import AuthContext from '../../Context/AuthContext';
+import AuthService from '../Service/AuthService';
 import axios from "axios";
 
 const LoginScreen = ({ navigation }) => {
     const [mobileNum, setMobileNum] = useState('')
     const [loader, setLoader] = useState(false)
+    const { authContext, AppUserData } = useContext(AuthContext);
 
     const handleLogin = (values) => {
         setLoader(true)
@@ -31,17 +35,18 @@ const LoginScreen = ({ navigation }) => {
             "user_mobile_number": "+91" + values.mobileNumber
         }
         console.log("data", data);
-        axios.post('https://api.ontestapp.com/api/auth/send_otp', data)
-            .then(response => {
+        AuthService.Post('send_otp', data)
+            .then(Response => {
+                console.log("res", Response)
                 setLoader(false)
-                console.log(response.data.status);
-                if (response.data.status === "success") {
+                console.log(Response.status);
+                if (Response.status === "success") {
                     navigation.navigate('OtpScreen', {
                         num: values.mobileNumber
                     })
                 }
                 else {
-                    alert("something went wrong")
+                    alert("You are not authorized")
                 }
             })
             .catch(error => {
@@ -49,6 +54,7 @@ const LoginScreen = ({ navigation }) => {
                 console.log(error);
             })
     }
+
 
     const SignInSchema = Yup.object().shape({
         mobileNumber: Yup.string()

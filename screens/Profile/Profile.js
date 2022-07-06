@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState,useContext } from 'react'
 import {
   SafeAreaView,
   View,
@@ -7,14 +7,33 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  StyleSheet
+  StyleSheet,
+  Alert
 } from 'react-native'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
+import AuthContext from '../../Context/AuthContext';
 const Profile = ({ navigation }) => {
+  const { authContext, AppUserData } = useContext(AuthContext);
+  const LogOutAlertOccurred = (title, body, btnTxt, btnTxt2) => {
+    Alert.alert(title, body, [
+      {
+        text: btnTxt,
+        onPress: () => {
+          authContext.signOut();
+        },
+      },
+      {
+        text: btnTxt2,
+        onPress: () => {
+          console.log('No Pressed');
+        },
+      },
+    ]);
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <ScrollView style={{ flex: 1, marginBottom: 5 }}>
@@ -67,7 +86,9 @@ const Profile = ({ navigation }) => {
           style={styles.continueButtonStyle}>
           <TouchableOpacity
             style={{ flexDirection: 'row' }}
-            onPress={() => navigation.navigate('LoginScreen')}>
+            onPress={() => {
+              LogOutAlertOccurred('Warning', 'Are You Sure?', 'yes', 'No');
+            }}>
             <Ionicons name="log-out-outline" size={24} color="#fff" />
             <Text style={{ ...Fonts.whiteColor16Bold }}>Logout</Text>
           </TouchableOpacity>
@@ -87,12 +108,12 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   cameraIcon: {
-    width:45,
-    height:45,
+    width: 45,
+    height: 45,
     position: "absolute",
     justifyContent: 'center',
     alignSelf: 'center',
-    alignItems:'center',
+    alignItems: 'center',
     top: '68%',
     left: '58%',
     borderRadius: 100,
@@ -123,11 +144,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: Sizes.fixPadding * 2.0,
   },
-  textHeader:{
-     ...Fonts.blackColor16Bold, padding: 18, color: '#696969' 
+  textHeader: {
+    ...Fonts.blackColor16Bold, padding: 18, color: '#696969'
   },
-  textBody:{
-    ...Fonts.blackColor14Bold, color: '#696969' 
+  textBody: {
+    ...Fonts.blackColor14Bold, color: '#696969'
   }
 })
 export default Profile
