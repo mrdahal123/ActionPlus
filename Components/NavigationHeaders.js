@@ -7,13 +7,11 @@ const NavigationHeaders = ({
 }) => {
 
     return (
-        <View style={styles.header}>
-            <AntDesign name="arrowleft" size={24} color="black" style={{ marginLeft: 15 }} onPress={onPress} />
+      < >
+      <AntDesign name="arrowleft" size={24} color="black" style={{ position:'absolute',top:5,left:10,zIndex:500}} onPress={onPress} />
             <Text style={styles.txetHeader}>{title}</Text>
-            <TouchableOpacity>
-
-            </TouchableOpacity>
-        </View>
+      </>
+            
     )
 }
 
@@ -21,15 +19,14 @@ export default NavigationHeaders
 
 const styles = StyleSheet.create({
     header: {
-        width: '100%',
-        paddingVertical: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+       alignSelf:'center'
     },
     txetHeader:{
         fontSize:18,
         fontWeight:'bold',
-        color:'#000'
+        color:'#000',
+        textAlign:'center',
+        position:'relative',
+        zIndex:1,
     }
 })

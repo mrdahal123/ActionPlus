@@ -45,7 +45,7 @@ const BookingDetails = ({ route, navigation }) => {
                 <Text style={{ ...Fonts.blackColor17Bold, lineHeight: 25,color:"#000" }}>Postmaster , Dummani B.O, Chitradurga,Karnataka ,India (IN),Pin Code :-577531</Text>
             </View>
             <View style={{ marginVertical: 10, }}>
-                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', }}>Pament Methode</Text>
+                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', }}>Payment Method</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Image source={require('../../Assets/images/gpay.jpg')} style={{ width: 50, height: 50, resizeMode: 'contain', }} />
                     <Text style={{ ...Fonts.blackColor18Bold, color: '#000', }}>Google Pay</Text>

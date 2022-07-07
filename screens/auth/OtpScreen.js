@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     Alert,
     ActivityIndicator,
+    TextInput
 } from 'react-native'
 import React, { Component, useState, useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
@@ -27,7 +28,7 @@ const OtpScreen = ({ route, navigation }) => {
     const VerifyOtp = () => {
         // setLoader(true)
         let data = {
-            "user_mobile_number": "+91" + mobNum,
+            "user_mobile_number": mobNum,
             "user_otp": Otp
         }
         console.log("data", data);
@@ -99,10 +100,12 @@ const OtpScreen = ({ route, navigation }) => {
                             // textAlign: 'center',
 
                         }}>
-                            Enter The OTP Code From The Phone {'\n'}We Just Send You!
+                            
+                             Please enter the 4-digit code sent {'\n'} to your mobile number ({mobNum})
                         </Text>
 
                         <View style={styles.inputContainer}>
+                            {/* <TextInput> */}
                             <SmoothPinCodeInput
                                 placeholder=""
                                 editable={true}
@@ -131,6 +134,7 @@ const OtpScreen = ({ route, navigation }) => {
                                 onTextChange={(txt) => setOTP(txt)}
                                 textStyle={{ color: Colors.themeColor, fontSize: 24 }}
                             />
+                            {/* </TextInput> */}
                         </View>
 
                         <View style={styles.butoonContainer}>
@@ -144,7 +148,7 @@ const OtpScreen = ({ route, navigation }) => {
                             </View>
                             <LinearGradient
                                 colors={['#F9B551', '#F87B2C']}
-                                style={styles.continueButtonStyle}>
+                                style={[styles.continueButtonStyle,{paddingVertical:10,marginTop:5}]}>
                                 <TouchableOpacity
                                     onPress={() => { moveTo() }}>
                                     <Text style={{ ...Fonts.whiteColor16Bold, textAlign: 'center' }}>Continue</Text>
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
 
     continueButtonStyle: {
         paddingHorizontal: 20,
-        paddingVertical: 12,
+        paddingVertical:5,
         backgroundColor: Colors.primaryColor,
         minWidth: '30%',
         alignSelf: "flex-end",

@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
     const handleLogin = (values) => {
         setLoader(true)
         let data = {
-            "user_mobile_number": "+91" + values.mobileNumber
+            "user_mobile_number": values.mobileNumber
         }
         console.log("data", data);
         AuthService.Post('send_otp', data)
@@ -89,7 +89,7 @@ const LoginScreen = ({ navigation }) => {
                         textAlign: 'center',
                         marginTop: 60
                     }}>
-                        Signin with phone number
+                       Sign in with your phone number
                     </Text>
 
                     {/* Input */}
@@ -162,7 +162,7 @@ const LoginScreen = ({ navigation }) => {
                         textAlign: 'center',
                         marginTop: 35
                     }}>
-                        We’ll send otp for verification
+                     We’ll send you an OTP for verification {"\n"} on this mobile number
                     </Text>
 
                     {/* Facebook and Google Buttons */}

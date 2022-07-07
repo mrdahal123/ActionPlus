@@ -21,6 +21,8 @@ import { styles } from './HomeScreen.style';
 import CustomTextInput from '../../Components/CustomTextInput';
 import Geolocation from '@react-native-community/geolocation';
 import AuthContext from '../../Context/AuthContext';
+
+
 export default function HomeScreen({ navigation }) {
 
     const { authContext, appState } = useContext(AuthContext);
@@ -58,7 +60,7 @@ export default function HomeScreen({ navigation }) {
                         <TouchableOpacity style={styles.logo}>
                             <Ionicons name="ios-location-sharp" size={30} color="#fff"  />
                         </TouchableOpacity>
-                        <View style={{ flexDirection: 'column', marginRight: '35%' }}>
+                        <View style={{ flexDirection: 'column', marginRight: '40%' }}>
                             <Text style={{ ...Fonts.blackColor20Bold, }}>Location</Text>
                             <Text style={{ ...Fonts.grayColor16Bold, }}>Chennai</Text>
                             {/* <Text style={{ ...Fonts.grayColor16Bold, }}>{location.lat}</Text>
@@ -72,7 +74,7 @@ export default function HomeScreen({ navigation }) {
                                 navigation.navigate('Profile')
                             }} >
 
-                            <Image source={require('../../Assets/images/user/user_9.jpg')} style={[styles.iconImage, { borderRadius: 100, }]} />
+                            <Image source={require('../../Assets/images/banner/user.png')} style={[styles.iconImage, { borderRadius: 100, }]} />
                         </TouchableOpacity>
                     </View>
 
@@ -96,6 +98,7 @@ export default function HomeScreen({ navigation }) {
                             style={styles.continueButtonStyle}>
                             <TouchableOpacity
                                 onPress={() => {
+
                                     // alert("all Service type will be available soon")
                                     navigation.navigate("AllService")
                                 }}>

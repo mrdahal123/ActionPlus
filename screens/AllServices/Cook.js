@@ -22,8 +22,7 @@ const Cook = ({navigation}) => {
         ...Fonts.grayColor20Bold,
         textAlign: 'center',
         marginVertical:20,
-      }}>Services are currently {"\n"} not  available in Your 
-      Area</Text>
+      }}>  services will be avaiable {"\n"} in your area soon</Text>
 
 
       <Image

@@ -23,7 +23,9 @@ import moment from 'moment';
 import { date } from 'yup';
 import NavigationHeaders from '../../Components/NavigationHeaders';
 
-const SlotBooking = ({ navigation }) => {
+const SlotBooking = ({ route,navigation }) => {
+    let serviceType = route.params.serviceName
+    console.log("serviceType",serviceType);
 
     const [bookingTime, setBookingTime] = useState('')
     const [bookingDate, setBookingDate] = useState(new Date())
@@ -34,7 +36,14 @@ const SlotBooking = ({ navigation }) => {
 
     const handleSubmit = () => {
         if (bookingDate !== '' && bookingTime !== '') {
-            navigation.navigate('SelectAdd')
+            let format = moment(bookingDate).format('L');
+            navigation.navigate('SelectAdd',{
+                data:{
+                    serviceType,
+                    bookingTime,
+                    format
+                }
+            })
             console.log("your booking date and time is", bookingDate, bookingTime)
         }
         else {
@@ -99,7 +108,7 @@ const SlotBooking = ({ navigation }) => {
                 <ScrollView showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
                         flexGrow: 1,
-                        paddingVertical: 20,
+                        marginVertical: 30,
                     }}>
                     <NavigationHeaders onPress={() => { navigation.goBack() }} title="Select date and time" />
                     {/* <Text style={{ ...Fonts.blackColor20Bold, textAlign: 'center', marginTop: 50 }}></Text> */}
@@ -110,8 +119,8 @@ const SlotBooking = ({ navigation }) => {
                             minDate={new date()}
                             // onMonthChange={(month)=> (new Date(month))}
                             customDayHeaderStyles={{ color: "red" }}
-                            previousTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 15 }}
-                            nextTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 15 }}
+                            previousTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 20 }}
+                            nextTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 20 }}
                             selectedDayColor={'#F9B551'}
                             // showDayStragglers={{color:'red'}}
                             selectedDayStyle={{ backgroundColor: '#F9B551' }}

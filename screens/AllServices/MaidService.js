@@ -24,9 +24,9 @@ import axios from 'axios';
 import * as ApiService from '../../Utils/Utils';
 import AuthContext from '../../Context/AuthContext';
 
-const MaidService = ({ navigation }) => {
-
-
+const MaidService = ({ route,navigation }) => {
+//  let maidId = route.params.maidId;
+// console.log("maidId",maidId);
   const { authContext, appState } = useContext(AuthContext);
   const [loader, setLoader] = useState(false)
   const [serviceType, setServiceType] = useState('')
@@ -34,13 +34,15 @@ const MaidService = ({ navigation }) => {
   const getAllService = () => {
     setLoader(true)
     let data = {
-      "category_id": "1"
+      "category_id": "62c4162acff13ea19b330b0e"
     }
-    ApiService.PostMethode('get_services_by_category_id', data)
+    console.log("data",data);
+    ApiService.PostMethode('services/get_services_by_category_id', data)
       .then(response => {
-        console.log(response.data.data);
+        console.log(response);
+        console.log(response.data);
         setLoader(false)
-        let apiValue = response.data.data
+        let apiValue = response.data
         setServiceType(apiValue)
       })
       .catch(error => {
@@ -93,9 +95,9 @@ const MaidService = ({ navigation }) => {
         </View>
       ) : (
         <>
-          <ScrollView nestedScrollEnabled={true}>
+          <ScrollView nestedScrollEnabled={true} style={{flexGrow:1, paddingVertical: 20,}}>
             <NavigationHeaders onPress={() => { navigation.goBack() }} title="Professional Cleaning Service" />
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, paddingVertical: 20, }}>
               <FlatList
                 data={serviceType}
                 keyExtractor={({ item, index }) => index}
@@ -103,7 +105,9 @@ const MaidService = ({ navigation }) => {
                   return (
 
                     <TouchableOpacity onPress={() => {
-                      navigation.navigate("SlotBooking")
+                      navigation.navigate("SlotBooking",{
+                        serviceName:item.service_name
+                      })
                     }} style={styles.card}>
                       <Image source={require('../../Assets/images/banner/action.png')} style={styles.boxImage} />
                       <View style={{ width: '50%', }}>

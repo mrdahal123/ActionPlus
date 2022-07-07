@@ -38,8 +38,8 @@ const Profile = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <ScrollView style={{ flex: 1, marginBottom: 5 }}>
         <View>
-          <Text style={{ ...Fonts.blackColor24Bold, textAlign: 'center', marginTop: 20 }}>profile</Text>
-          <Image source={require('../../Assets/images/user/user_9.jpg')} style={styles.profile} />
+          <Text style={{ ...Fonts.blackColor24Bold, textAlign: 'center', marginTop: 20 }}>Profile</Text>
+          <Image source={require('../../Assets/images/banner/user.png')} style={styles.profile} />
           <TouchableOpacity onPress={() => {
             navigation.navigate('EditProfile')
           }} style={styles.cameraIcon}>
@@ -48,14 +48,14 @@ const Profile = ({ navigation }) => {
         </View>
 
         <TouchableOpacity style={styles.container}>
-          <Text style={styles.textBody}>Favroite</Text>
+          <Text style={styles.textBody}>Favorites</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.container}>
-          <Text style={styles.textBody} >Notification</Text>
+          <Text style={styles.textBody} >Notifications</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { navigation.navigate("BookingHistory") }} style={styles.container}>
+        <TouchableOpacity onPress={() => { navigation.navigate("Booking") }} style={styles.container}>
           <Text style={styles.textBody}>Booking Details</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
@@ -68,7 +68,7 @@ const Profile = ({ navigation }) => {
           <Text style={styles.textBody}>Terms of use</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
-        <Text style={styles.textHeader}>App</Text>
+        <Text style={styles.textHeader}>APP</Text>
         <TouchableOpacity style={styles.container}>
           <Text style={styles.textBody}>Support </Text>
           <AntDesign name="right" size={24} color="#696969" />
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     top: '68%',
-    left: '58%',
+    left: '55%',
     borderRadius: 100,
     flexDirection: 'row',
     borderWidth: 1,

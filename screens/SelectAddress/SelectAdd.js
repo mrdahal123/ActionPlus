@@ -15,7 +15,7 @@ import {
     Pressable,
     ActivityIndicator
 } from 'react-native'
-import React, { Component, useState, useEffect,useContext } from 'react'
+import React, { Component, useState, useEffect, useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -29,53 +29,47 @@ import * as Yup from 'yup';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from "axios";
 import AuthContext from '../../Context/AuthContext';
-
+import * as ApiService from '../../Utils/Utils';
 const SelectAdd = ({ navigation, route }) => {
 
     const { authContext, appState } = useContext(AuthContext);
     console.log(appState.data)
+    let userData = appState.data
 
-    const [finalArr, setfinalArr] = useState([{
-        "FirstName": 'saurav',
-        "PhoneNumber": "987654310",
-        "city": "Postmaster , Dummani B.O, Chitradurga,Karnataka ,India (IN),Pin Code :-577531",
-    },
-    {
-        "FirstName": 'amit',
-        "PhoneNumber": "987654380",
-        "city": "Postmaster , Dummani B.O, Chitradurga,Karnataka ,India (IN),Pin Code :-577531",
-    },
-    {
-        "FirstName": 'diwas',
-        "PhoneNumber": "987654370",
-        "city": "Postmaster , Dummani B.O, Chitradurga,Karnataka ,India (IN),Pin Code :-577531",
-    }]);
+    let bookingData = route.params.data
+    console.log("bookingData", bookingData);
+
+
     const [IsModalVisible, setIsModalVisible] = useState(false);
-    const [formData, setFormData] = useState([]);
+    const [existingData, setExistingData] = useState([]);
     const [loader, setLoader] = useState(false)
+    const [newData, setNewData] = useState([])
+    const [FlatListData, setFlatListData] = useState([])
+    const [existingFlatlistData, setExistingFlatlistData] = useState([])
 
     const EditAddress = Yup.object().shape({
         FirstName: Yup.string()
             .required('Please enter your first name'),
         LastName: Yup.string()
-            .required("enter your last name please"),
-        PhoneNumber: Yup.string()
-            .required("enter your mobile number please")
-            .max(10, "maximum 10 digit please")
-            .min(10, 'mobile Number must be minimum 10 digit'),
+            .required("Please enter your last name"),
+        // PhoneNumber: Yup.string()
+        //     .required("Please enter your mobile number")
+        //     .max(10, "maximum 10 digit please")
+        //     .min(10, 'mobile Number must be minimum 10 digit'),
         email: Yup.string()
-            .required("email address is required")
+            .required("Email address is required")
             .matches(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+                // /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             ),
         houseNo: Yup.string()
-            .required("Confirm Your house/ Flat / Floor No Please"),
+            .required("Please enter your House No. / Flat No. / Floor"),
         socitey: Yup.string()
-            .required("confirm Your Society/ Streat Name Please"),
+            .required("Please enter your Society / Street Name "),
         area: Yup.string()
-            .required("confirm your Area Please"),
+            .required("Please enter your Area "),
         city: Yup.string()
-            .required("enter your city name please "),
+            .required("Please enter your City "),
         pinCode: Yup.string()
             .required("provide your city pin code please ")
             .max(6, "max six digit allow for pim code")
@@ -86,30 +80,103 @@ const SelectAdd = ({ navigation, route }) => {
             .required("select your address type")
     });
 
-    const Address = () => {
+    const Address = async () => {
         setLoader(true)
-        axios.post('https://api.ontestapp.com/api/bookings/get_all_bookings_customer', {
-            "b_c_name": "ashok",
-            "b_c_date": "12-06-2022",
-            "b_c_time": "12:06",
+        try {
+            let response = await ApiService.PostMethode('address/get_address_by_phone_number', {"phone_number": userData});
+            console.log('dsf', response);
+            setLoader(false)
+            setExistingData(response?.data)
+            setExistingFlatlistData([response?.data])
+        } catch (error) {
+            setLoader(false)
+        }
+    }
+
+    const AddAddress = async (apiData) => {
+        setLoader(true)
+        try {
+
+            const response = await ApiService.PostMethode('address/add_customer_address', apiData)
+            setLoader(false)
+            setNewData(response.data)
+            
+            setFlatListData([response.data])
+            setIsModalVisible(false)
+            Address();
+        } catch (error) {
+            setLoader(false)
+            setIsModalVisible(false)
+            setNewData([])
+        }
+
+
+    }
+    const editAddress = async () => {
+        setLoader(true)
+        let data = {
+            "id": existingData._id,
+            "first_name": existingData.first_name,
+            "last_name": existingData.last_name,
+            "phone_number": existingData.phone_number,
+            "email_address": "raju67@gmail.com",
+            "house_number": "25",
+            "street_name": "bannner",
+            "area": "arekere",
+            "city": "bangalore",
+            "pin_code": "234567",
+            "address_type": "home"
+        }
+        console.log("editAddressdata", data);
+        try {
+            const response = await ApiService.PostMethode('address/edit_customers_address', data)
+
+            console.log("editAddress", response);
+
+            setLoader(false)
+            // setNewData([response?.data])
+            // setIsModalVisible(false)
+
+        } catch (error) {
+            setLoader(false)
+            console.log(error);
+            setIsModalVisible(false)
+        }
+
+    }
+    const BookingSuccess = () => {
+        setLoader(true)
+        let data = {
+            "b_c_name": existingData?.first_name ? existingData.first_name : newData?.first_name ? newData?.first_name : '',
+            "b_c_time": bookingData.bookingTime,
+            "b_c_date": bookingData.format,
+            "service_provider_id": "",
+            "service_provider_name": "",
             "b_c_service_id": "786545",
-            "b_c_seat_address": "arekere",
-            "b_c_city": "lucknow",
-            "b_c_pin_code": "221272",
+            "b_c_service_name": bookingData.serviceType,
+            "b_c_seat_address": existingData ?.area ?existingData.area : newData?.area ? newData?.area : '',
+            "b_c_city": existingData ?.city ?existingData.city : newData?.city ? newData?.city : '',
+            "b_c_pin_code": existingData ?.pin_code ?existingData.pin_code : newData?.pin_code ? newData?.pin_code : '',
             "b_c_floor": "5th",
-            "b_c_flat_number": "105",
-            "b_c_state": "uttar pradesh",
-            "b_c_phone_number": "8703375634",
-            "b_c_amount": "1500"
-        })
+            "b_c_flat_number": existingData ?.house_number ?existingData.house_number : newData?.house_number ? newData?.house_number : '',
+            "b_c_state": existingData ?.state ?existingData.state : newData?.state ? newData?.state : '',
+            "b_c_phone_number": existingData ?.phone_number ?existingData.phone_number : newData?.phone_number ? newData?.phone_number : '',
+            "b_c_amount": "1500",
+            "b_c_status": "0"
+
+        }
+        console.log("BookingSuccess", data);
+        ApiService.PostMethode('bookings/add_bookings_customer', data)
             .then(response => {
                 setLoader(false)
-                console.log(response.data.data);
-                let responseApi = response.data.data
-                responseApi.map((element) => {
-                    setFormData(element)
-                })
-                setFormData(responseApi)
+                console.log(response.status);
+                if (response.status === "success") {
+                    navigation.navigate("BookingSuccess")
+                }
+                else {
+                    alert("something went wrong")
+
+                }
             })
             .catch(error => {
                 setLoader(false)
@@ -153,56 +220,53 @@ const SelectAdd = ({ navigation, route }) => {
 
                             <FlatList
                                 scrollEnabled={false}
-                                data={finalArr}
+                                data={[...existingFlatlistData, ...FlatListData]}
                                 keyExtractor={({ item, index }) => index}
                                 renderItem={({ item, index }) => {
+                                    console.log('item Flatlist', item);
                                     return (
                                         <>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    if (formData.length == 0) {
-                                                        alert("something went 0")
-                                                    }
-                                                    else {
-                                                        navigation.navigate("BookingSuccess", {
-                                                            data: formData
-                                                        })
-                                                    }
-                                                    // console.log("formData",formData)
-                                                }}
-                                                style={styles.AddContainer}>
-                                                {item.addType && <Text style={{ textAlign: 'center' }}>Address Type ({item.addType})</Text>}
-                                                <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
-                                                    <FontAwesome name="user" size={24} color="black" />
-                                                    <Text style={{ marginLeft: 10, color: "#000" }}>{item.FirstName}</Text>
-                                                </View>
-                                                <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
-                                                    <FontAwesome name="phone" size={24} color="black" />
-                                                    <Text style={{ marginLeft: 10, color: "#000" }}>{item.PhoneNumber}</Text>
-                                                </View>
-                                                <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
-                                                    <Ionicons name="location-sharp" size={24} color="black" />
-                                                    <Text style={{ marginLeft: 10, color: "#000" }}>{item.city}</Text>
-                                                </View>
-                                                <Feather name="edit" size={24} color={Colors.themeColor} style={{ alignSelf: 'flex-end', marginRight: 20 }} onPress={() => {
-                                                    setIsModalVisible(true)
-                                                }} />
-                                            </TouchableOpacity>
-                                        </>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    BookingSuccess()
+                                }}
+                                style={styles.AddContainer}>
+                                <Text style={{ textAlign: 'center' }}>Address Type {item.address_type}</Text>
+                                <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
+                                    <FontAwesome name="user" size={24} color="black" />
+                                    <Text style={{ marginLeft: 10, color: "#000" }}>{item.first_name}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
+                                    <FontAwesome name="phone" size={24} color="black" />
+                                    <Text style={{ marginLeft: 10, color: "#000" }}>{item.phone_number}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', width: '60%', padding: 10 }}>
+                                    <Ionicons name="location-sharp" size={24} color="black" />
+                                    <Text style={{ marginLeft: 10, color: "#000" }}>{item.city} , {item.area} ,  {item.street_name}
+                                        , {item.pin_code}</Text>
+                                </View>
+                                <Feather name="edit" size={24} color={Colors.themeColor} style={{ alignSelf: 'flex-end', marginRight: 20 }} onPress={() => {
+                                    setIsModalVisible(true)
+                                    // alert("working on this please wait for some time")
+                                }} />
+                            </TouchableOpacity>
+                            </>
                                     )
                                 }}
                             />
-                            <TouchableOpacity
-                                onPress={() =>
-                                    setIsModalVisible(true)
-                                    // navigation.navigate('AddnewAddress')
-                                }
-                                style={[styles.AddContainer, { borderWidth: 1, borderStyle: 'dashed', alignItems: 'center', paddingVertical: 40 }]}>
+                            {
+                                existingData.length == 0 && newData.length == 0 ? (
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            setIsModalVisible(true)
+                                            // navigation.navigate('AddnewAddress')
+                                        }
+                                        style={[styles.AddContainer, { borderWidth: 1, borderStyle: 'dashed', alignItems: 'center', paddingVertical: 40 }]}>
 
-                                <AntDesign name="plus" size={24} color="black" />
-                                <Text>Add New Adress</Text>
+                                        <AntDesign name="plus" size={24} color="black" />
+                                        <Text>Add New Adress</Text>
 
-                            </TouchableOpacity>
+                                    </TouchableOpacity>) : null}
 
                         </ScrollView>
 
@@ -222,35 +286,41 @@ const SelectAdd = ({ navigation, route }) => {
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                     }}>
-                                        <AntDesign name="arrowleft" size={24} color="black" style={{alignSelf:'flex-start' }}  onPress={() => {
-                                            setIsModalVisible(false)
-                                        }} />
-
+                                    <AntDesign name="arrowleft" size={24} color="black" style={{ alignSelf: 'flex-start' }} onPress={() => {
+                                        setIsModalVisible(false)
+                                    }} />
                                     <Formik
                                         validationSchema={EditAddress}
                                         initialValues=
                                         {{
-                                            FirstName: '',
-                                            LastName: '',
-                                            PhoneNumber: '',
-                                            email: '',
-                                            houseNo: '',
-                                            socitey: '',
-                                            area: '',
-                                            city: '',
-                                            pinCode: '',
-                                            state: '',
-                                            addType: '',
+                                            FirstName: existingData && existingData[0] && existingData[0].first_name ? existingData[0].first_name : '',
+                                            LastName: existingData && existingData[0] && existingData[0].last_name ? existingData[0].last_name : '',
+                                            PhoneNumber: existingData && existingData[0] && existingData[0].phone_number ? existingData[0].phone_number : '',
+                                            email: existingData && existingData[0] && existingData[0].email_address ? existingData[0].email : "",
+                                            houseNo: existingData && existingData[0] && existingData[0].house_number ? existingData[0].house_number : '',
+                                            socitey: existingData && existingData[0] && existingData[0].street_name ? existingData[0].street_name : '',
+                                            area: existingData && existingData[0] && existingData[0].area ? existingData[0].area : '',
+                                            city: existingData && existingData[0] && existingData[0].city ? existingData[0].city : '',
+                                            pinCode: existingData && existingData[0] && existingData[0].pin_code ? existingData[0].pin_code : '',
+                                            state: existingData && existingData[0] && existingData[0].state ? existingData[0].state : '',
+                                            addType: existingData && existingData[0] && existingData[0].address_type ? existingData[0].address_type : '',
                                         }}
                                         onSubmit={values => {
-
-
-
                                             if (values) {
+                                                let apiData = {
+                                                    first_name: values.FirstName,
+                                                    last_name: values.LastName,
+                                                    phone_number: userData,
+                                                    email_address: values.email,
+                                                    house_number: values.houseNo,
+                                                    street_name: values.socitey,
+                                                    area: values.area,
+                                                    city: values.city,
+                                                    pin_code: values.pinCode,
+                                                    address_type: values.addType,
+                                                }
 
-                                                setfinalArr((prev) => [...prev, values])
-
-                                                setIsModalVisible(false);
+                                                AddAddress(apiData)
 
                                             }
                                             else {
@@ -269,11 +339,21 @@ const SelectAdd = ({ navigation, route }) => {
                                             isValid,
                                         }) => (
                                             <>
+                                            { existingData && existingData.length>0 ?(
+
                                                 <Text style={{
                                                     ...Fonts.blackColor18Bold,
                                                     textAlign: 'center',
                                                     marginTop: 10
                                                 }}>Edit Address</Text>
+                                            ):(
+
+                                                <Text style={{
+                                                    ...Fonts.blackColor18Bold,
+                                                    textAlign: 'center',
+                                                    marginTop: 10
+                                                }}> Add Address</Text>
+                                            )}
                                                 <View style={styles.textInput}>
                                                     <FontAwesome5 name="user-alt" size={24} color="black" />
                                                     <TextInput
@@ -304,7 +384,7 @@ const SelectAdd = ({ navigation, route }) => {
                                                     <TextInput
                                                         style={styles.inputStyle}
                                                         placeholderTextColor={'#000'}
-                                                        placeholder="Last Name"
+                                                        placeholder="Last name"
                                                         value={values.LastName}
                                                         onChangeText={
                                                             handleChange('LastName')
@@ -324,7 +404,7 @@ const SelectAdd = ({ navigation, route }) => {
                                                         </Text>
                                                     </View>
                                                 )}
-                                                <View style={styles.textInput}>
+                                                {/* <View style={styles.textInput}>
                                                     <FontAwesome5 name="phone-alt" size={24} color="black" />
                                                     <TextInput
                                                         style={styles.inputStyle}
@@ -350,7 +430,7 @@ const SelectAdd = ({ navigation, route }) => {
                                                             {errors.PhoneNumber}
                                                         </Text>
                                                     </View>
-                                                )}
+                                                )} */}
                                                 <View style={styles.textInput}>
                                                     <MaterialCommunityIcons name="email-multiple" size={24} color="black" />
                                                     <TextInput
@@ -381,8 +461,8 @@ const SelectAdd = ({ navigation, route }) => {
                                                     <FontAwesome5 name="house-user" size={24} color="black" />
                                                     <TextInput
                                                         style={styles.inputStyle}
-                                                        keyboardType={'twitter'}
-                                                        placeholder="House No / Flat No / Floor "
+                                                        keyboardType={'number-pad'}
+                                                        placeholder="House No. / Flat No. / Floo "
                                                         placeholderTextColor={'#000'}
                                                         value={values.houseNo}
                                                         onChangeText={
@@ -588,17 +668,49 @@ const SelectAdd = ({ navigation, route }) => {
                                                     </View>
                                                 )}
 
-                                                <LinearGradient
-                                                    colors={['#F9B551', '#F87B2C']}
-                                                    style={styles.continueButtonStyle}>
-                                                    <TouchableOpacity onPress={(e) => {
-                                                        console.log('errors');
-                                                        console.log('errors', errors);
-                                                        handleSubmit(e)
-                                                    }}>
-                                                        <Text style={{ ...Fonts.whiteColor16Bold }}>Save</Text>
-                                                    </TouchableOpacity>
-                                                </LinearGradient>
+                                                {
+                                                    existingData && existingData && existingData.first_name ?
+                                                        <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
+                                                            <LinearGradient
+                                                                colors={['#F9B551', '#F87B2C']}
+                                                                style={styles.continueButtonStyle}>
+                                                                <TouchableOpacity onPress={(e) => {
+                                                                    console.log('errors');
+                                                                    console.log('errors', errors);
+                                                                    // handleSubmit(e)
+                                                                    editAddress()
+                                                                }}>
+                                                                    <Text style={{ ...Fonts.whiteColor16Bold }}>Update</Text>
+                                                                </TouchableOpacity>
+                                                            </LinearGradient>
+                                                            <LinearGradient
+                                                                colors={['#F9B551', '#F87B2C']}
+                                                                style={styles.continueButtonStyle}>
+                                                                <TouchableOpacity onPress={(e) => {
+                                                                    console.log('errors');
+                                                                    console.log('errors', errors);
+                                                                    // handleSubmit(e)
+                                                                    editAddress()
+                                                                }}>
+                                                                    <Text style={{ ...Fonts.whiteColor16Bold }}>save</Text>
+                                                                </TouchableOpacity>
+                                                            </LinearGradient>
+                                                        </View>
+                                                        : (
+                                                            <>
+                                                                <LinearGradient
+                                                                    colors={['#F9B551', '#F87B2C']}
+                                                                    style={styles.continueButtonStyle}>
+                                                                    <TouchableOpacity onPress={(e) => {
+                                                                        console.log('errors');
+                                                                        console.log('errors', errors);
+                                                                        handleSubmit(e)
+                                                                    }}>
+                                                                        <Text style={{ ...Fonts.whiteColor16Bold }}>Save</Text>
+                                                                    </TouchableOpacity>
+                                                                </LinearGradient>
+                                                            </>
+                                                        )}
                                             </>
                                         )}
                                     </Formik>

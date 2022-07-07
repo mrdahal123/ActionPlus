@@ -28,7 +28,7 @@ const AllService = ({ navigation }) => {
 
     const { authContext, appState } = useContext(AuthContext);
     const [loader, setLoader] = useState(false)
-    const [serviceType, setServiceType] = useState('')
+    const [serviceType, setServiceType] = useState([])
 
     const getAllService = () => {
         setLoader(true)
@@ -80,6 +80,12 @@ const AllService = ({ navigation }) => {
     // const nav = () => {
     //     if()
     // }
+
+
+
+    // return (
+    //     <Text>dfgdstyfgysd</Text>
+    // )
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
             {loader == true ? (
@@ -88,9 +94,9 @@ const AllService = ({ navigation }) => {
                 </View>
             ) : (
                 <>
-                    <ScrollView nestedScrollEnabled={true}>
+                    <ScrollView nestedScrollEnabled={true} style={{flexGrow:1, paddingVertical: 20,}}>
                         <NavigationHeaders onPress={() => { navigation.goBack() }} title="Services" />
-                        <View style={{ flex: 1 }}>
+                        <View style={{ flex: 1,marginVertical:20 }}>
                             <FlatList
                                 data={serviceType}
                                 keyExtractor={({ item, index }) => index}
@@ -98,12 +104,40 @@ const AllService = ({ navigation }) => {
                                     return (
 
                                         <TouchableOpacity onPress={() => {
-                                            if (item.category_status == 1) {
-                                                navigation.navigate("MaidService")
+                                            if (item.category_name === "Maid") {
+                                                navigation.navigate("MaidService",{
+                                                    maidId:item._id
+                                                })
                                             }
                                             else if (item.category_name === 'Plumbing') {
 
-                                                navigation.navigate("PlumberService")
+                                                navigation.navigate("PlumberService",{
+                                                    plumberId:item._id
+                                                })
+                                            }
+                                            else if (item.category_name === 'Painter') {
+
+                                                navigation.navigate("Painter",{
+                                                    PainterId:item._id
+                                                })
+                                            }
+                                            else if (item.category_name === 'Painter') {
+
+                                                navigation.navigate("Painter",{
+                                                    PainterId:item._id
+                                                })
+                                            }
+                                            else if (item.category_name === 'Electricians') {
+
+                                                navigation.navigate("ElectricianService",{
+                                                    ElectriciansId:item._id
+                                                })
+                                            }
+                                            else if (item.category_name === 'Carpenters') {
+
+                                                navigation.navigate("Carpenters",{
+                                                    CarpentersId:item._id
+                                                })
                                             }
                                         }} style={styles.card}>
                                             <Image source={require('../../Assets/images/banner/action.png')} style={styles.boxImage} />

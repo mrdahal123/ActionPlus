@@ -16,7 +16,9 @@ export const PostMethode = async (url, data, token) => {
         // console.log("Api resp",response)
         return response.data;
     } catch (error) {
+        console.log('error', error);
         throw handleError(error)
+        return error
     }
 }
 
@@ -42,6 +44,7 @@ export const getRawurl = async (url, data, token) => {
 // }
 
 const handleError = (err) => {
+    console.log(err);
     let error = err;
     if (err.response && err.response.data.hasOwnProperty('message'))
         error = err.response.data;

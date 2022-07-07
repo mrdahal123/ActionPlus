@@ -175,7 +175,7 @@ const BookingHistory = ({ navigation }) => {
     ]
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
-            <ScrollView nestedScrollEnabled ={true} style={{ flex: 1 }}>
+            <ScrollView nestedScrollEnabled ={true} style={{ flex: 1, }}>
             <NavigationHeaders onPress={()=>{navigation.goBack()}} title='Booking History'/>
                 <FlatList
                     data={bookingData}

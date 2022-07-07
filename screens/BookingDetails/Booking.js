@@ -8,9 +8,10 @@ import {
     TouchableOpacity,
     FlatList,
     ScrollView,
-    ActivityIndicator
+    ActivityIndicator,
+    RefreshControl
 } from 'react-native'
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useEffect, useState, useContext, useCallback } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -21,64 +22,38 @@ import * as ApiService from '../../Utils/Utils';
 import AuthContext from '../../Context/AuthContext';
 
 const Booking = ({ navigation }) => {
-    const { authContext, appState } = useContext(AuthContext);
+    const { appState } = useContext(AuthContext);
     let userData = appState.data;
+    console.log("userData",userData)
     const [loader, setLoader] = useState(false)
-    const [bookingData, setBookingData] = useState('')
-
-    const BookingApi = () => {
-        setLoader(true)
-        let data = {
-            "phone_number":userData ,
-        }
-        console.log("data", data);
-        ApiService.PostMethode('bookings/get_all_bookings_customer', data)
-            .then(response => {
-                setLoader(false)
-                console.log(response);
-                // let ApiRes = response.data.data
-                // setBookingData(ApiRes)
-            })
-            .catch(error => {
-                setLoader(false)
-                console.log(error);
-            })
+    const [bookingData, setBookingData] = useState('');
+    const [refreshing, setRefreshing] = React.useState(false);
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
     }
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false), BookingApi());
+    }, []);
+
+    const BookingApi = useCallback(async () => {
+        setLoader(true)
+        try {
+            let response = await ApiService.PostMethode('bookings/get_bookings_by_customer_phone_number', { "phone_number": userData})
+            console.log("response",response);
+            setLoader(false)
+            setBookingData(response.data)
+        } catch (error) {
+            setLoader(false)
+        }
+    }, [userData])
+
     useEffect(() => {
         BookingApi()
     }, [])
-    const bookingDetails = [
-        {
-            time: "Today at 06:00 PM",
-            serviceBookedL: "1 service",
-            serviceType: "Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1 ",
-            cost: ' 26.06',
-        },
-        {
-            time: "Today at 07:00 PM",
-            serviceBookedL: "1 service",
-            serviceType: "Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1 ",
-            cost: ' 20.06',
-        },
-        {
-            time: "Today at 01:00 PM",
-            serviceBookedL: "1 service",
-            serviceType: "Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1 ",
-            cost: ' 35.06',
-        },
-        {
-            time: "Today at 12:00 PM",
-            serviceBookedL: "1 service",
-            serviceType: "Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1 ",
-            cost: ' 30.06',
-        },
-        {
-            time: "Today at 02:00 PM",
-            serviceBookedL: "1 service",
-            serviceType: "Home Cleaning Oatmeal Stout  * 2 Stone Peak Condition * 1 ",
-            cost: ' 29.06',
-        },
-    ]
+
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
             {loader == true ? (
@@ -87,7 +62,12 @@ const Booking = ({ navigation }) => {
                 </View>
             ) : (
                 <>
-                    <ScrollView style={styles.wrapper}>
+                    <ScrollView style={styles.wrapper} refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }>
                         <NavigationHeaders onPress={() => { navigation.goBack() }} title='Booking' />
                         {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
                     <AntDesign name="arrowleft" size={24} color="black" onPress={() => { navigation.goBack() }} />
@@ -96,18 +76,27 @@ const Booking = ({ navigation }) => {
                         <FlatList
                             data={bookingData}
                             keyExtractor={({ item, index }) => index}
+                            ListEmptyComponent={() => {
+                                return (
+                                    <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
+                                        <Image source={require('../../Assets/images/gif/notFound.gif')}
+                                            style={{ width: 300, height: 300, resizeMode: 'contain', }} />
+                                        <Text>You have no bookings available</Text>
+                                    </View>
+                                )
+                            }}
                             renderItem={({ item, index }) => {
                                 return (
                                     <>
                                         <TouchableOpacity style={styles.booking} onPress={() => { navigation.navigate('BookingDetails') }}>
-                                            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                            <Text style={{ ...Fonts.blackColor16Bold, color: '#F9B551', }}>ID: #{item.b_c_service_id}</Text>
-                                            <View style={{ alignItems: 'center', flexDirection: 'row' }} >
-                                                <MaterialIcons name='loop' size={24} color='#FF0000' />
-                                                <TouchableOpacity onPress={() => navigation.navigate('MaidService')}>
-                                                    <Text style={{ color: '#FF0000', fontSize: 16, fontWeight: '700' }}> Re-book</Text>
-                                                </TouchableOpacity>
-                                            </View>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                <Text style={{ ...Fonts.blackColor16Bold, color: '#F9B551', }}>ID: #{item.b_c_service_id}</Text>
+                                                <View style={{ alignItems: 'center', flexDirection: 'row' }} >
+                                                    <MaterialIcons name='loop' size={24} color='#FF0000' />
+                                                    <TouchableOpacity onPress={() => navigation.navigate('MaidService')}>
+                                                        <Text style={{ color: '#FF0000', fontSize: 16, fontWeight: '700' }}> Re-book</Text>
+                                                    </TouchableOpacity>
+                                                </View>
                                             </View>
                                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
 
@@ -221,6 +210,7 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
         paddingHorizontal: 10,
+        marginVertical:20,
     },
     booking: {
         width: '100%',

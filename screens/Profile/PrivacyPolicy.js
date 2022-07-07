@@ -1,14 +1,14 @@
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native'
 import React from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 
 const PrivacyPolicy = () => {
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.wrapper}>
+            <ScrollView style={styles.wrapper}>
                 <Text style={{ ...Fonts.blackColor18Bold, marginBottom: 10 }}>Welcome to Action Plus Company's Privacy policy .</Text>
                 <Text style={{ ...Fonts.blackColor14Bold, lineHeight: 25, letterSpacing: 0.5, textAlign: 'left' }}>
-                    Action Plus consider the privacy and protec- tion of our clients' data, both corporate and personal,
+                    Action Plus consider the privacy and protection of our client’s data, both corporate and personal,
                     to be of the utmost importance and we take robust measures across our
                     business to protect the security and integrity of all such information.
                     However, the law requires us to take particular steps  in relation to the processing
@@ -19,9 +19,10 @@ const PrivacyPolicy = () => {
                     sets out the basis on which we will collect, use and process personal data. Please read
                     this Privacy Policy carefully to ensure you understand how we handle your personal data;
                     please also check this page from time to time as the Policy may be updated.
+                    INFORMATION WE MAY COLLECT FROM YOU time to time as the Policy may be updated.
                     INFORMATION WE MAY COLLECT FROM YOU
                 </Text>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     )
 }

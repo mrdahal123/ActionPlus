@@ -7,15 +7,11 @@ import { Colors, Fonts, Sizes } from "../../constant/style";
 const BookingSuccess = ({ route, navigation }) => {
     const [userId, seUsertId] = useState('')
     // console.log("sdfd",route.params.data)
-    useEffect(() => {
-        let responseApi = route.params.data
-        console.log(responseApi);
-       responseApi && responseApi.map(item => {
-            let id = item._id
-            console.log("id", id);
-            seUsertId(id)
-        })
-    }, [])
+    // useEffect(() => {
+    // let responseApi = route.params.data
+    // console.log("responseApi", responseApi);
+
+    // }, [])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
@@ -26,15 +22,15 @@ const BookingSuccess = ({ route, navigation }) => {
             <Image source={require('../../Assets/images/banner/sign.png')} style={{ width: 120, height: 120, resizeMode: 'contain', alignSelf: 'center', position: 'absolute', top: '46%' }} />
 
             <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', position: 'absolute', top: '62%', alignSelf: 'center' }}>
-                <Text style={{ ...Fonts.blackColor20Bold, marginVertical: 5 }}>Booking Success</Text>
-                <Text style={{ ...Fonts.grayColor18Bold, marginVertical: 5,textAlign:'center' }}>Your Booking Id is {"\n"}{userId}</Text>
-                <Text style={{ ...Fonts.blackColor16Bold, textAlign: 'center' }}>Thank you for your booking! our {'\n'} representative will contact You shortly</Text>
+                <Text style={{ ...Fonts.blackColor20Bold, marginVertical: 5 }}>Booking Successful</Text>
+                {/* {responseApi && <Text style={{ ...Fonts.grayColor18Bold, marginVertical: 5, textAlign: 'center' }}>Your Booking Id is {"\n"} # {responseApi}</Text>} */}
+                <Text style={{ ...Fonts.blackColor16Bold, textAlign: 'center' }}>Our representative will contact your shortly</Text>
                 <LinearGradient
                     colors={['#F9B551', '#F87B2C']}
                     style={styles.continueButtonStyle}>
                     <TouchableOpacity style={{ alignSelf: 'center', }}
                         onPress={() => navigation.navigate('HomeScreen')}>
-                        <Text style={{ ...Fonts.whiteColor16Bold }}>Okay!</Text>
+                        <Text style={{ ...Fonts.whiteColor16Bold }}>Okay</Text>
                     </TouchableOpacity>
                 </LinearGradient>
             </View>

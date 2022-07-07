@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, Image, StatusBar } from 'react-na
 import { Colors, Fonts } from '../../constant/style';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
-const ElectricianService = ({navigation}) => {
+const Painter = ({navigation}) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <StatusBar backgroundColor={Colors.themeColor} />
@@ -22,9 +22,7 @@ const ElectricianService = ({navigation}) => {
         ...Fonts.grayColor20Bold,
         textAlign: 'center',
         marginVertical:20,
-      }}>
-        {/* Electrician  */}
-        services will be avaiable {"\n"} in your area soon</Text>
+      }}>  services will be avaiable {"\n"} in your area soon</Text>
 
       <Image
         source={require('../../Assets/images/service-include/common.png')}
@@ -35,7 +33,7 @@ const ElectricianService = ({navigation}) => {
   )
 }
 
-export default ElectricianService
+export default Painter
 
 const styles = StyleSheet.create({
   container: {
@@ -56,6 +54,6 @@ const styles = StyleSheet.create({
    flexGrow:1,
     resizeMode:'contain',
     alignSelf:'center',
-    marginBottom:200,
+    marginBottom:200
   }
 })
