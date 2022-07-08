@@ -16,6 +16,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import AuthContext from '../../Context/AuthContext';
+import NavigationHeaders from '../../Components/NavigationHeaders';
 const Profile = ({ navigation }) => {
   const { authContext, AppUserData } = useContext(AuthContext);
   const LogOutAlertOccurred = (title, body, btnTxt, btnTxt2) => {
@@ -37,13 +38,15 @@ const Profile = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <ScrollView style={{ flex: 1, marginBottom: 5 }}>
+      <AntDesign name="arrowleft" size={24} color="black" style={{ position:'absolute',top:20,left:10,zIndex:500}} onPress={()=> navigation.goBack()} />
+        {/* <NavigationHeaders onPress={()=> navigation.goBack()} title={"Profile"}/> */}
         <View>
           <Text style={{ ...Fonts.blackColor24Bold, textAlign: 'center', marginTop: 20 }}>Profile</Text>
           <Image source={require('../../Assets/images/banner/user.png')} style={styles.profile} />
           <TouchableOpacity onPress={() => {
             navigation.navigate('EditProfile')
           }} style={styles.cameraIcon}>
-            <FontAwesome5 name="user-edit" size={20} color="#fff" />
+            <FontAwesome5 name="user-edit" size={20} color="#fff" style={{marginLeft:5}} />
           </TouchableOpacity>
         </View>
 
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderWidth: 1,
     borderColor: Colors.themeColor,
-    padding: 10,
+    // paddingHorizontal: 10,
     backgroundColor: Colors.themeColor,
   },
   container: {

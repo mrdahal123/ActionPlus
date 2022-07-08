@@ -24,7 +24,7 @@ const Carpenters = ({navigation}) => {
         marginVertical:20,
       }}>
         {/* Electrician  */} 
-        services will be avaiable {"\n"} in your area soon
+        Services will be available {"\n"} in your area soon
       </Text>
 
       <Image

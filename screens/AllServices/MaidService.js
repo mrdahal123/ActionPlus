@@ -105,9 +105,17 @@ const MaidService = ({ route,navigation }) => {
                   return (
 
                     <TouchableOpacity onPress={() => {
-                      navigation.navigate("SlotBooking",{
-                        serviceName:item.service_name
-                      })
+                      if(item.service_name==="Deep Cleaning "){
+                        navigation.navigate("DeepCleaning",{
+                          serviceName:item.service_name
+                          
+                        })
+                      }
+                      else{
+                        navigation.navigate("SlotBooking",{
+                          serviceName:item.service_name
+                        })
+                      }
                     }} style={styles.card}>
                       <Image source={require('../../Assets/images/banner/action.png')} style={styles.boxImage} />
                       <View style={{ width: '50%', }}>

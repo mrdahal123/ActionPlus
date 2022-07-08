@@ -25,6 +25,7 @@ import { BottomTab } from './BottomTab';
 import Painter from '../../screens/AllServices/Painter';
 import Carpenters from '../../screens/AllServices/Carpenters';
 import NavigationHeaders from '../../Components/NavigationHeaders';
+import DeepCleaning from '../../screens/AllServices/DeepCleaning';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +60,7 @@ const StackNav = () => {
             <Stack.Screen name="Painter" component={Painter} />
             <Stack.Screen name="Carpenters" component={Carpenters} />
             <Stack.Screen name="NavigationHeaders" component={NavigationHeaders} />
+            <Stack.Screen name="DeepCleaning" component={DeepCleaning} />
 
 
         </Stack.Navigator>

@@ -111,15 +111,15 @@ export default function HomeScreen({ navigation }) {
 
                     <View style={styles.serviceType}>
                         <TouchableOpacity onPress={() => { navigation.navigate('MaidService') }}>
-                            <Image source={require('../../Assets/images/banner/maid.png')} style={styles.iconImage} />
+                            <Image source={require('../../Assets/images/banner/maidRound.jpg')} style={styles.iconImageBanner} />
                             <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Maid</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { navigation.navigate('PlumberService') }}>
-                            <Image source={require('../../Assets/images/banner/plumber.png')} style={styles.iconImage} />
+                            <Image source={require('../../Assets/images/banner/plumbRound.jpg')} style={styles.iconImageBanner} />
                             <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Plumber</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { navigation.navigate('ElectricianService') }}>
-                            <Image source={require('../../Assets/images/banner/electrician.png')} style={styles.iconImage} />
+                            <Image source={require('../../Assets/images/banner/ElectRound.jpg')} style={styles.iconImageBanner} />
                             <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Electrician</Text>
                         </TouchableOpacity>
                     </View>
@@ -131,6 +131,10 @@ export default function HomeScreen({ navigation }) {
 
                     {/* Banner */}
                   <Image source={require('../../Assets/images/banner/action+banner2.png')} style={styles.imgBanner} resizeMode={'contain'} />
+                  <Image source={require('../../Assets/images/banner/action+banner1.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                  <Image source={require('../../Assets/images/banner/action+banner2.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                  <Image source={require('../../Assets/images/banner/action+banner3.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                  <Image source={require('../../Assets/images/banner/action+banner4.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
                 </View>
             </ScrollView>
         </SafeAreaView>

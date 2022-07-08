@@ -78,10 +78,10 @@ const Booking = ({ navigation }) => {
                             keyExtractor={({ item, index }) => index}
                             ListEmptyComponent={() => {
                                 return (
-                                    <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
+                                    <View style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff',marginTop:'30%' }}>
                                         <Image source={require('../../Assets/images/gif/notFound.gif')}
-                                            style={{ width: 300, height: 300, resizeMode: 'contain', }} />
-                                        <Text>You have no bookings available</Text>
+                                            style={{ width: 350, height: 350, resizeMode: 'contain', }} />
+                                        <Text style={Fonts.blackColor18Bold}>You have no bookings available</Text>
                                     </View>
                                 )
                             }}

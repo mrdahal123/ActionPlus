@@ -22,32 +22,43 @@ import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
 import { date } from 'yup';
 import NavigationHeaders from '../../Components/NavigationHeaders';
+import Slider from '@react-native-community/slider';
+const SlotBooking = ({ route, navigation }) => {
+    const serviceType = route.params.serviceName
+    console.log("serviceType", serviceType);
 
-const SlotBooking = ({ route,navigation }) => {
-    let serviceType = route.params.serviceName
-    console.log("serviceType",serviceType);
 
     const [bookingTime, setBookingTime] = useState('')
     const [bookingDate, setBookingDate] = useState(new Date())
     const [checked, setChecked] = useState(false)
+    const [checkedFlat, setCheckedFlat] = useState('')
+    const [squareFeet, setSquareFeet] = useState('')
+    const [finalPrice, setFinalPrice] = useState('')
+    const [flatType, setFlatType] = useState([])
+    // const [DeepClean, setDeepClean] = useState('')
 
     // const [newTime, setNewTime] = useState()
     const [time, setTime] = useState('')
 
+    // console.log("DefgdfaufugepClean",DeepClean);
     const handleSubmit = () => {
-        if (bookingDate !== '' && bookingTime !== '') {
+        if (bookingDate !== '' && bookingTime !== '' && checkedFlat!=='') {
             let format = moment(bookingDate).format('L');
-            navigation.navigate('SelectAdd',{
-                data:{
+            navigation.navigate('SelectAdd', {
+                data: {
                     serviceType,
                     bookingTime,
-                    format
+                    format,
+                    flatType,
+                    finalPrice,
+                    squareFeet,
+                    finalPrice
                 }
             })
             console.log("your booking date and time is", bookingDate, bookingTime)
         }
         else {
-            alert("select a date and time for your maid please")
+            alert("Please select all field")
         }
         console.log(bookingDate, bookingTime)
     }
@@ -76,6 +87,23 @@ const SlotBooking = ({ route,navigation }) => {
         }
         return timeStops;
     }, []);
+
+    const flatData = [
+        { flatType: '2 BHK', id: '1', mins: '60' },
+        { flatType: '2.5 BHK', id: '2', mins: '75' },
+        { flatType: '3.0 BHK', id: '3', mins: '90' },
+        { flatType: '4.0 BHK', id: '4', mins: '120' },
+        { flatType: 'Duplex', id: '5', mins: '150' },
+    ]
+
+    const deepClean = [
+        { flatType: '2 BHK', mins: '210', serviceCharge: '3499' },
+        { flatType: '2.5 BHK', mins: '240', serviceCharge: '3999' },
+        { flatType: '3.0 BHK', mins: '270', serviceCharge: '4499' },
+        { flatType: '4.0 BHK', mins: '300', serviceCharge: '5499' },
+        { flatType: 'Duplex', mins: '390', serviceCharge: '7999' },
+    ]
+
 
 
     useEffect(() => {
@@ -106,12 +134,16 @@ const SlotBooking = ({ route,navigation }) => {
                 source={require('../../Assets/images/banner/background.png')}
                 style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff' }}>
                 <ScrollView showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{
-                        flexGrow: 1,
-                        marginVertical: 30,
-                    }}>
-                    <NavigationHeaders onPress={() => { navigation.goBack() }} title="Select date and time" />
-                    {/* <Text style={{ ...Fonts.blackColor20Bold, textAlign: 'center', marginTop: 50 }}></Text> */}
+                // contentContainerStyle={{
+                //     // flex: 1,
+                //     marginVertical: 30,
+                // }}
+                >
+                    <View style={{ marginVertical: 15 }}>
+                        <NavigationHeaders onPress={() => { navigation.goBack() }} title="Select date and time" />
+
+                    </View>
+
 
                     <View style={styles.calenderContainer}>
                         <CalendarPicker
@@ -127,6 +159,83 @@ const SlotBooking = ({ route,navigation }) => {
                             selectedDayTextColor="red"
                             selectedDayTextStyle={{ color: "#fff", fontWeight: '700' }}
                         />
+                    </View>
+                    {serviceType === 'Deep Cleaning ' ? null : <Text style={{ ...Fonts.blackColor20Bold, padding: 15 }}>Please complete your booking </Text>}
+
+                    {serviceType === 'Deep Cleaning ' ? null : <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '95%', alignItems: 'center', alignSelf: 'center', marginVertical: 15 }}>
+
+                        <Text style={{ ...Fonts.FontColor16Bold }}><Text style={{ color: Colors.themeColor }}>Sft </Text>{squareFeet}</Text>
+                        <Text style={Fonts.FontColor16Bold}><Text style={{ color: Colors.themeColor }}>2.50 ₹ </Text>per/sft</Text>
+                    </View>}
+
+                    {serviceType === 'Deep Cleaning ' ? null : (
+                        <View style={styles.sliderContainer}>
+                            <Slider
+                                style={{ width: '100%', }}
+                                minimumValue={100}
+                                step={5}
+                                thumbTintColor={Colors.themeColor}
+                                onValueChange={(value) => {
+                                    setSquareFeet(value)
+                                    let squareFeet = value
+                                    let price = squareFeet * 2.50
+                                    let finalPrice = price + (price * (18 / 100))
+                                    console.log("finalPriceAfterGSt", finalPrice);
+                                    setFinalPrice(finalPrice)
+                                }}
+                                maximumValue={1000}
+                                minimumTrackTintColor={Colors.themeColor}
+                                maximumTrackTintColor="#000000"
+                            />
+                        </View>
+                    )}
+
+                    <View>
+                        <Text style={{ ...Fonts.blackColor18Bold, padding: 15 }}>Please select your flat type</Text>
+                        <FlatList
+                            data={serviceType === 'Deep Cleaning ' ? deepClean : flatData}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            keyExtractor={({ item, index }) => index}
+                            renderItem={({ item, index }) => {
+                                console.log(item)
+                                return (
+                                    <>
+                                        <TouchableOpacity
+                                            onPress={
+                                                () => {
+                                                    let arr = []
+                                                    arr.push(item)
+                                                    setFlatType(arr)
+                                                    setCheckedFlat(item)
+                                                    console.log("item", arr)
+                                                    serviceType === 'Deep Cleaning ' ? setFinalPrice(item.serviceCharge):null
+                                                }}
+                                            style={[styles.TimeButton, { backgroundColor: checkedFlat.flatType == item.flatType ? '#F9B551' : "#fff" }]}>
+                                            <Text>{item.flatType}</Text>
+                                        </TouchableOpacity>
+                                    </>
+                                )
+                            }} />
+
+                    </View>
+
+                    <View style={[styles.TimeButton,]}>
+                        {flatType.length > 0 ? flatType.map(Element => {
+                            console.log(Element)
+                            return (
+                                <>
+                                    <Text style={{ ...Fonts.blackColor16Bold, paddingVertical: 10 }}>
+                                    {/* {serviceType === 'Deep Cleaning ' ?setFinalPrice(Element.serviceCharge ) : finalPrice} */}
+                                        final amount includeing 18% GST is <Text style={{ color: Colors.themeColor, textAlign: 'center' }}>
+                                            {serviceType === 'Deep Cleaning ' ? Element.serviceCharge : finalPrice} ₹</Text></Text>
+                                    <Text style={{ ...Fonts.blackColor16Bold, padding: 15 }}>Duration of service  is <Text style={{ color: Colors.themeColor, textAlign: 'center' }}>
+                                        {Element.mins} Mins</Text></Text>
+                                       
+                                </>
+                            )
+                        }) : null}
+
                     </View>
                     <Text style={{ ...Fonts.blackColor20Bold, padding: 15 }}>Slots Available For Booking</Text>
                     <FlatList
@@ -216,6 +325,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginHorizontal: 20,
     },
+    sliderContainer: {
+        width: '95%',
+        paddingVertical: 15,
+        backgroundColor: '#000',
+        borderRadius: 10,
+        shadowColor: "#F9B551",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 2.27,
+        elevation: 5,
+        alignSelf: 'center'
+    }
+
 })
-
-

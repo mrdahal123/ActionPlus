@@ -135,6 +135,7 @@ export const Fonts = {
     grayColor20Bold: {
         color: '#808080',
         fontSize: 24,
+        fontWeight:'bold'
         // fontFamily: 'Montserrat_Bold',
     },
 

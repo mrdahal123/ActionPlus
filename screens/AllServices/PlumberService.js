@@ -24,7 +24,7 @@ const PlumberService = ({navigation}) => {
         marginVertical:20,
       }}>
         {/* Plumbing */}
-        services will be avaiable {"\n"} in your area soon</Text>
+        Services will be available {"\n"} in your area soon</Text>
 
       <Image
         source={require('../../Assets/images/service-include/common.png')}

@@ -26,7 +26,7 @@ function MainNav() {
                 return {
                     ...prevState,
                     isLogout: false,
-                    userToken: action.token,
+                    userToken: action.payload.token,
                     setIsLoading: false
                 };
             case 'LOGIN':
@@ -172,29 +172,30 @@ function MainNav() {
             userData = JSON.parse(userData);
             console.log('User Token found ==>', userToken);
             console.log('User Data found ==>', userData);
+            if (userToken && userData !== null) {
+                setAppState({
+                    token: userToken,
+                    data: userData,
+                    signUpFlow: false,
+                });
+                dataFound = {
+                    token: userToken,
+                    user: userData,
+                };
+                dispatch({ type: 'RETRIEVE_TOKEN', payload: dataFound });
+                console.log('fetchUserData called');
+            } else {
+                dataFound = {
+                    token: userToken,
+                    user: userData,
+                };
+                console.log('dataFound', dataFound);
+                dispatch({ type: 'RETRIEVE_TOKEN', payload: dataFound });
+            }
         } catch (error) {
             console.log('Error Occurred while fetching user Data', error);
         }
-        if (userToken && userData !== null) {
-            setAppState({
-                token: userToken,
-                data: userData,
-                signUpFlow: false,
-            });
-            dataFound = {
-                token: userToken,
-                user: userData,
-            };
-            dispatch({ type: 'RETRIEVE_TOKEN', payload: `dataFound` });
-            console.log('fetchUserData called');
-        } else {
-            dataFound = {
-                token: userToken,
-                user: userData,
-            };
-            console.log('dataFound', dataFound);
-            dispatch({ type: 'RETRIEVE_TOKEN', payload: dataFound });
-        }
+       
     };
     // if (loginState.isLoading == true) {
     //     return (
