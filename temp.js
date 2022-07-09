@@ -41,7 +41,7 @@ const SelectAdd = ({ navigation, route }) => {
 
 
     const [IsModalVisible, setIsModalVisible] = useState(false);
-    const [existingData, setExistingData] = useState([]);
+    const [existingData, setExistingData] = useState('');
     const [loader, setLoader] = useState(false)
     const [newData, setNewData] = useState([])
     const [FlatListData, setFlatListData] = useState([])
@@ -89,7 +89,6 @@ const SelectAdd = ({ navigation, route }) => {
             setLoader(false)
             setExistingData(response?.data)
             setExistingFlatlistData([response?.data])
-     
         } catch (error) {
             setLoader(false)
         }
@@ -102,11 +101,7 @@ const SelectAdd = ({ navigation, route }) => {
             const response = await ApiService.PostMethode('address/add_customer_address', apiData)
             setLoader(false)
             setNewData(response.data)
-            {if(newData.length>0){
-                const multipleAdd = newData.concat(existingData)
-                setExistingData(multipleAdd)
-                Address()
-            }}
+
             setFlatListData([response.data])
             setIsModalVisible(false)
             Address();
@@ -125,13 +120,13 @@ const SelectAdd = ({ navigation, route }) => {
             "first_name": existingData.first_name,
             "last_name": existingData.last_name,
             "phone_number": existingData.phone_number,
-            "email_address": "raju67@gmail.com",
-            "house_number": "25",
-            "street_name": "bannner",
-            "area": "arekere",
-            "city": "bangalore",
-            "pin_code": "234567",
-            "address_type": "home"
+            "email_address": existingData.email_address,
+            "house_number": existingData.house_number,
+            "street_name": existingData.street_name,
+            "area": existingData.area,
+            "city": existingData.city,
+            "pin_code": existingData.pin_code,
+            "address_type": existingData.address_type,
         }
         console.log("editAddressdata", data);
         try {
@@ -140,7 +135,9 @@ const SelectAdd = ({ navigation, route }) => {
             console.log("editAddress", response);
 
             setLoader(false)
-            // setNewData([response?.data])
+            setIsModalVisible(false)
+            setExistingData([response?.data])
+            Address()
             // setIsModalVisible(false)
 
         } catch (error) {
@@ -252,27 +249,27 @@ const SelectAdd = ({ navigation, route }) => {
                                                         , {item.pin_code}</Text>
                                                 </View>
                                                 <Feather name="edit" size={24} color={Colors.themeColor} style={{ alignSelf: 'flex-end', marginRight: 20 }} onPress={() => {
-                                                    // setIsModalVisible(true)
+                                                    setIsModalVisible(true)
                                                     setEditText("edit")
-                                                    alert("working on this please wait for some time")
+                                                    // alert("working on this please wait for some time")
                                                 }} />
                                             </TouchableOpacity>
                                         </>
                                     )
                                 }}
                             />
-                          
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            setIsModalVisible(true)
-                                            // navigation.navigate('AddnewAddress')
-                                        }
-                                        style={[styles.AddContainer, { borderWidth: 1, borderStyle: 'dashed', alignItems: 'center', paddingVertical: 40 }]}>
 
-                                        <AntDesign name="plus" size={24} color="black" />
-                                        <Text>Add New Adress</Text>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setIsModalVisible(true)
+                                    // navigation.navigate('AddnewAddress')
+                                }
+                                style={[styles.AddContainer, { borderWidth: 1, borderStyle: 'dashed', alignItems: 'center', paddingVertical: 40 }]}>
 
-                                    </TouchableOpacity>
+                                <AntDesign name="plus" size={24} color="black" />
+                                <Text>Add New Adress</Text>
+
+                            </TouchableOpacity>
 
                         </ScrollView>
 
@@ -299,17 +296,28 @@ const SelectAdd = ({ navigation, route }) => {
                                         validationSchema={EditAddress}
                                         initialValues=
                                         {{
-                                            FirstName: existingData && existingData[0] && existingData[0].first_name ? existingData[0].first_name : '',
-                                            LastName: existingData && existingData[0] && existingData[0].last_name ? existingData[0].last_name : '',
-                                            PhoneNumber: existingData && existingData[0] && existingData[0].phone_number ? existingData[0].phone_number : '',
-                                            email: existingData && existingData[0] && existingData[0].email_address ? existingData[0].email : "",
-                                            houseNo: existingData && existingData[0] && existingData[0].house_number ? existingData[0].house_number : '',
-                                            socitey: existingData && existingData[0] && existingData[0].street_name ? existingData[0].street_name : '',
-                                            area: existingData && existingData[0] && existingData[0].area ? existingData[0].area : '',
-                                            city: existingData && existingData[0] && existingData[0].city ? existingData[0].city : '',
-                                            pinCode: existingData && existingData[0] && existingData[0].pin_code ? existingData[0].pin_code : '',
-                                            state: existingData && existingData[0] && existingData[0].state ? existingData[0].state : '',
-                                            addType: existingData && existingData[0] && existingData[0].address_type ? existingData[0].address_type : '',
+                                            FirstName:  '',
+                                            LastName:  '',
+                                            PhoneNumber:  '',
+                                            email: '',
+                                            houseNo:  '',
+                                            socitey:  '',
+                                            area:  '',
+                                            city: '',
+                                            pinCode:  '',
+                                            state:  '',
+                                            addType:  '',
+                                            // FirstName: existingData && existingData && existingData.first_name ? existingData.first_name : '',
+                                            // LastName: existingData && existingData && existingData.last_name ? existingData.last_name : '',
+                                            // PhoneNumber: existingData && existingData && existingData.phone_number ? existingData.phone_number : '',
+                                            // email: existingData && existingData && existingData.email_address ? existingData.email_address : '',
+                                            // houseNo: existingData && existingData && existingData.house_number ? existingData.house_number : '',
+                                            // socitey: existingData && existingData && existingData.street_name ? existingData.street_name : '',
+                                            // area: existingData && existingData && existingData.area ? existingData.area : '',
+                                            // city: existingData && existingData && existingData.city ? existingData.city : '',
+                                            // pinCode: existingData && existingData && existingData.pin_code ? existingData.pin_code: '',
+                                            // state: existingData && existingData && existingData.state ? existingData.state : '',
+                                            // addType: existingData && existingData && existingData.address_type ? existingData.address_type : '',
                                         }}
                                         onSubmit={values => {
                                             if (values) {
@@ -345,7 +353,7 @@ const SelectAdd = ({ navigation, route }) => {
                                             isValid,
                                         }) => (
                                             <>
-                                                {editText=='' ? (
+                                                {editText == '' ? (
 
                                                     <Text style={{
                                                         ...Fonts.blackColor18Bold,
@@ -674,8 +682,8 @@ const SelectAdd = ({ navigation, route }) => {
                                                     </View>
                                                 )}
 
-                                                {/* {
-                                                    existingData && existingData && existingData.first_name ?
+                                                {
+                                                    editText === "edit" ?
                                                         <View style={{ flexDirection: 'row', alignSelf: 'flex-end' }}>
                                                             <LinearGradient
                                                                 colors={['#F9B551', '#F87B2C']}
@@ -689,7 +697,7 @@ const SelectAdd = ({ navigation, route }) => {
                                                                     <Text style={{ ...Fonts.whiteColor16Bold }}>Update</Text>
                                                                 </TouchableOpacity>
                                                             </LinearGradient>
-                                                            <LinearGradient
+                                                            {/* <LinearGradient
                                                                 colors={['#F9B551', '#F87B2C']}
                                                                 style={styles.continueButtonStyle}>
                                                                 <TouchableOpacity onPress={(e) => {
@@ -700,9 +708,9 @@ const SelectAdd = ({ navigation, route }) => {
                                                                 }}>
                                                                     <Text style={{ ...Fonts.whiteColor16Bold }}>save</Text>
                                                                 </TouchableOpacity>
-                                                            </LinearGradient>
+                                                            </LinearGradient> */}
                                                         </View>
-                                                        : ( */}
+                                                        : (
                                                             <>
                                                                 <LinearGradient
                                                                     colors={['#F9B551', '#F87B2C']}
@@ -716,7 +724,7 @@ const SelectAdd = ({ navigation, route }) => {
                                                                     </TouchableOpacity>
                                                                 </LinearGradient>
                                                             </>
-                                                        {/* )} */}
+                                                        )}
                                             </>
                                         )}
                                     </Formik>

@@ -72,7 +72,7 @@ const Profile = ({ navigation }) => {
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <Text style={styles.textHeader}>APP</Text>
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate("Support")}}>
           <Text style={styles.textBody}>Support </Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>

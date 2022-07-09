@@ -88,7 +88,9 @@ const Booking = ({ navigation }) => {
                             renderItem={({ item, index }) => {
                                 return (
                                     <>
-                                        <TouchableOpacity style={styles.booking} onPress={() => { navigation.navigate('BookingDetails') }}>
+                                        <TouchableOpacity style={styles.booking} onPress={() => { navigation.navigate('BookingDetails',{
+                                            data:item
+                                        }) }}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                                 <Text style={{ ...Fonts.blackColor16Bold, color: '#F9B551', }}>ID: #{item.b_c_service_id}</Text>
                                                 <View style={{ alignItems: 'center', flexDirection: 'row' }} >

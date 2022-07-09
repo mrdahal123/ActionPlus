@@ -89,7 +89,7 @@ const LoginScreen = ({ navigation }) => {
                         textAlign: 'center',
                         marginTop: 60
                     }}>
-                       Sign in with your phone number
+                        Sign in with your phone number
                     </Text>
 
                     {/* Input */}
@@ -157,13 +157,18 @@ const LoginScreen = ({ navigation }) => {
 
                     {/* OTP Text */}
 
-                    <Text style={{
-                        ...Fonts.blackColor16Bold,
-                        textAlign: 'center',
-                        marginTop: 35
-                    }}>
-                     We’ll send you an OTP for verification {"\n"} on this mobile number
-                    </Text>
+
+
+                    <Image source={require('../../Assets/images/gif/login.gif')}
+                        style={{ width: 300, height: 300, resizeMode: 'contain',alignSelf:'center' }} />
+                        <Text style={{
+                                    ...Fonts.blackColor16Bold,
+                                    textAlign: 'center',
+                                    marginVertical:20
+
+                                }}>
+                                    We’ll send you an OTP for verification {"\n"} on this mobile number
+                                </Text>
 
                     {/* Facebook and Google Buttons */}
 

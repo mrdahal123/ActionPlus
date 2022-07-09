@@ -120,6 +120,10 @@ export const Fonts = {
         fontSize: 14,
         // fontFamily: 'Montserrat_Bold',
     },
+    grayColor26Regular:{
+        color:'#fff',
+        fontSize:32,
+    },
 
     grayColor16Bold: {
         color: '#808080',
@@ -136,6 +140,11 @@ export const Fonts = {
         color: '#808080',
         fontSize: 24,
         fontWeight:'bold'
+        // fontFamily: 'Montserrat_Bold',
+    },
+    grayColor24Regular: {
+        color: '#808080',
+        fontSize: 24,
         // fontFamily: 'Montserrat_Bold',
     },
 

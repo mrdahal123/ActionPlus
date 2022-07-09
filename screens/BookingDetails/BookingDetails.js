@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import {
     SafeAreaView,
     StatusBar,
@@ -17,18 +17,37 @@ import { Colors, Fonts, Sizes } from "../../constant/style";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-
+import AuthContext from '../../Context/AuthContext';
+import * as ApiService from '../../Utils/Utils';
 const BookingDetails = ({ route, navigation }) => {
+    const bookingInfo = route.params.data
+    console.log("bookingInfo",bookingInfo);
+    const { appState } = useContext(AuthContext);
+    let userData = appState.data;
+    console.log("userData",userData)
+
     const [id, setId] = useState('')
-    // useEffect(() => {
-    //     let userBookingId = route.params.userBookingId
-    //     setId(userBookingId)
-    //     console.log(userBookingId);
-    // }, [])
+    const [bookingData, setBookingData] = useState('');
+    const [loader, setLoader] = useState(false)
 
-    // const payment =[{
-
-    // }]
+    const bookingDetails = async () => {
+        setLoader(true)
+        try {
+            let response = await ApiService.PostMethode('address/get_address_by_phone_number', { "phone_number": userData });
+            console.log('response', response.data);
+            setLoader(false)
+            setBookingData(response.data)
+            // setExistingFlatlistData([response?.data])
+        } catch (error) {
+            setLoader(false)
+        }
+    }
+    // const internet_Handeling_Fee = bookingInfo.b_c_amount + 200
+    // const Tip = bookingInfo.b_c_amount + 100
+    // const Total = internet_Handeling_Fee + Tip
+    useEffect(()=>{
+        bookingDetails()
+    },[])
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
             <View style={{ flexDirection: 'row', padding:10 }}>
@@ -37,12 +56,13 @@ const BookingDetails = ({ route, navigation }) => {
             </View>
           <View style={{flex:1,padding:15}}>
           <View style={{ marginTop: 20 }}>
-                <Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551', }}># MRN893813</Text>
-                <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}> Today at 01:00 PM</Text>
+                <Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551', }}># {bookingInfo._id}</Text>
+                <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}> {bookingInfo.b_c_date} , {bookingInfo.b_c_time}</Text>
             </View>
             <View style={{ marginVertical: 30, }}>
                 <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', }}>Booking Address</Text>
-                <Text style={{ ...Fonts.blackColor17Bold, lineHeight: 25,color:"#000" }}>Postmaster , Dummani B.O, Chitradurga,Karnataka ,India (IN),Pin Code :-577531</Text>
+                <Text style={{ ...Fonts.blackColor17Bold, lineHeight: 25,color:"#000" }}>{bookingInfo.b_c_seat_address} {bookingInfo.b_c_state} , {bookingInfo.b_c_city} , 
+                {bookingInfo.b_c_flat_number} , {bookingInfo.b_c_floor} , Pin Code :- {bookingInfo.b_c_pin_code}</Text>
             </View>
             <View style={{ marginVertical: 10, }}>
                 <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', }}>Payment Method</Text>
@@ -52,24 +72,24 @@ const BookingDetails = ({ route, navigation }) => {
                 </View>
             </View>
             <View style={{ borderBottomWidth: 1, borderTopWidth: 0.8, borderBottomColor: '#696969', flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 15 }}>
-                <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}>Full Home Cleaning</Text>
-                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}><Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text>  1500</Text>
+                <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}>{bookingInfo.b_c_service_name}</Text>
+                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}><Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text> {bookingInfo.b_c_amount}</Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
                 <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}>Total</Text>
-                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}> <Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text> 2000</Text>
+                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}> <Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text> {bookingInfo.b_c_amount}</Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
                 <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}>internet Handeling Fee </Text>
-                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}><Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text> 200</Text>
+                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}><Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text> </Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
                 <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}>Tip</Text>
-                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}><Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text> 100</Text>
+                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}><Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text> </Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
                 <Text style={{ ...Fonts.blackColor18Bold, color: '#696969', }}>Paid</Text>
-                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}><Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text> 1800</Text>
+                <Text style={{ ...Fonts.blackColor20Bold, color: '#696969', flexDirection: 'row' }}><Text style={{ ...Fonts.blackColor20Bold, color: '#F9B551' }}>₹</Text> {bookingInfo.b_c_amount}</Text>
             </View>
             <View style={{ borderTopWidth: 1, borderTopColor: '#696969', marginTop: 15 }} />
 

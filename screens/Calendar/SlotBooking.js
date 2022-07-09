@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     sliderContainer: {
         width: '95%',
         paddingVertical: 15,
-        backgroundColor: '#000',
+        backgroundColor: '#fff',
         borderRadius: 10,
         shadowColor: "#F9B551",
         shadowOffset: {
