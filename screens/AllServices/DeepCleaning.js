@@ -4,6 +4,7 @@ import { Colors, Fonts } from '../../constant/style';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import NavigationHeaders from '../../Components/NavigationHeaders';
+import LinearGradient from 'react-native-linear-gradient';
 
 const DeepCleaning = ({ route, navigation }) => {
     let serviceType = route.params.serviceName

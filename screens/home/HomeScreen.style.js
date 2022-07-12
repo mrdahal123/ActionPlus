@@ -94,5 +94,6 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignSelf: 'center'
-    }
+    },
+    locationWrap:{ flexDirection: 'row',alignItems:'center',justifyContent:'center',}
 })

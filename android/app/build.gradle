@@ -259,6 +259,9 @@ android {
 
         }
     }
+    project.ext.react = [
+   bundleInRelease: false
+]
 }
 
 dependencies {

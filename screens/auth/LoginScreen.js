@@ -164,7 +164,7 @@ const LoginScreen = ({ navigation }) => {
                         <Text style={{
                                     ...Fonts.blackColor16Bold,
                                     textAlign: 'center',
-                                    marginVertical:20
+                                    // marginVertical:20
 
                                 }}>
                                     We’ll send you an OTP for verification {"\n"} on this mobile number

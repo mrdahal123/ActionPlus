@@ -132,6 +132,7 @@ const OtpScreen = ({ route, navigation }) => {
                                 codeLength={4}
                                 value={Otp}
                                 onTextChange={(txt) => setOTP(txt)}
+                                autoComplete={Otp}
                                 textStyle={{ color: Colors.themeColor, fontSize: 24 }}
                             />
                             {/* </TextInput> */}

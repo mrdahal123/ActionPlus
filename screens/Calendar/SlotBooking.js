@@ -38,11 +38,11 @@ const SlotBooking = ({ route, navigation }) => {
     // const [DeepClean, setDeepClean] = useState('')
 
     // const [newTime, setNewTime] = useState()
-    const [time, setTime] = useState('')
+    const [time, setTime] = useState([])
 
     // console.log("DefgdfaufugepClean",DeepClean);
     const handleSubmit = () => {
-        if (bookingDate !== '' && bookingTime !== '' && checkedFlat!=='') {
+        if (bookingDate !== '' && bookingTime !== '' && checkedFlat !== '') {
             let format = moment(bookingDate).format('L');
             navigation.navigate('SelectAdd', {
                 data: {
@@ -107,38 +107,37 @@ const SlotBooking = ({ route, navigation }) => {
 
 
     useEffect(() => {
-        var slots;
+        setTime('');
+        var slots = [];
         let today = moment().format("MMM Do YY");
         let checkdate = moment(bookingDate).format("MMM Do YY");
         let now = moment().endOf('hour');
 
         now = now.add(1, 'minutes').format("HH:mm");
 
-        console.log('bookingDate', bookingDate);
-        console.log(checkdate);
-        console.log(today);
+
 
         if (checkdate === today) {
-            slots = createTImeSlot(now, '20:00');
+            if ((now.split(':')[0] < 20) && (now.split(':')[0] > 7)) {
+                slots = createTImeSlot(now, '20:00');
+            }
+
         } else {
             slots = createTImeSlot('08:00', '20:00');
         }
+
+        console.log('slots', slots);
 
         setTime(slots);
     }, [bookingDate])
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
             <StatusBar backgroundColor={Colors.themeColor} />
             <ImageBackground
                 source={require('../../Assets/images/banner/background.png')}
-                style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff' }}>
-                <ScrollView showsVerticalScrollIndicator={false}
-                // contentContainerStyle={{
-                //     // flex: 1,
-                //     marginVertical: 30,
-                // }}
-                >
+                style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 10 }}>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{ marginVertical: 15 }}>
                         <NavigationHeaders onPress={() => { navigation.goBack() }} title="Select date and time" />
 
@@ -209,10 +208,10 @@ const SlotBooking = ({ route, navigation }) => {
                                                     setFlatType(arr)
                                                     setCheckedFlat(item)
                                                     console.log("item", arr)
-                                                    serviceType === 'Deep Cleaning ' ? setFinalPrice(item.serviceCharge):null
+                                                    serviceType === 'Deep Cleaning ' ? setFinalPrice(item.serviceCharge) : null
                                                 }}
                                             style={[styles.TimeButton, { backgroundColor: checkedFlat.flatType == item.flatType ? '#F9B551' : "#fff" }]}>
-                                            <Text>{item.flatType}</Text>
+                                            <Text style={{ color: checkedFlat.flatType == item.flatType ? '#fff' : '#000' }}>{item.flatType}</Text>
                                         </TouchableOpacity>
                                     </>
                                 )
@@ -225,40 +224,57 @@ const SlotBooking = ({ route, navigation }) => {
                             console.log(Element)
                             return (
                                 <>
-                                    <Text style={{ ...Fonts.blackColor16Bold, paddingVertical: 10 }}>
-                                    {/* {serviceType === 'Deep Cleaning ' ?setFinalPrice(Element.serviceCharge ) : finalPrice} */}
+                                    <Text style={{ ...Fonts.blackColor14Bold, paddingVertical: 10 }}>
+                                        {/* {serviceType === 'Deep Cleaning ' ?setFinalPrice(Element.serviceCharge ) : finalPrice} */}
                                         final amount includeing 18% GST is <Text style={{ color: Colors.themeColor, textAlign: 'center' }}>
                                             {serviceType === 'Deep Cleaning ' ? Element.serviceCharge : finalPrice} ₹</Text></Text>
                                     <Text style={{ ...Fonts.blackColor16Bold, padding: 15 }}>Duration of service  is <Text style={{ color: Colors.themeColor, textAlign: 'center' }}>
                                         {Element.mins} Mins</Text></Text>
-                                       
+
                                 </>
                             )
                         }) : null}
 
                     </View>
                     <Text style={{ ...Fonts.blackColor20Bold, padding: 15 }}>Slots Available For Booking</Text>
-                    <FlatList
+                    {/* <FlatList
                         scrollEnabled={false}
                         data={time}
                         numColumns={3}
-                        keyExtractor={({ item, index }) => index}
-                        renderItem={({ item, index }) => {
+                        keyExtractor={({ item, index }) => item}
+                        renderItem={({ item }) => {
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
                                         setBookingTime(item)
                                         setChecked(item)
                                     }}
-                                    // disabled={item.id == dateIndex ? true :false}
                                     style={[styles.TimeButton, { backgroundColor: checked == item ? '#F9B551' : "#fff" }]}>
-                                    {/* <Text style={{ color: checked == item ? '#fff' : '#000' }}>{item}</Text> */}
+                                        
                                     <Text style={{ color: checked == item ? '#fff' : '#000' }}>{moment(item, 'HH:mm').format("hh:mm a")}</Text>
                                 </TouchableOpacity>
                             )
                         }
                         }
-                    />
+                    /> */}
+
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                        {time.length > 0 ?
+                            time.map(item => (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setBookingTime(item)
+                                        setChecked(item)
+                                    }}
+                                    style={[styles.TimeButton, { backgroundColor: checked == item ? '#F9B551' : "#fff" }]}>
+
+                                    <Text style={{ color: checked == item ? '#fff' : '#000' }}>{moment(item, 'HH:mm').format("hh:mm a")}</Text>
+                                </TouchableOpacity>
+                            ))
+                            : <Text>No SLot Available</Text>
+                        }
+                    </View>
+
 
                     {/* Button */}
                     <LinearGradient
@@ -303,7 +319,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 10,
         marginHorizontal: 18,
-        // alignSelf: 'center',
         backgroundColor: '#fff',
         borderRadius: 10,
         shadowColor: "#F9B551",
@@ -323,7 +338,8 @@ const styles = StyleSheet.create({
         alignSelf: "flex-end",
         borderRadius: 25,
         justifyContent: 'center',
-        marginHorizontal: 20,
+        marginHorizontal: 25,
+        marginBottom: 5
     },
     sliderContainer: {
         width: '95%',

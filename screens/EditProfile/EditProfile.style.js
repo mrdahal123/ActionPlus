@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
         width:45,
         height:45,
         alignSelf:'center',
-        top:'76%',
+        top:'74%',
         left:'58%',
         borderRadius:100,
         borderWidth:1,

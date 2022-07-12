@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View,ActivityIndicator,Text } from 'react-native';
-import { useState,useEffect } from 'react';
+import { View, ActivityIndicator, Text } from 'react-native';
+import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNav from '../StackNavigation/StackNav';
 import AuthContext from '../../Context/AuthContext';
@@ -16,6 +16,7 @@ function MainNav() {
         userData: null,
         userToken: null,
         isLogout: false,
+        // userDetails: null,
     }
     let options = { appState, setAppState };
 
@@ -30,11 +31,12 @@ function MainNav() {
                     setIsLoading: false
                 };
             case 'LOGIN':
-                console.log("sign IN ",action)
+                console.log("sign IN ", action.payload)
                 return {
                     ...prevState,
                     userData: action.payload.data,
                     userToken: action.payload.token,
+                    // userDetails: action.payload.allDetails,
                     setIsLoading: false,
                     isLogout: false,
                 };
@@ -54,6 +56,14 @@ function MainNav() {
                     setIsLoading: false,
                     isLogout: false,
                 };
+            // case 'UPDATEPROFILE':
+            //     console.log("edut",action.payload);
+            //     return {
+            //         ...prevState,
+            //         userDetails: action.payload.data,
+            //         setIsLoading: false,
+            //         isLogout: false,
+            //     };
             default:
                 return prevState;
         }
@@ -66,20 +76,24 @@ function MainNav() {
             console.log("response main ", data);
             let userToken = data.data._id;
             let contextData;
-            let userData = data.data.user_mobile_number;
+            let userData = data.data
+            // let userDetails = data.data
+            // console.log("userDetails", userDetails)
             console.log("maine nav", userData, userToken);
             if (userToken && userData !== null) {
 
                 try {
                     await AsyncStorage.setItem('userToken', userToken.toString())
-                    await AsyncStorage.setItem('userData', userData.toString())
-                    contextData = { token: userToken, data: userData };
+                    // await AsyncStorage.setItem('userData', userData.toString())
+                    await AsyncStorage.setItem('userData', JSON.stringify(userData));
+                    contextData = { token: userToken, data: userData, };
                     console.log('contextData', contextData);
                     setAppState({
                         token: userToken,
                         data: userData,
+                       
                     });
-                    if ((userToken,userData)) {
+                    if ((userToken, userData)) {
 
                         dispatch({ type: 'LOGIN', payload: contextData })
                     }
@@ -98,6 +112,7 @@ function MainNav() {
                     setAppState({
                         token: userToken,
                         data: userData,
+                        
                     });
             }
 
@@ -115,7 +130,7 @@ function MainNav() {
         },
 
 
-        signUp: async() => {
+        signUp: async () => {
             let userToken = data.token;
             let contextData;
             let userData = data.data;
@@ -165,6 +180,7 @@ function MainNav() {
     const fetchUserData = async () => {
         let userToken = null;
         let userData = null;
+       
         let dataFound;
         try {
             userToken = await AsyncStorage.getItem('userToken');
@@ -172,6 +188,14 @@ function MainNav() {
             userData = JSON.parse(userData);
             console.log('User Token found ==>', userToken);
             console.log('User Data found ==>', userData);
+            // userToken = await AsyncStorage.getItem('userToken');
+            // userData = await AsyncStorage.getItem('userData');
+            // userDetails = await AsyncStorage.getItem('userDetails');
+            // userData = JSON.parse(userData);
+            // userDetails = JSON.parse(userDetails);
+            // console.log('User Token found ==>', userToken);
+            // console.log('User Data found ==>', userData);
+            // console.log('Parse userDetails found ==>', userDetails);
             if (userToken && userData !== null) {
                 setAppState({
                     token: userToken,
@@ -188,6 +212,7 @@ function MainNav() {
                 dataFound = {
                     token: userToken,
                     user: userData,
+                    
                 };
                 console.log('dataFound', dataFound);
                 dispatch({ type: 'RETRIEVE_TOKEN', payload: dataFound });
@@ -195,7 +220,7 @@ function MainNav() {
         } catch (error) {
             console.log('Error Occurred while fetching user Data', error);
         }
-       
+
     };
     // if (loginState.isLoading == true) {
     //     return (
@@ -212,14 +237,14 @@ function MainNav() {
     //         </View>
     //     );
     // } else {
-        console.log("LoginReducer",LoginReducer);
-        return (
-            <AuthContext.Provider value={{ ...options, authContext }}>
-                <NavigationContainer>
-                    {loginState.userToken == null ? <AuthNav /> : <StackNav />}
-                </NavigationContainer>
-            </AuthContext.Provider>
-        );
+    console.log("LoginReducer", LoginReducer);
+    return (
+        <AuthContext.Provider value={{ ...options, authContext }}>
+            <NavigationContainer>
+                {loginState.userToken == null ? <AuthNav /> : <StackNav />}
+            </NavigationContainer>
+        </AuthContext.Provider>
+    );
     // }
 }
 

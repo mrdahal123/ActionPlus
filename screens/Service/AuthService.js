@@ -4,7 +4,7 @@ import * as a from '../../ApiService/Api';
 export default new (class AuthService {
   async Post(url, data) {
     let PostUrl = a.API_BASE_URL + url;
-    console.log("here");
+    console.log(PostUrl);
     // return
 
     try {

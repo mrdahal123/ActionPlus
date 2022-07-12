@@ -1,4 +1,4 @@
-import React, { Component, useState,useContext } from 'react'
+import React, { Component, useState, useContext } from 'react'
 import {
   SafeAreaView,
   View,
@@ -18,7 +18,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import AuthContext from '../../Context/AuthContext';
 import NavigationHeaders from '../../Components/NavigationHeaders';
 const Profile = ({ navigation }) => {
-  const { authContext, AppUserData } = useContext(AuthContext);
+  const { authContext, appState } = useContext(AuthContext);
+  const userProfile = appState.data
+  console.log("appState,homescreen", appState)
+  console.log("alldetails", appState.data)
+  console.log("alldetails", userProfile)
   const LogOutAlertOccurred = (title, body, btnTxt, btnTxt2) => {
     Alert.alert(title, body, [
       {
@@ -35,19 +39,58 @@ const Profile = ({ navigation }) => {
       },
     ]);
   };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <ScrollView style={{ flex: 1, marginBottom: 5 }}>
-      <AntDesign name="arrowleft" size={24} color="black" style={{ position:'absolute',top:20,left:10,zIndex:500}} onPress={()=> navigation.goBack()} />
+        <AntDesign name="arrowleft" size={24} color="black" style={{ position: 'absolute', top: 20, left: 10, zIndex: 500 }} onPress={() => navigation.goBack()} />
         {/* <NavigationHeaders onPress={()=> navigation.goBack()} title={"Profile"}/> */}
         <View>
           <Text style={{ ...Fonts.blackColor24Bold, textAlign: 'center', marginTop: 20 }}>Profile</Text>
-          <Image source={require('../../Assets/images/banner/user.png')} style={styles.profile} />
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('EditProfile')
-          }} style={styles.cameraIcon}>
-            <FontAwesome5 name="user-edit" size={20} color="#fff" style={{marginLeft:5}} />
-          </TouchableOpacity>
+
+          {appState.data && appState.data.user_image ? (
+
+            <TouchableOpacity
+              style={styles.imgShadow} onPress={() => {
+                navigation.navigate('Profile')
+              }} >
+
+              <Image style={[styles.profile, { borderRadius: 100, }]} source={{ uri: `data:image/jpeg;base64, ${appState.data.user_image}` }} />
+
+            </TouchableOpacity>
+          ) : (
+
+            <>
+              <Image source={require('../../Assets/images/banner/user.png')} style={styles.profile} />
+            </>
+          )}
+              <TouchableOpacity onPress={() => {
+                navigation.navigate('EditProfile')
+              }} style={styles.cameraIcon}>
+                <FontAwesome5 name="user-edit" size={20} color="#fff" style={{ marginLeft: 5 }} />
+              </TouchableOpacity>
+
+          {/* {userProfile && userProfile.user_image ? (
+
+            <TouchableOpacity
+              style={styles.imgShadow} onPress={() => {
+                navigation.navigate('Profile')
+              }} >
+
+              <Image style={[styles.iconImage, { borderRadius: 100, }]} source={{ uri: `data:image/jpeg;base64, ${userProfile.user_image}` }} />
+
+            </TouchableOpacity>
+          ) : (
+
+            <TouchableOpacity
+              style={styles.imgShadow} onPress={() => {
+                navigation.navigate('Profile')
+              }} >
+
+              <Image source={require('../../Assets/images/banner/user.png')} style={[styles.iconImage, { borderRadius: 100, }]} />
+            </TouchableOpacity>
+          )} */}
+
         </View>
 
         <TouchableOpacity style={styles.container}>
@@ -72,7 +115,7 @@ const Profile = ({ navigation }) => {
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <Text style={styles.textHeader}>APP</Text>
-        <TouchableOpacity style={styles.container} onPress={()=>{navigation.navigate("Support")}}>
+        <TouchableOpacity style={styles.container} onPress={() => { navigation.navigate("Support") }}>
           <Text style={styles.textBody}>Support </Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>

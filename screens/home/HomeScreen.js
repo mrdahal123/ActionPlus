@@ -12,7 +12,7 @@ import {
     TextInput,
     Alert
 } from 'react-native'
-import React, { Component, useState, useEffect,useContext } from 'react'
+import React, { Component, useState, useEffect, useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
@@ -26,7 +26,10 @@ import AuthContext from '../../Context/AuthContext';
 export default function HomeScreen({ navigation }) {
 
     const { authContext, appState } = useContext(AuthContext);
-    console.log(appState.data)
+    const userProfile = appState.data
+    console.log("appState,homescreen", appState)
+    console.log("alldetails", appState.data)
+    console.log("alldetails", userProfile)
 
     useEffect(() => {
         getUserCurrentLocation()
@@ -45,8 +48,9 @@ export default function HomeScreen({ navigation }) {
             console.log("locValue", locValue);
             setLocation(locValue)
         },
-            error => Alert.alert('Error', JSON.stringify(error)),
-            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+            // error => Alert.alert('Error', JSON.stringify(error)),
+            // { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+            error => console.error('Error', JSON.stringify(error))
         );
     }
     console.log('location', location);
@@ -57,25 +61,40 @@ export default function HomeScreen({ navigation }) {
                 <View style={styles.wrapper}>
                     <View style={[styles.location, { justifyContent: 'space-between' }]}>
                         {/* <Image source={require('../../Assets/images/banner/location.png')}style={styles.iconImage} /> */}
-                        <TouchableOpacity style={styles.logo}>
-                            <Ionicons name="ios-location-sharp" size={30} color="#fff"  />
-                        </TouchableOpacity>
-                        <View style={{ flexDirection: 'column', marginRight: '40%' }}>
-                            <Text style={{ ...Fonts.blackColor20Bold, }}>Location</Text>
-                            <Text style={{ ...Fonts.grayColor16Bold, }}>Chennai</Text>
+
+                        <View style={styles.locationWrap}>
+                            <TouchableOpacity style={styles.logo}>
+                                <Ionicons name="ios-location-sharp" size={30} color="#fff" />
+                            </TouchableOpacity>
+                            <View style={{ marginLeft: 10 }}>
+                                <Text style={{ ...Fonts.blackColor20Bold, }}>Location</Text>
+                                {/* <Text style={{ ...Fonts.grayColor16Bold, }}>{userProfile.first_name}</Text> */}
+                            </View>
                             {/* <Text style={{ ...Fonts.grayColor16Bold, }}>{location.lat}</Text>
                             <Text style={{ ...Fonts.grayColor16Bold, }}>{location.long}</Text> */}
                         </View>
 
-                        {/* <FontAwesome5 name="history" size={30} color="#F9B551" onPress={() => { navigation.navigate("BookingHistory") }} /> */}
+                        {appState.data && appState.data.user_image ? (
 
-                        <TouchableOpacity
-                            style={styles.imgShadow} onPress={() => {
-                                navigation.navigate('Profile')
-                            }} >
+                            <TouchableOpacity
+                                style={styles.imgShadow} onPress={() => {
+                                    navigation.navigate('Profile')
+                                }} >
 
-                            <Image source={require('../../Assets/images/banner/user.png')} style={[styles.iconImage, { borderRadius: 100, }]} />
-                        </TouchableOpacity>
+                                <Image  style={[styles.iconImage, { borderRadius: 100, }]} source={{ uri: `data:image/jpeg;base64, ${appState.data.user_image}` }} />
+
+                            </TouchableOpacity>
+                        ) : (
+
+                            <TouchableOpacity
+                                style={styles.imgShadow} onPress={() => {
+                                    navigation.navigate('Profile')
+                                }} >
+
+                                <Image source={require('../../Assets/images/banner/user.png')} style={[styles.iconImage, { borderRadius: 100, }]} />
+                            </TouchableOpacity>
+                        )}
+
                     </View>
 
 
@@ -125,16 +144,16 @@ export default function HomeScreen({ navigation }) {
                     </View>
 
                     {/* Banner */}
-                   <Image source={require('../../Assets/images/banner/action+banner1.png')} style={styles.imgBanner} resizeMode={'contain'} />
+                    <Image source={require('../../Assets/images/banner/action+banner1.png')} style={styles.imgBanner} resizeMode={'contain'} />
 
                     <Text style={{ ...Fonts.blackColor20Bold }}>Best offers</Text>
 
                     {/* Banner */}
-                  <Image source={require('../../Assets/images/banner/action+banner2.png')} style={styles.imgBanner} resizeMode={'contain'} />
-                  <Image source={require('../../Assets/images/banner/action+banner1.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                  <Image source={require('../../Assets/images/banner/action+banner2.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                  <Image source={require('../../Assets/images/banner/action+banner3.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                  <Image source={require('../../Assets/images/banner/action+banner4.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                    <Image source={require('../../Assets/images/banner/action+banner2.png')} style={styles.imgBanner} resizeMode={'contain'} />
+                    <Image source={require('../../Assets/images/banner/newBanner.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                    <Image source={require('../../Assets/images/banner/newBanner2.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                    <Image source={require('../../Assets/images/banner/action+banner3.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                    <Image source={require('../../Assets/images/banner/action+banner4.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
                 </View>
             </ScrollView>
         </SafeAreaView>
