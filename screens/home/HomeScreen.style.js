@@ -4,18 +4,28 @@ import { Colors, Fonts, Sizes } from "../../constant/style";
 export const styles = StyleSheet.create({
     location: {
         width: '100%',
-        paddingVertical: 20,
         alignItems: 'center',
         flexDirection: 'row',
+        
     },
     logo:{
-        width:60,
-        height:60,
+        width:40,
+        height:40,
         alignItems:'center',
         justifyContent:'center',
         backgroundColor:Colors.themeColor,
         borderRadius:100,
        
+       
+    },
+    iconCircle :{
+        width:80,
+        height:80,
+        borderWidth:4,
+        borderRadius:100,
+        borderColor:Colors.grayLight,
+        justifyContent:'center',
+        alignItems:'center'
     },
     iconImage: {
         width: 60,
@@ -23,8 +33,8 @@ export const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     iconImageBanner: {
-        width: 80,
-        height: 80,
+        width: '60%',
+        height: '60%',
         resizeMode: 'contain',
     },
     imgShadow:{
@@ -39,10 +49,41 @@ export const styles = StyleSheet.create({
         shadowRadius: 6.27,
         elevation: 10,
     },
-    imgBanner:{
-        width:350,
-        height:200,
+    locationWrapper:{
+        width:50,
+        height:50,
+        justifyContent:'center',
+        alignItems:'center',
+        borderWidth:3,
+        borderRadius:100,
+        borderColor:Colors.grayLight,
+    },
+    carouselimg: {
+        width:'90%',
+        height:180,
+        borderRadius:10,
         alignSelf:'center',
+        resizeMode:'contain',
+        
+      },
+    carousel: {
+        height: 200,
+        width: '90%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 3,
+        zIndex: 1,
+       marginHorizontal:10,
+       alignSelf:'center',
+        marginVertical:15,
+        borderRadius:10
+      },
+    imgBanner:{
+        width:'100%',
+        height:180,
+        borderRadius:10,
+        alignSelf:'center',
+        resizeMode:'contain',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -86,14 +127,15 @@ export const styles = StyleSheet.create({
     },
     wrapper: {
         flex: 1,
-        paddingVertical: 30,
+        paddingVertical: 10,
         paddingHorizontal: 20
     },
     serviceType: {
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginVertical:10
     },
     locationWrap:{ flexDirection: 'row',alignItems:'center',justifyContent:'center',}
 })

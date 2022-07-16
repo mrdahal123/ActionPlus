@@ -23,6 +23,7 @@ import * as ApiService from '../../Utils/Utils';
 import AuthContext from '../../Context/AuthContext';
 import AuthService from '../Service/AuthService';
 import axios from "axios";
+import GlobalButton from '../../Components/GlobalButton';
 
 const LoginScreen = ({ navigation }) => {
     const [mobileNum, setMobileNum] = useState('')
@@ -42,7 +43,8 @@ const LoginScreen = ({ navigation }) => {
                 console.log(Response.status);
                 if (Response.status === "success") {
                     navigation.navigate('OtpScreen', {
-                        num: values.mobileNumber
+                        num: values.mobileNumber,
+                        
                     })
                 }
                 else {
@@ -142,7 +144,9 @@ const LoginScreen = ({ navigation }) => {
                                         </Text>
                                     </View>
                                 )}
-                                <LinearGradient
+                                <GlobalButton title={"Continue"} inlineStyle={{margin:20,marginTop:10}} onPress={() =>
+                                            handleSubmit()}/>
+                                {/* <LinearGradient
                                     colors={['#F9B551', '#F87B2C']}
                                     style={styles.continueButtonStyle}>
                                     <TouchableOpacity
@@ -150,7 +154,7 @@ const LoginScreen = ({ navigation }) => {
                                             handleSubmit()}>
                                         <Text style={{ ...Fonts.whiteColor16Bold }}>Continue</Text>
                                     </TouchableOpacity>
-                                </LinearGradient>
+                                </LinearGradient> */}
                             </View>
                         )}
                     </Formik>
@@ -158,9 +162,9 @@ const LoginScreen = ({ navigation }) => {
                     {/* OTP Text */}
 
 
-
+{/* 
                     <Image source={require('../../Assets/images/gif/login.gif')}
-                        style={{ width: 300, height: 300, resizeMode: 'contain',alignSelf:'center' }} />
+                        style={{ width: 300, height: 300, resizeMode: 'contain',alignSelf:'center' }} /> */}
                         <Text style={{
                                     ...Fonts.blackColor16Bold,
                                     textAlign: 'center',
@@ -210,7 +214,7 @@ const styles = StyleSheet.create({
         padding: 15,
         width: '90%',
         alignSelf: 'center',
-        borderRadius: 25,
+        borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

@@ -8,7 +8,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const DeepCleaning = ({ route, navigation }) => {
     let serviceType = route.params.serviceName
-    console.log(serviceType);
+    let catId = route.params.catId
+    console.log(serviceType,catId);
 
     const serviceInfo = [
         { type: "All rooms cobweb removal." },
@@ -60,7 +61,7 @@ const DeepCleaning = ({ route, navigation }) => {
             </LinearGradient>
             <TouchableOpacity style={styles.TimeButton} onPress={() => {
                 navigation.navigate('SlotBooking', {
-                    serviceName: serviceType
+                    serviceName: serviceType ,catId
                 })
             }}>
 

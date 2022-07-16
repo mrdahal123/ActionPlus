@@ -47,10 +47,16 @@ export const Fonts = {
         fontWeight:'bold'
         // fontFamily: 'Montserrat_Bold',
     },
+    blackColor18Medium: {
+        color: '#000000',
+        fontSize: 18,
+        
+        // fontFamily: 'Montserrat_Bold',
+    },
     blackColor20Bold: {
         color: '#000000',
         fontSize: 20,
-        fontWeight:'bold'
+        // fontWeight:'bold'
         // fontFamily: 'Montserrat_Bold',
     },
 
@@ -205,10 +211,13 @@ export const Colors = {
     primaryColor: '#4667D5',
     bodyBackColor: '#F2F4F6',
     grayColor: '#808080',
+    grayLightColor: '#f9f9f9',
+    grayLight: '#D3D3D3',
     orangeColor: '#FFA500',
     greenColor: '#006400',
     redColor: '#FF0000',
     blueColor: '#448AFF',
+    lightPink: '##fff9fa',
 }
 
 export const Sizes = {

@@ -1,4 +1,4 @@
-import React, { Component, useState, useContext } from 'react'
+import React, { Component, useState, useContext,useEffect } from 'react'
 import {
   SafeAreaView,
   View,
@@ -8,7 +8,8 @@ import {
   ScrollView,
   TextInput,
   StyleSheet,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -17,12 +18,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import AuthContext from '../../Context/AuthContext';
 import NavigationHeaders from '../../Components/NavigationHeaders';
-const Profile = ({ navigation }) => {
+import AuthService from '../Service/AuthService';
+import { useFocusEffect } from '@react-navigation/native';
+const Profile = ({ route, navigation }) => {
   const { authContext, appState } = useContext(AuthContext);
-  const userProfile = appState.data
-  console.log("appState,homescreen", appState)
-  console.log("alldetails", appState.data)
-  console.log("alldetails", userProfile)
+  // const userProfile = route.params.data
+
+  // console.log("alldetails", userProfile)
   const LogOutAlertOccurred = (title, body, btnTxt, btnTxt2) => {
     Alert.alert(title, body, [
       {
@@ -39,36 +41,69 @@ const Profile = ({ navigation }) => {
       },
     ]);
   };
+  const [loader, setLoader] = useState(false)
+  const [userAllDetails, setUserAllDetails] = useState('')
+
+  const getProfileApi = async () => {
+        
+    setLoader(true)
+    let apiData={
+        "user_mobile_number":appState.data.user_mobile_number
+    }
+    console.log("getProfileApi", apiData);
+    try {
+        let response = await AuthService.Post('get_user_by_phone_number', apiData);
+        console.log('getProfileApi response', response.data[0]);
+        setLoader(false)
+        setUserAllDetails(response.data[0])
+    } catch (error) {
+        setLoader(false)
+        console.log("Data", error);
+    }
+}
+
+useFocusEffect(
+  React.useCallback(() => {
+    const unsubscribe = getProfileApi();
+    return () => unsubscribe;
+  }, [])
+)
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
+      {loader == true ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+                <ActivityIndicator size={30} color={Colors.themeColor} />
+            </View>
+            ):(
       <ScrollView style={{ flex: 1, marginBottom: 5 }}>
         <AntDesign name="arrowleft" size={24} color="black" style={{ position: 'absolute', top: 20, left: 10, zIndex: 500 }} onPress={() => navigation.goBack()} />
         {/* <NavigationHeaders onPress={()=> navigation.goBack()} title={"Profile"}/> */}
         <View>
           <Text style={{ ...Fonts.blackColor24Bold, textAlign: 'center', marginTop: 20 }}>Profile</Text>
 
-          {appState.data && appState.data.user_image ? (
+          {userAllDetails!=='' ? (
 
             <TouchableOpacity
-              style={styles.imgShadow} onPress={() => {
-                navigation.navigate('Profile')
-              }} >
+              style={styles.imgShadow}>
 
-              <Image style={[styles.profile, { borderRadius: 100, }]} source={{ uri: `data:image/jpeg;base64, ${appState.data.user_image}` }} />
+              <Image style={[styles.profile, { borderRadius: 100, }]} source={{ uri: `data:image/jpeg;base64, ${userAllDetails.user_image}` }} />
 
             </TouchableOpacity>
           ) : (
 
-            <>
-              <Image source={require('../../Assets/images/banner/user.png')} style={styles.profile} />
-            </>
+
+            <Image source={require('../../Assets/images/banner/user.png')} style={styles.profile} />
+
           )}
-              <TouchableOpacity onPress={() => {
-                navigation.navigate('EditProfile')
-              }} style={styles.cameraIcon}>
-                <FontAwesome5 name="user-edit" size={20} color="#fff" style={{ marginLeft: 5 }} />
-              </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('EditProfile',{
+              data:userAllDetails
+            })
+          }} style={styles.cameraIcon}>
+            <FontAwesome5 name="user-edit" size={20} color="#fff" style={{ marginLeft: 5 }} />
+          </TouchableOpacity>
+
 
           {/* {userProfile && userProfile.user_image ? (
 
@@ -94,37 +129,47 @@ const Profile = ({ navigation }) => {
         </View>
 
         <TouchableOpacity style={styles.container}>
-          <Text style={styles.textBody}>Favorites</Text>
+        <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Favorites</Text>
+          {/* <Text style={styles.textBody}>Favorites</Text> */}
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.container}>
-          <Text style={styles.textBody} >Notifications</Text>
+          {/* <Text style={styles.textBody} >Notifications</Text> */}
+          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Notifications</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => { navigation.navigate("Booking") }} style={styles.container}>
-          <Text style={styles.textBody}>Booking Details</Text>
+          {/* <Text style={styles.textBody}>Booking Details</Text> */}
+          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Booking Details</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
-        <Text style={styles.textHeader}>ABOUT</Text>
+        {/* <Text style={styles.textHeader}>ABOUT</Text> */}
+        <Text style={[styles.textHeader,{ ...Fonts.grayColor18Bold, marginTop: 5,  }]}>ABOUT</Text>
         <TouchableOpacity style={styles.container} onPress={() => { navigation.navigate("PrivacyPolicy") }}>
-          <Text style={styles.textBody}>Privacy Policy</Text>
+          {/* <Text style={styles.textBody}>Privacy Policy</Text> */}
+          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Privacy Policy</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.container}>
-          <Text style={styles.textBody}>Terms of use</Text>
+          {/* <Text style={styles.textBody}>Terms of use</Text> */}
+          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Terms of use</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
-        <Text style={styles.textHeader}>APP</Text>
+        {/* <Text style={styles.textHeader}>APP</Text> */}
+        <Text style={[styles.textHeader,{ ...Fonts.grayColor18Bold,   }]}>APP</Text>
         <TouchableOpacity style={styles.container} onPress={() => { navigation.navigate("Support") }}>
-          <Text style={styles.textBody}>Support </Text>
+          {/* <Text style={styles.textBody}>Support </Text> */}
+          <Text style={{ ...Fonts.grayColor18Bold, textAlign: 'center' }}>Support</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.container}>
-          <Text style={styles.textBody}>Report a Bug</Text>
+          {/* <Text style={styles.textBody}>Report a Bug</Text> */}
+          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Report a Bug</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.container}>
-          <Text style={styles.textBody}>App Version 1.0</Text>
+          {/* <Text style={styles.textBody}>App Version 1.0</Text> */}
+          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>App Version 1.0</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
         <LinearGradient
@@ -139,7 +184,7 @@ const Profile = ({ navigation }) => {
             <Text style={{ ...Fonts.whiteColor16Bold }}>Logout</Text>
           </TouchableOpacity>
         </LinearGradient>
-      </ScrollView>
+      </ScrollView>)}
     </SafeAreaView>
   )
 }

@@ -8,7 +8,8 @@ import {
     Modal,
     Pressable,
     onPress,
-    Alert
+    Alert,
+    ImageBackground
 } from 'react-native'
 import React, { Component, useState, useContext, useEffect } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
@@ -24,8 +25,9 @@ import * as Yup from 'yup';
 import AuthContext from '../../Context/AuthContext';
 import { ActivityIndicator } from 'react-native-paper';
 import AuthService from '../Service/AuthService';
+import GlobalButton from '../../Components/GlobalButton';
 
-const EditProfile = ({ navigation }) => {
+const EditProfile = ({ route, navigation }) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [lastName, setLastName] = useState('')
@@ -34,11 +36,11 @@ const EditProfile = ({ navigation }) => {
     const [localImage, setLocalImage] = useState('');
     const [modalVisible, setModalVisible] = useState(false)
     const [loader, setLoader] = useState(false)
+    const [userAllDetails, setUserAllDetails] = useState()
 
     const { authContext, appState } = useContext(AuthContext);
-    const userProfile = appState.data
-    console.log("appState,homescreen", appState)
-    console.log("alldetails", appState.data)
+    const userProfile = route.params.data
+
     console.log("alldetails", userProfile)
 
 
@@ -55,16 +57,17 @@ const EditProfile = ({ navigation }) => {
     });
 
     const EditProfileApi = async (apiData) => {
-        
+
         setLoader(true)
         try {
             let response = await AuthService.Post('edit_user_profiles', apiData);
-            console.log('response', response);
+            console.log('EditProfileApi response', response);
             setLoader(false)
             if (response.status === "success") {
-                authContext.signIn({
-                    data: response.data
-                })
+                // authContext.signIn({
+                //     data: response.data
+                // })
+                getProfileApi()
                 navigation.navigate("HomeScreen")
             }
             else {
@@ -79,6 +82,24 @@ const EditProfile = ({ navigation }) => {
         }
     }
 
+
+    const getProfileApi = async () => {
+
+        setLoader(true)
+        let apiData = {
+            "user_mobile_number": appState.data.user_mobile_number
+        }
+        console.log("getProfileApi", apiData);
+        try {
+            let response = await AuthService.Post('get_user_by_phone_number', apiData);
+            console.log('getProfileApi response', response.data[0]);
+            setLoader(false)
+            setUserAllDetails(response.data[0])
+        } catch (error) {
+            setLoader(false)
+            console.log("Data", error);
+        }
+    }
 
     const pickImage = () => {
         ImagePicker.openPicker({
@@ -107,96 +128,92 @@ const EditProfile = ({ navigation }) => {
             setModalVisible(false);
         });
     }
-    // useEffect(() => {
-    //     EditProfileApi()
-    // }, [])
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
             {loader == true ? (
-                <ActivityIndicator size={30} color={Colors.themeColor} />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+                    <ActivityIndicator size={30} color={Colors.themeColor} />
+                </View>
             ) : (
-
-                <ScrollView>
-
-                    <View style={{ paddingVertical: 15 }}>
-                        <View style={{ flexDirection: 'row', padding: 10 }}>
-                            <AntDesign name="arrowleft" size={24} color="black" style={{ padding: 2, }} onPress={() => { navigation.goBack() }} />
-                            <Text style={{ ...Fonts.blackColor20Bold, marginLeft: '25%' }}>Edit profile</Text>
-                        </View>
-
+                <View style={{ flex: 1 }}>
+                    <View style={{ height: '25%', backgroundColor: Colors.themeColor, flexDirection: 'row', alignItems: 'flex-start', padding: 10 }}>
+                        <AntDesign name="arrowleft" size={24} color="black" style={{ padding: 2, }} onPress={() => { navigation.goBack() }} />
+                        <Text style={{ ...Fonts.blackColor20Bold, marginLeft: '30%',color:'#fff' }}>Edit profile</Text></View>
+                    <View style={{ position: 'absolute', bottom: 0, top: '5%', alignSelf: 'center', zIndex: 100 }}>
                         {localImage == '' && appState.data.user_image == '' ? (
                             <Image source={require('../../Assets/images/banner/user.png')} style={styles.profile} />
+
                         ) : <Image source={{
                             uri:
-                                localImage !== '' ? localImage : `data:image/jpeg;base64, ${appState.data.user_image}`
-                        }} style={styles.profile} />}
-
+                                localImage !== '' ? localImage : `data:image/jpeg;base64, ${userProfile.user_image}`
+                        }} style={styles.profile} />
+                        }
                         <TouchableOpacity onPress={() => { setModalVisible(true) }} style={styles.cameraIcon}>
 
                             <FontAwesome5 name="camera" size={24} color="#fff" />
                         </TouchableOpacity>
 
-                        <Modal transparent={true} visible={modalVisible}>
-                            <Pressable
-                                onPress={() => {
-                                    setModalVisible(false);
-                                }}
-                                style={{
-                                    backgroundColor: '#000000aa',
-                                    flex: 1,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}>
-                                <View
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        padding: 20,
-                                        borderRadius: 15,
-                                        width: '90%',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                    }}>
-                                    <View style={{ flexDirection: 'row', marginBottom: 15 }}>
-                                        <LinearGradient
-                                            colors={['#F9B551', '#F87B2C']}
-                                            style={[styles.continueButtonStyle, { minWidth: '40%', justifyContent: 'space-between' }]}>
-                                            <TouchableOpacity
-                                                onPress={() => { pickImage() }}>
-                                                <Text style={{ ...Fonts.whiteColor16Bold }}>Gallery</Text>
-                                            </TouchableOpacity>
-                                            <FontAwesome name="photo" size={24} color='#fff' />
-                                        </LinearGradient>
-                                        <LinearGradient
-                                            onPress={() => { openCamera() }}
-                                            colors={['#F9B551', '#F87B2C']}
-                                            style={[styles.continueButtonStyle, { minWidth: '40%', justifyContent: 'space-between', }]}>
-                                            <TouchableOpacity
-                                                onPress={() => { openCamera() }}>
-                                                <Text style={{ ...Fonts.whiteColor16Bold }}>Camera</Text>
-                                            </TouchableOpacity>
-                                            <FontAwesome5 name="camera" size={24} color="#fff" onPress={() => { openCamera() }} />
-                                        </LinearGradient>
-                                    </View>
-                                </View>
-                            </Pressable>
-                        </Modal>
-
                     </View>
+                    <View style={{ width: '90%', alignSelf: 'center', backgroundColor: '#fff', flexGrow: 1, position: 'absolute', bottom: 0, top: '15%', borderRadius: 20 }} />
+                    <Modal transparent={true} visible={modalVisible}>
+                        <Pressable
+                            onPress={() => {
+                                setModalVisible(false);
+                            }}
+                            style={{
+                                backgroundColor: '#000000aa',
+                                flex: 1,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+                            <View
+                                style={{
+                                    backgroundColor: '#fff',
+                                    padding: 20,
+                                    borderRadius: 15,
+                                    width: '90%',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                <View style={{ flexDirection: 'row', marginBottom: 15 }}>
+                                    <LinearGradient
+                                        colors={['#F9B551', '#F87B2C']}
+                                        style={[styles.continueButtonStyle, { minWidth: '40%', justifyContent: 'space-between' }]}>
+                                        <TouchableOpacity
+                                            onPress={() => { pickImage() }}>
+                                            <Text style={{ ...Fonts.whiteColor16Bold }}>Gallery</Text>
+                                        </TouchableOpacity>
+                                        <FontAwesome name="photo" size={24} color='#fff' />
+                                    </LinearGradient>
+                                    <LinearGradient
+                                        onPress={() => { openCamera() }}
+                                        colors={['#F9B551', '#F87B2C']}
+                                        style={[styles.continueButtonStyle, { minWidth: '40%', justifyContent: 'space-between', }]}>
+                                        <TouchableOpacity
+                                            onPress={() => { openCamera() }}>
+                                            <Text style={{ ...Fonts.whiteColor16Bold }}>Camera</Text>
+                                        </TouchableOpacity>
+                                        <FontAwesome5 name="camera" size={24} color="#fff" onPress={() => { openCamera() }} />
+                                    </LinearGradient>
+                                </View>
+                            </View>
+                        </Pressable>
+                    </Modal>
 
                     <Formik
                         validationSchema={SignInSchema}
                         initialValues={{
-                            name: appState.data && appState.data.first_name ? appState.data.first_name : '',
-                            lastName: appState.data && appState.data.last_name ? appState.data.last_name : '',
-                            email: appState.data && appState.data.user_email ? appState.data.user_email : '',
-                            mobileNumber: appState.data && appState.data.user_mobile_number ? appState.data.user_mobile_number.toString() : '',
+                            name: userProfile && userProfile.first_name ? userProfile.first_name : '',
+                            lastName: userProfile && userProfile.last_name ? userProfile.last_name : '',
+                            email: userProfile && userProfile.user_email ? userProfile.user_email : '',
+                            mobileNumber: userProfile && userProfile.user_mobile_number ? userProfile.user_mobile_number.toString() : '',
 
                         }}
                         onSubmit={values => {
 
                             console.log(values);
                             if (values) {
-                                let imagePth = (image == '' && appState.data.user_image ) ? appState.data.user_image : (image !== '') ? image : '';
+                                let imagePth = (image == '' && userProfile.user_image) ? userProfile.user_image : (image !== '') ? image : '';
                                 let apiData = {
                                     "first_name": values.name,
                                     "last_name": values.lastName,
@@ -244,6 +261,7 @@ const EditProfile = ({ navigation }) => {
                                     onBlur={handleBlur('lastName')}
                                     isErrors={errors.lastName}
                                     isTouched={touched.lastName}
+                                    
                                 />
 
                                 <CustomTextInput
@@ -270,84 +288,14 @@ const EditProfile = ({ navigation }) => {
                                     keyboardType={'number-pad'}
                                     isErrors={errors.mobileNumber}
                                     isTouched={touched.mobileNumber}
-                                />
-
-
-
-                                <LinearGradient
-                                    colors={['#F9B551', '#F87B2C']}
-                                    style={styles.continueButtonStyle}>
-                                    <TouchableOpacity
-                                        onPress={() => { handleSubmit() }
-                                        }>
-                                        <Text style={{ ...Fonts.whiteColor16Bold }}>Save</Text>
-                                    </TouchableOpacity>
-                                </LinearGradient>
+                                />  
+                                <GlobalButton title={"Save"} onPress={() =>{handleSubmit()}} inlineStyle={{marginRight:20,marginTop:20}} />
                             </View>
                         )}
                     </Formik>
 
-
-                    {/* <CustomTextInput
-                        icon={require('../../Assets/images/banner/name.png')}
-                        placeholder="First Name"
-                        placeholderTextColor={'#000'}
-                        value={appState.data && appState.data.first_name ? appState.data.first_name : name}
-                        onChangeText={(text) => {
-                            setName(text)
-                        }}
-                    // isErrors={errors.email}
-                    // isTouched={touched.email}
-                    />
-
-                    <CustomTextInput
-                        icon={require('../../Assets/images/banner/name.png')}
-                        placeholder="Last Name"
-                        placeholderTextColor={'#000'}
-                        value={appState.data && appState.data.last_name ? appState.data.last_name : lastName}
-                        onChangeText={(text) => {
-                            setLastName(text)
-                        }}
-                    // isErrors={errors.email}
-                    // isTouched={touched.email}
-                    />
-
-                    <CustomTextInput
-                        icon={require('../../Assets/images/banner/email.png')}
-                        placeholder="Email"
-                        placeholderTextColor={'#000'}
-                        value={appState.data && appState.data.user_email ? appState.data.user_email : email}
-                        keyboardType={'email-address'}
-                        onChangeText={(text) => {
-                            setEmail(text)
-                        }}
-                    // isErrors={errors.email}
-                    // isTouched={touched.email}
-                    />
-                    <CustomTextInput
-                        icon={require('../../Assets/images/banner/phone.png')}
-                        placeholder="Phone Number"
-                        placeholderTextColor={'#000'}
-                        value={appState.data && appState.data.user_mobile_number ? appState.data.user_mobile_number.toString() : phone}
-                        onChangeText={(text) => {
-                            setPhone(text)
-                        }}
-                        keyboardType={'number-pad'}
-                    // isErrors={errors.email}
-                    // isTouched={touched.email}
-                    />
-
-
-                    <LinearGradient
-                        colors={['#F9B551', '#F87B2C']}
-                        style={styles.continueButtonStyle}>
-                        <TouchableOpacity
-                            onPress={() => { handleSubmit() }
-                            }>
-                            <Text style={{ ...Fonts.whiteColor16Bold }}>Save</Text>
-                        </TouchableOpacity>
-                    </LinearGradient> */}
-                </ScrollView>
+                   
+                </View>
             )}
         </SafeAreaView>
     )

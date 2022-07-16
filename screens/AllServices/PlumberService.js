@@ -8,9 +8,9 @@ const PlumberService = ({navigation}) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <StatusBar backgroundColor={Colors.themeColor} />
       <View style={{ width: '100%' }}>
-        <Image
+        {/* <Image
           source={require('../../Assets/images/banner/graphic.png')}
-          style={{ width: 200, height: 200, resizeMode: "contain", position: 'absolute', right: -30, }} />
+          style={{ width: 200, height: 200, resizeMode: "contain", position: 'absolute', right: -30, }} /> */}
         <AntDesign name="arrowleft" size={24} color="black" style={{ padding: 20, }} onPress={() => { navigation.goBack() }} />
       </View>
       <Image
@@ -27,7 +27,8 @@ const PlumberService = ({navigation}) => {
         Services will be available {"\n"} in your area soon</Text>
 
       <Image
-        source={require('../../Assets/images/service-include/common.png')}
+        source={require('../../Assets/images/gif/serviceNotAvail.gif')}
+        // style={{width:'100%',justifyContent:'center',alignItems:'center',}}
         style={styles.image}
         resizeMode='contain'
       />
@@ -52,10 +53,10 @@ const styles = StyleSheet.create({
     position: 'relative',
     alignSelf: 'center'
   },
-  image:{
-   flexGrow:1,
+  image:{width:'100%',
     resizeMode:'contain',
     alignSelf:'center',
-    marginBottom:200
+    position:'absolute',
+    top:'30%'
   }
 })

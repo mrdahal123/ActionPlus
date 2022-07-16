@@ -8,9 +8,10 @@ import {
     TouchableOpacity,
     Alert,
     ActivityIndicator,
-    TextInput
+    TextInput,
+    Keyboard
 } from 'react-native'
-import React, { Component, useState, useContext } from 'react'
+import React, { Component, useState, useContext, useEffect } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,6 +19,9 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import axios from 'axios';
 import AuthContext from '../../Context/AuthContext';
 import AuthService from '../Service/AuthService';
+import RNOtpVerify from 'react-native-otp-verify';
+import GlobalButton from '../../Components/GlobalButton';
+import { string } from 'yup';
 
 const OtpScreen = ({ route, navigation }) => {
     const [Otp, setOTP] = useState('')
@@ -67,6 +71,45 @@ const OtpScreen = ({ route, navigation }) => {
         }
     }
 
+
+    // getHash = () =>
+    //     RNOtpVerify.getHash()
+    //         .then(console.log)
+    //         .catch(console.log);
+
+    // startListeningForOtp = () =>
+    //     RNOtpVerify.getOtp()
+    //         .then(p => RNOtpVerify.addListener(otpHandler))
+    //         .catch(p => console.log(p));
+
+    // otpHandler = (message) => {
+    //     const otp = /(\d{4})/g.exec(message)[1];
+    //     this.setState({ otp });
+    // }
+
+    const otpHandler = (message) => {
+        console.log("message", message)
+        // const otp = /(\d{4})/g.exec(message)[1];
+        // console.log("Auto otp",otp)
+        // setOTP(otp)
+        RNOtpVerify.removeListener()
+        Keyboard.dismiss();
+    }
+
+    useEffect(() => {
+        RNOtpVerify.getHash()
+            .then(
+                Response =>
+                    console.log("sucess", Response))
+            .catch(console.log("error"));
+
+        RNOtpVerify.getOtp()
+            .then(p => RNOtpVerify.addListener(otpHandler()))
+            .catch(p => console.log(p));
+
+        return () => RNOtpVerify.removeListener()
+    })
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
             {loader == true ? (
@@ -77,84 +120,81 @@ const OtpScreen = ({ route, navigation }) => {
             )
                 : (
                     <>
-                        <StatusBar backgroundColor={Colors.themeColor} />
-                        <View style={{ width: '100%' }}>
+                        <View style={{ flex: 1 }}>
+                            <StatusBar backgroundColor={Colors.themeColor} />
+                            <View style={{ height: '30%', backgroundColor: Colors.themeColor, flexDirection: 'row', alignItems: 'flex-start', padding: 10 }} />
+
+                            <View style={{ width: '90%', alignSelf: 'center', backgroundColor: '#fff', flexGrow: 1, position: 'absolute', bottom: 0, top: '2%', borderRadius: 5 }} />
                             <Image
-                                source={require('../../Assets/images/banner/graphic.png')}
-                                style={{ width: 200, height: 200, resizeMode: "contain", position: 'absolute', right: -30, }} />
-                            <AntDesign name="arrowleft" size={24} color="black" style={{ padding: 20, }} onPress={() => { navigation.goBack() }} />
-                        </View>
-
-                        <Image
-                            source={require('../../Assets/images/banner/logo-top.jpg')}
-                            style={styles.appLogoStyle}
-                            resizeMode='contain'
-                        />
-
-
-                        <Text style={{
-                            ...Fonts.grayColor18Bold,
-                            textAlign: 'center',
-                            lineHeight: 25
-                            // ...Fonts.blackColor18Bold,
-                            // textAlign: 'center',
-
-                        }}>
-                            
-                             Please enter the 4-digit code sent {'\n'} to your mobile number ({mobNum})
-                        </Text>
-
-                        <View style={styles.inputContainer}>
-                            {/* <TextInput> */}
-                            <SmoothPinCodeInput
-                                placeholder=""
-                                editable={true}
-                                autoFocus={true}
-                                cellStyle={{
-                                    borderRadius: 8,
-                                    borderWidth: 2,
-                                    borderColor: '#fff',
-                                    backgroundColor: '#fff',
-                                    shadowColor: '#F87B2C',
-                                    shadowOffset: {
-                                        width: 0,
-                                        height: 2,
-                                    },
-                                    shadowOpacity: 1.25,
-                                    shadowRadius: 8.84,
-
-                                    elevation: 8,
-                                }}
-                                cellStyleFocused={{
-                                    borderColor: Colors.themeColor,
-                                }}
-                                cellSpacing={15}
-                                codeLength={4}
-                                value={Otp}
-                                onTextChange={(txt) => setOTP(txt)}
-                                autoComplete={Otp}
-                                textStyle={{ color: Colors.themeColor, fontSize: 24 }}
+                                source={require('../../Assets/images/banner/logo-top.jpg')}
+                                style={styles.appLogoStyle}
+                                resizeMode='contain'
                             />
-                            {/* </TextInput> */}
-                        </View>
 
-                        <View style={styles.butoonContainer}>
-                            <View style={{ flexDirection: 'column' }}>
-                                <Text>Didn’t receive the otp code! </Text>
+
+                            <Text style={{
+                                ...Fonts.blackColor18Medium,
+                                textAlign: 'center',
+                                marginVertical: 10,
+                                lineHeight: 25
+                                // ...Fonts.blackColor18Bold,
+                                // textAlign: 'center',
+
+                            }}>
+
+                                Please enter the 4-digit code sent {'\n'} to your mobile number ({mobNum})
+                            </Text>
+
+                            <View style={styles.inputContainer}>
+                                {/* <TextInput> */}
+                                <SmoothPinCodeInput
+                                    placeholder=""
+                                    editable={true}
+                                    autoFocus={true}
+                                    cellStyle={{
+                                        borderRadius: 8,
+                                        borderWidth: 2,
+                                        borderColor: '#fff',
+                                        backgroundColor: Colors.grayLight,
+                                        shadowColor: Colors.grayLight,
+                                        shadowOffset: {
+                                            width: 0,
+                                            height: 2,
+                                        },
+                                        shadowOpacity: 1.25,
+                                        shadowRadius: 8.84,
+
+                                        elevation: 8,
+                                    }}
+                                    cellStyleFocused={{
+                                        borderColor: Colors.themeColor,
+                                    }}
+                                    cellSpacing={15}
+                                    codeLength={4}
+                                    value={Otp}
+                                    onTextChange={(txt) => setOTP(txt)}
+                                    autoComplete={Otp}
+                                    textStyle={{ color: Colors.themeColor, fontSize: 24 }}
+                                />
+                                {/* </TextInput> */}
+                            </View>
+
+                            <View style={{ alignSelf: 'center', marginVertical: 10 }}>
+                                {/* <View style={{ flexDirection: 'column' }}> */}
+                                <Text style={Fonts.grayColor16Bold}>Didn’t receive the otp code! </Text>
                                 <TouchableOpacity onPress={() => {
                                     navigation.navigate('LoginScreen');
                                 }}><Text style={{
                                     ...Fonts.blackColor18Bold,
+                                    color: Colors.themeColor,
+
+                                    textAlign: 'center', marginVertical: 10
                                 }}>Resend</Text></TouchableOpacity>
+                                {/* </View> */}
+
+                                <GlobalButton onPress={() => { moveTo() }} title="Verify" inlineStyle={{ alignSelf: 'center' }} />
+
                             </View>
-                            <LinearGradient
-                                colors={['#F9B551', '#F87B2C']}
-                                style={[styles.continueButtonStyle,{paddingVertical:10,marginTop:5}]}>
-                                <TouchableOpacity
-                                    onPress={() => { moveTo() }}>
-                                    <Text style={{ ...Fonts.whiteColor16Bold, textAlign: 'center' }}>Continue</Text>
-                                </TouchableOpacity>
-                            </LinearGradient>
                         </View>
                     </>
                 )}
@@ -167,7 +207,7 @@ const styles = StyleSheet.create({
 
     continueButtonStyle: {
         paddingHorizontal: 20,
-        paddingVertical:5,
+        paddingVertical: 5,
         backgroundColor: Colors.primaryColor,
         minWidth: '30%',
         alignSelf: "flex-end",
@@ -178,12 +218,12 @@ const styles = StyleSheet.create({
         height: 180.0,
         justifyContent: 'center',
         resizeMode: 'contain',
-        position: 'relative',
+        position: 'absolute',
         alignSelf: 'center'
     },
     inputContainer: {
         width: '90%',
-        marginVertical: 50,
+        marginVertical: 20,
         justifyContent: 'space-around',
         alignSelf: 'center',
         alignItems: 'center'

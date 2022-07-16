@@ -23,8 +23,10 @@ import moment from 'moment';
 import { date } from 'yup';
 import NavigationHeaders from '../../Components/NavigationHeaders';
 import Slider from '@react-native-community/slider';
+import GlobalButton from '../../Components/GlobalButton';
 const SlotBooking = ({ route, navigation }) => {
     const serviceType = route.params.serviceName
+    const serviceId = route.params.catId
     console.log("serviceType", serviceType);
 
 
@@ -35,6 +37,8 @@ const SlotBooking = ({ route, navigation }) => {
     const [squareFeet, setSquareFeet] = useState('')
     const [finalPrice, setFinalPrice] = useState('')
     const [flatType, setFlatType] = useState([])
+    const [price, setPrice] = useState('')
+    const [gst, setGst] = useState('')
     // const [DeepClean, setDeepClean] = useState('')
 
     // const [newTime, setNewTime] = useState()
@@ -52,10 +56,10 @@ const SlotBooking = ({ route, navigation }) => {
                     flatType,
                     finalPrice,
                     squareFeet,
-                    finalPrice
+                    serviceId
                 }
             })
-            console.log("your booking date and time is", bookingDate, bookingTime)
+            console.log("your booking date and time is", bookingDate, bookingTime,)
         }
         else {
             alert("Please select all field")
@@ -132,164 +136,198 @@ const SlotBooking = ({ route, navigation }) => {
     }, [bookingDate])
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, paddingVertical: 15 }}>
             <StatusBar backgroundColor={Colors.themeColor} />
-            <ImageBackground
+            {/* <ImageBackground
                 source={require('../../Assets/images/banner/background.png')}
-                style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 10 }}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <View style={{ marginVertical: 15 }}>
-                        <NavigationHeaders onPress={() => { navigation.goBack() }} title="Select date and time" />
+                style={{ flex: 1, justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 10 }}> */}
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={{ marginVertical: 15 }}>
+                    <NavigationHeaders onPress={() => { navigation.goBack() }} title="Select date and time" />
 
-                    </View>
+                </View>
 
 
-                    <View style={styles.calenderContainer}>
-                        <CalendarPicker
-                            onDateChange={(date) => setBookingDate(date)}
-                            minDate={new date()}
-                            // onMonthChange={(month)=> (new Date(month))}
-                            customDayHeaderStyles={{ color: "red" }}
-                            previousTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 20 }}
-                            nextTitleStyle={{ color: '#4174D0', fontWeight: '700', paddingHorizontal: 20 }}
-                            selectedDayColor={'#F9B551'}
-                            // showDayStragglers={{color:'red'}}
-                            selectedDayStyle={{ backgroundColor: '#F9B551' }}
-                            selectedDayTextColor="red"
-                            selectedDayTextStyle={{ color: "#fff", fontWeight: '700' }}
+                <View style={styles.calenderContainer}>
+                    <CalendarPicker
+                        onDateChange={(date) => setBookingDate(date)}
+                        minDate={new date()}
+                        // onMonthChange={(month)=> (new Date(month))}
+                        customDayHeaderStyles={{ color: "red" }}
+                        // previousComponent={<AntDesign name='left'/>}
+                        // nextComponent={<AntDesign name='right'/>}
+                        previousTitleStyle={{ color: '#F9B551', fontWeight: '700', paddingHorizontal: 20 }}
+                        previousTitle={null}
+
+                        nextTitleStyle={{ color: '#F9B551', fontWeight: '700', paddingHorizontal: 20 }}
+                        selectedDayColor={'#F9B551'}
+                        // showDayStragglers={{color:'red'}}
+                        selectedDayStyle={{ backgroundColor: '#F9B551' }}
+                        selectedDayTextColor="red"
+                        selectedDayTextStyle={{ color: "#fff", fontWeight: '700' }}
+                    />
+                </View>
+
+
+                {serviceType === 'Deep Cleaning ' ? null : (
+                    <View style={styles.sliderContainer}>
+                        <Text style={{ ...Fonts.blackColor20Bold, padding: 15, textAlign: 'center' }}>Please complete your booking </Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '95%', alignItems: 'center', alignSelf: 'center', marginVertical: 15 }}>
+
+                            <Text style={{ ...Fonts.FontColor16Bold, fontSize: 18 }}><Text style={{ color: Colors.themeColor, fontSize: 18 }}>Sq.ft </Text>{squareFeet}</Text>
+                            <Text style={{ ...Fonts.FontColor18Bold, fontSize: 18 }}><Text style={{ color: Colors.themeColor, fontSize: 18 }}>2.50 ₹ </Text>per/sq.ft</Text>
+                        </View>
+                        <Slider
+                            style={{ width: '100%', }}
+                            minimumValue={100}
+                            step={5}
+                            thumbTintColor={Colors.themeColor}
+                            onValueChange={(value) => {
+                                setSquareFeet(value)
+                                let squareFeet = value
+                                let price = squareFeet * 2.50
+                                setPrice(price)
+                                let Gst = price * (18 / 100)
+                                setGst(Gst)
+                                let finalPrice = price + Gst
+                                console.log("finalPriceAfterGSt", finalPrice);
+                                setFinalPrice(finalPrice)
+                            }}
+                            maximumValue={1000}
+                            minimumTrackTintColor={Colors.themeColor}
+                            maximumTrackTintColor="#000000"
                         />
                     </View>
-                    {serviceType === 'Deep Cleaning ' ? null : <Text style={{ ...Fonts.blackColor20Bold, padding: 15 }}>Please complete your booking </Text>}
+                )}
 
-                    {serviceType === 'Deep Cleaning ' ? null : <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '95%', alignItems: 'center', alignSelf: 'center', marginVertical: 15 }}>
-
-                        <Text style={{ ...Fonts.FontColor16Bold }}><Text style={{ color: Colors.themeColor }}>Sft </Text>{squareFeet}</Text>
-                        <Text style={Fonts.FontColor16Bold}><Text style={{ color: Colors.themeColor }}>2.50 ₹ </Text>per/sft</Text>
-                    </View>}
-
-                    {serviceType === 'Deep Cleaning ' ? null : (
-                        <View style={styles.sliderContainer}>
-                            <Slider
-                                style={{ width: '100%', }}
-                                minimumValue={100}
-                                step={5}
-                                thumbTintColor={Colors.themeColor}
-                                onValueChange={(value) => {
-                                    setSquareFeet(value)
-                                    let squareFeet = value
-                                    let price = squareFeet * 2.50
-                                    let finalPrice = price + (price * (18 / 100))
-                                    console.log("finalPriceAfterGSt", finalPrice);
-                                    setFinalPrice(finalPrice)
-                                }}
-                                maximumValue={1000}
-                                minimumTrackTintColor={Colors.themeColor}
-                                maximumTrackTintColor="#000000"
-                            />
-                        </View>
-                    )}
-
-                    <View>
-                        <Text style={{ ...Fonts.blackColor18Bold, padding: 15 }}>Please select your flat type</Text>
-                        <FlatList
-                            data={serviceType === 'Deep Cleaning ' ? deepClean : flatData}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            keyExtractor={({ item, index }) => index}
-                            renderItem={({ item, index }) => {
-                                console.log(item)
-                                return (
-                                    <>
-                                        <TouchableOpacity
-                                            onPress={
-                                                () => {
-                                                    let arr = []
-                                                    arr.push(item)
-                                                    setFlatType(arr)
-                                                    setCheckedFlat(item)
-                                                    console.log("item", arr)
-                                                    serviceType === 'Deep Cleaning ' ? setFinalPrice(item.serviceCharge) : null
-                                                }}
-                                            style={[styles.TimeButton, { backgroundColor: checkedFlat.flatType == item.flatType ? '#F9B551' : "#fff" }]}>
-                                            <Text style={{ color: checkedFlat.flatType == item.flatType ? '#fff' : '#000' }}>{item.flatType}</Text>
-                                        </TouchableOpacity>
-                                    </>
-                                )
-                            }} />
-
-                    </View>
-
-                    <View style={[styles.TimeButton,]}>
-                        {flatType.length > 0 ? flatType.map(Element => {
-                            console.log(Element)
+                <View>
+                    <Text style={{ ...Fonts.blackColor18Bold, padding: 15 }}>Please select your flat type</Text>
+                    <FlatList
+                        data={serviceType === 'Deep Cleaning ' ? deepClean : flatData}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={({ item, index }) => index}
+                        renderItem={({ item, index }) => {
+                            console.log(item)
                             return (
                                 <>
-                                    <Text style={{ ...Fonts.blackColor14Bold, paddingVertical: 10 }}>
-                                        {/* {serviceType === 'Deep Cleaning ' ?setFinalPrice(Element.serviceCharge ) : finalPrice} */}
-                                        final amount includeing 18% GST is <Text style={{ color: Colors.themeColor, textAlign: 'center' }}>
-                                            {serviceType === 'Deep Cleaning ' ? Element.serviceCharge : finalPrice} ₹</Text></Text>
-                                    <Text style={{ ...Fonts.blackColor16Bold, padding: 15 }}>Duration of service  is <Text style={{ color: Colors.themeColor, textAlign: 'center' }}>
-                                        {Element.mins} Mins</Text></Text>
-
+                                    <TouchableOpacity
+                                        onPress={
+                                            () => {
+                                                let arr = []
+                                                arr.push(item)
+                                                setFlatType(arr)
+                                                setCheckedFlat(item)
+                                                console.log("item", arr)
+                                                serviceType === 'Deep Cleaning ' ? setFinalPrice(item.serviceCharge) : null
+                                            }}
+                                        style={[styles.TimeButton, { backgroundColor: checkedFlat.flatType == item.flatType ? '#fff9fa' : Colors.grayLightColor, borderWidth: 0.5, borderColor: checkedFlat.flatType == item.flatType ? Colors.themeColor : Colors.grayLightColor }]}>
+                                        <Text style={{ color: '#000' }}>{item.flatType}</Text>
+                                    </TouchableOpacity>
                                 </>
                             )
-                        }) : null}
+                        }} />
 
-                    </View>
-                    <Text style={{ ...Fonts.blackColor20Bold, padding: 15 }}>Slots Available For Booking</Text>
-                    {/* <FlatList
-                        scrollEnabled={false}
-                        data={time}
-                        numColumns={3}
-                        keyExtractor={({ item, index }) => item}
-                        renderItem={({ item }) => {
-                            return (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setBookingTime(item)
-                                        setChecked(item)
-                                    }}
-                                    style={[styles.TimeButton, { backgroundColor: checked == item ? '#F9B551' : "#fff" }]}>
-                                        
-                                    <Text style={{ color: checked == item ? '#fff' : '#000' }}>{moment(item, 'HH:mm').format("hh:mm a")}</Text>
-                                </TouchableOpacity>
-                            )
-                        }
-                        }
-                    /> */}
+                </View>
 
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                        {time.length > 0 ?
-                            time.map(item => (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setBookingTime(item)
-                                        setChecked(item)
-                                    }}
-                                    style={[styles.TimeButton, { backgroundColor: checked == item ? '#F9B551' : "#fff" }]}>
+                {flatType.length > 0 ? flatType.map(Element => {
+                    console.log(Element)
+                    return (
+                        <View style={[styles.TimeButton, { flexDirection: 'column' }]}>
+                            {serviceType === 'Deep Cleaning ' ? null: (
+                                <>
+                                    <View style={styles.priceContainer}>
+                                        <Text style={{ ...Fonts.blackColor14Bold, }}>
+                                            Charge :  </Text>
+                                        <Text>
+                                            {price} ₹
+                                        </Text>
+                                    </View>
 
-                                    <Text style={{ color: checked == item ? '#fff' : '#000' }}>{moment(item, 'HH:mm').format("hh:mm a")}</Text>
-                                </TouchableOpacity>
-                            ))
-                            : <Text>No SLot Available</Text>
-                        }
-                    </View>
+                                    <View style={styles.priceContainer}>
+                                        <Text style={{ ...Fonts.blackColor14Bold, }}>
+                                            Gst (18%) :  </Text>
+                                        <Text>
+                                            {gst} ₹
+                                        </Text>
+                                    </View>
+                                </>
+                            )}
+                            <View style={styles.priceContainer}>
+                                <Text style={{ ...Fonts.blackColor14Bold, }}>
+                                    Total Amount : </Text>
+                                <Text style={{ color: Colors.themeColor, }}>
+                                    {serviceType === 'Deep Cleaning ' ? Element.serviceCharge : finalPrice} ₹</Text>
+                            </View>
+                            <View style={styles.priceContainer}>
+                                <Text style={{ ...Fonts.blackColor14Bold, }}>
+                                    Duration of service  is : </Text>
+                                <Text style={{ color: Colors.themeColor, }}>
+                                    {Element.mins} Mins </Text>
+                            </View>
+                        </View>
+
+                        // <View style={[styles.TimeButton, { flexDirection: 'column' }]}>
+                        //     <View style={{ flexDirection: 'row', justifyContent: 'space-between',width:'100%' }}>
+                        //         <Text style={{ ...Fonts.blackColor14Bold, paddingVertical: 10 }}>
+                        //             Charge  </Text>
+                        //         <Text>
+                        //             : {price} /-
+                        //         </Text>
+                        //         <View style={{ flexDirection: 'row', justifyContent: 'space-between',width:'100%' }}>
+                        //         <Text>
+                        //             Gst (18%)
+                        //         </Text>
+                        //         <Text>
+                        //             {gst}
+                        //         </Text>
+                        //         </View>
+                        //         <Text>
+                        //             {/* GST (18%) And Total Amount is  */}
+                        //             <Text style={{ color: Colors.themeColor, }}>
+                        //                 {serviceType === 'Deep Cleaning ' ? Element.serviceCharge : finalPrice} ₹</Text></Text>
+                        //     </View>
+
+                        //     <Text style={{ ...Fonts.blackColor16Bold, padding: 15 }}>Duration of service  is <Text style={{ color: Colors.themeColor, }}>
+                        //         {Element.mins} Mins</Text></Text>
+
+                        // </View>
+                    )
+                }) : null}
+                <Text style={{ ...Fonts.blackColor20Bold, padding: 15 }}>Preferred time For Booking</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignSelf: 'flex-start', marginHorizontal: 5 }}>
+                    {time.length > 0 ?
+                        time.map(item => (
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setBookingTime(item)
+                                    setChecked(item)
+                                }}
+                                style={[styles.TimeButton, { backgroundColor: checked == item ? '#fff9fa' : Colors.grayLightColor, borderWidth: 0.5, borderColor: checked == item ? Colors.themeColor : Colors.grayLightColor }]}>
+
+                                <Text style={{ color: '#000' }}>{moment(item, 'HH:mm').format("hh:mm a")}</Text>
+                            </TouchableOpacity>
 
 
-                    {/* Button */}
-                    <LinearGradient
-                        colors={['#F9B551', '#F87B2C']}
-                        style={styles.continueButtonStyle}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                handleSubmit()
-                            }>
-                            <Text style={{ ...Fonts.whiteColor16Bold }}>Book Now</Text>
-                        </TouchableOpacity>
-                    </LinearGradient>
-                </ScrollView>
-            </ImageBackground>
-        </SafeAreaView>
+
+                        ))
+
+
+
+                        : <Text style={{ ...Fonts.blackColor16Bold, padding: 15 }}>Booking  Is Not Available Please Select Another Date</Text>
+                    }
+                </View>
+
+
+                {/* Button */}
+
+                <GlobalButton inlineStyle={{ marginRight: 20, marginBottom: 10 }} title={'Book Now'} onPress={() =>
+                    handleSubmit()
+                } />
+            </ScrollView>
+            {/* </ImageBackground> */}
+        </SafeAreaView >
     )
 }
 
@@ -318,8 +356,9 @@ const styles = StyleSheet.create({
         padding: 15,
         alignItems: 'center',
         marginVertical: 10,
-        marginHorizontal: 18,
-        backgroundColor: '#fff',
+        marginHorizontal: 15,
+        flexDirection: 'row',
+        backgroundColor: Colors.grayLightColor,
         borderRadius: 10,
         shadowColor: "#F9B551",
         shadowOffset: {
@@ -330,21 +369,25 @@ const styles = StyleSheet.create({
         shadowRadius: 2.27,
         elevation: 5,
     },
-    continueButtonStyle: {
-        paddingHorizontal: 20,
-        paddingVertical: 12,
-        alignItems: 'center',
-        minWidth: '30%',
-        alignSelf: "flex-end",
-        borderRadius: 25,
-        justifyContent: 'center',
-        marginHorizontal: 25,
-        marginBottom: 5
-    },
+    priceContainer:
+        { width: '100%', justifyContent: 'space-between', padding: 15, flexDirection: 'row' },
+
+    // continueButtonStyle: {
+    //     paddingHorizontal: 20,
+    //     paddingVertical: 12,
+    //     alignItems: 'center',
+    //     minWidth: '30%',
+    //     alignSelf: "flex-end",
+    //     borderRadius: 25,
+    //     justifyContent: 'center',
+    //     marginHorizontal: 25,
+    //     marginBottom: 5
+    // },
     sliderContainer: {
-        width: '95%',
+        width: '90%',
         paddingVertical: 15,
-        backgroundColor: '#fff',
+        marginHorizontal: 20,
+        backgroundColor: Colors.grayLightColor,
         borderRadius: 10,
         shadowColor: "#F9B551",
         shadowOffset: {

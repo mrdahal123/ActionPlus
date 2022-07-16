@@ -13,7 +13,7 @@ import {
     FlatList,
     ActivityIndicator
 } from 'react-native'
-import React, { Component, useEffect, useState,useContext } from 'react'
+import React, { Component, useEffect, useState, useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import { FontAwesome } from '@expo/vector-icons';
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -50,33 +50,16 @@ const AllService = ({ navigation }) => {
     }, [])
 
     const AllService = [
-        {
-            image: require('../../Assets/images/service-include/maid.png'),
-            type: "Maid",
-        },
-        {
-            image: require('../../Assets/images/service-include/plumber.png'),
-            type: "Plumber",
-        },
-        {
-            image: require('../../Assets/images/service-include/electrician.png'),
-            type: "Electrician",
-        },
-        {
-            image: require('../../Assets/images/service-include/massage.png'),
-            type: "Massage",
-        },
-        {
-            image: require('../../Assets/images/service-include/tutor.png'),
-            type: "Tutor",
-        },
-        {
-            image: require('../../Assets/images/service-include/cook.png'),
-            type: "Cook",
-        },
-
-
+        require('../../Assets/images/newServiceList/maid.jpg'),
+        require('../../Assets/images/newServiceList/makeup.jpeg'),
+        require('../../Assets/images/newServiceList/painter.jpg'),
+        require('../../Assets/images/newServiceList/elect.jpg'),
+        require('../../Assets/images/newServiceList/plumber.jpg'),
+        require('../../Assets/images/newServiceList/carPainter.jpg'),
+        require('../../Assets/images/newServiceList/driver.jpg'),
     ]
+
+ 
     // const nav = () => {
     //     if()
     // }
@@ -94,9 +77,9 @@ const AllService = ({ navigation }) => {
                 </View>
             ) : (
                 <>
-                    <ScrollView nestedScrollEnabled={true} style={{flexGrow:1, paddingVertical: 20,}}>
+                    <ScrollView nestedScrollEnabled={true} style={{ flexGrow: 1, paddingVertical: 20, }}>
                         <NavigationHeaders onPress={() => { navigation.goBack() }} title="Services" />
-                        <View style={{ flex: 1,marginVertical:20 }}>
+                        <View style={{ flex: 1, marginVertical: 20 }}>
                             <FlatList
                                 data={serviceType}
                                 keyExtractor={({ item, index }) => index}
@@ -105,42 +88,42 @@ const AllService = ({ navigation }) => {
 
                                         <TouchableOpacity onPress={() => {
                                             if (item.category_name === "Maid") {
-                                                navigation.navigate("MaidService",{
-                                                    maidId:item._id
+                                                navigation.navigate("MaidService", {
+                                                    maidId: item._id
                                                 })
                                             }
                                             else if (item.category_name === 'Plumbing') {
 
-                                                navigation.navigate("PlumberService",{
-                                                    plumberId:item._id
+                                                navigation.navigate("PlumberService", {
+                                                    plumberId: item._id
                                                 })
                                             }
                                             else if (item.category_name === 'Painter') {
 
-                                                navigation.navigate("Painter",{
-                                                    PainterId:item._id
+                                                navigation.navigate("Painter", {
+                                                    PainterId: item._id
                                                 })
                                             }
                                             else if (item.category_name === 'Painter') {
 
-                                                navigation.navigate("Painter",{
-                                                    PainterId:item._id
+                                                navigation.navigate("Painter", {
+                                                    PainterId: item._id
                                                 })
                                             }
                                             else if (item.category_name === 'Electricians') {
 
-                                                navigation.navigate("ElectricianService",{
-                                                    ElectriciansId:item._id
+                                                navigation.navigate("ElectricianService", {
+                                                    ElectriciansId: item._id
                                                 })
                                             }
                                             else if (item.category_name === 'Carpenters') {
 
-                                                navigation.navigate("Carpenters",{
-                                                    CarpentersId:item._id
+                                                navigation.navigate("Carpenters", {
+                                                    CarpentersId: item._id
                                                 })
                                             }
                                         }} style={styles.card}>
-                                            <Image source={require('../../Assets/images/banner/action.png')} style={styles.boxImage} />
+                                            <Image source={AllService[index]} style={styles.boxImage} />
                                             <View style={{ width: '50%', }}>
                                                 <Text style={{ ...Fonts.blackColor17Bold, textAlign: 'left' }}>{item.category_name}</Text>
                                             </View>
@@ -182,7 +165,7 @@ const styles = StyleSheet.create({
     boxImage: {
         width: 60,
         height: 60,
-        resizeMode: 'contain',
+        resizeMode: 'cover',
         borderRadius: 10
     }
 })

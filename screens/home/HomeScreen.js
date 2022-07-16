@@ -10,34 +10,50 @@ import {
     ScrollView,
     ImageBackground,
     TextInput,
-    Alert
+    Alert,
+    ActivityIndicator,
+    RefreshControl
 } from 'react-native'
 import React, { Component, useState, useEffect, useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import Feather from 'react-native-vector-icons/Feather'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import LinearGradient from 'react-native-linear-gradient';
 import { styles } from './HomeScreen.style';
 import CustomTextInput from '../../Components/CustomTextInput';
 import Geolocation from '@react-native-community/geolocation';
 import AuthContext from '../../Context/AuthContext';
-
+import AuthService from '../Service/AuthService';
+import { useFocusEffect } from '@react-navigation/native';
+import { SliderBox } from 'react-native-image-slider-box';
+import GlobalButton from '../../Components/GlobalButton';
 
 export default function HomeScreen({ navigation }) {
 
     const { authContext, appState } = useContext(AuthContext);
-    const userProfile = appState.data
-    console.log("appState,homescreen", appState)
-    console.log("alldetails", appState.data)
-    console.log("alldetails", userProfile)
+    // const userProfile = appState.data
+    // console.log("appState,homescreen", appState)
+    // console.log("alldetails", appState.data)
+    // console.log("alldetails", userProfile)
 
     useEffect(() => {
         getUserCurrentLocation()
     }, [])
 
-    const [search, setSearch] = useState('')
     const [location, setLocation] = useState([])
+    const [userAllDetails, setUserAllDetails] = useState('')
+    const [loader, setLoader] = useState(false)
+    const [refreshing, setRefreshing] = React.useState(false);
+    const [userCurrentAdd, setUserCurrentAdd] = useState('');
+    const [userCurrentCity, setUserCurrentCity] = useState('');
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
 
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false), getProfileApi());
+    }, []);
 
     const getUserCurrentLocation = () => {
         Geolocation.getCurrentPosition(position => {
@@ -45,7 +61,11 @@ export default function HomeScreen({ navigation }) {
             let latitude = position.coords.latitude;
             let longitude = position.coords.longitude;
             let locValue = { lat: latitude, long: longitude }
-            console.log("locValue", locValue);
+            let cordinets = {
+                "latitude": latitude,
+                "longitude": longitude
+            }
+            GetCurrentLocation(cordinets)
             setLocation(locValue)
         },
             // error => Alert.alert('Error', JSON.stringify(error)),
@@ -53,109 +73,212 @@ export default function HomeScreen({ navigation }) {
             error => console.error('Error', JSON.stringify(error))
         );
     }
+
+
+    // Location
+
+    const GetCurrentLocation = async (cordinets) => {
+
+        setLoader(true)
+        console.log("GetCurrentLocation", cordinets);
+        try {
+            let response = await AuthService.Post('get_location', cordinets);
+            console.log('GetCurrentLocation response', response.data[0].city);
+            setLoader(false)
+            setUserCurrentCity(response.data[0].city);
+            setUserCurrentAdd(response.data[0].formattedAddress);
+
+        } catch (error) {
+            setLoader(false)
+            console.log("Data", error);
+        }
+    }
+
+    const getProfileApi = async () => {
+
+        setLoader(true)
+        let apiData = {
+            "user_mobile_number": appState.data.user_mobile_number
+        }
+        console.log("getProfileApi", apiData);
+        try {
+            let response = await AuthService.Post('get_user_by_phone_number', apiData);
+            console.log('getProfileApi response', response.data[0]);
+            setLoader(false)
+            setUserAllDetails(response.data[0])
+        } catch (error) {
+            setLoader(false)
+            console.log("Data", error);
+        }
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setUserAllDetails('')
+            const unsubscribe = getProfileApi();
+            return () => unsubscribe;
+        }, [])
+    )
+
+
+    const SliderImage = [
+        // "https://source.unsplash.com/1024x768/?nature",
+        // "https://source.unsplash.com/1024x768/?water",
+        // "https://source.unsplash.com/1024x768/?girl",
+        // "https://source.unsplash.com/1024x768/?tree", // Network image
+        require('../../Assets/images/banner/carousel1.png'),          // Local 
+        require('../../Assets/images/banner/newBanner2.jpg'),          // Local image
+        require('../../Assets/images/banner/action+banner3.jpg'),          // Local image
+        require('../../Assets/images/banner/action+banner4.jpg'),          // Local image
+    ]
+
     console.log('location', location);
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor={Colors.themeColor} />
-            <ScrollView>
-                <View style={styles.wrapper}>
-                    <View style={[styles.location, { justifyContent: 'space-between' }]}>
-                        {/* <Image source={require('../../Assets/images/banner/location.png')}style={styles.iconImage} /> */}
+            {loader == true ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+                    <ActivityIndicator size={30} color={Colors.themeColor} />
+                </View>
+            ) : (
 
-                        <View style={styles.locationWrap}>
-                            <TouchableOpacity style={styles.logo}>
-                                <Ionicons name="ios-location-sharp" size={30} color="#fff" />
-                            </TouchableOpacity>
-                            <View style={{ marginLeft: 10 }}>
-                                <Text style={{ ...Fonts.blackColor20Bold, }}>Location</Text>
-                                {/* <Text style={{ ...Fonts.grayColor16Bold, }}>{userProfile.first_name}</Text> */}
+                <ScrollView refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />}>
+
+                    <View style={styles.wrapper}>
+                        <View style={[styles.location, { justifyContent: 'space-between' }]}>
+
+
+                            {/* {userAllDetails !== "" ? (
+                                <View style={styles.locationWrap}>
+                                    <TouchableOpacity
+                                        style={styles.imgShadow} onPress={() => {
+                                            navigation.navigate('Profile', {
+                                                data: userAllDetails.user_image
+                                            })
+                                        }} >
+                                        <Image style={[styles.iconImage, { borderRadius: 100, }]} source={{ uri: `data:image/jpeg;base64, ${userAllDetails.user_image}` }} />
+                                    </TouchableOpacity>
+                                    <View style={{ marginLeft: 10, justifyContent: 'center', }}>
+                                        <Text style={{ ...Fonts.grayColor16Bold, }}>Welcome</Text>
+                                        <Text style={{ ...Fonts.grayColor18Bold, }}>{userAllDetails.first_name}</Text>
+                                    </View>
+                                </View>
+                            ) : (
+                                <View style={styles.locationWrap}>
+                                    <TouchableOpacity
+                                        style={styles.imgShadow} onPress={() => {
+                                            navigation.navigate('Profile')
+                                        }} >
+                                        <Image source={require('../../Assets/images/banner/user.png')} style={[styles.iconImage, { borderRadius: 100, }]} />
+                                    </TouchableOpacity>
+                                    <View style={{ marginLeft: 10 }}>
+                                        <Text style={{ ...Fonts.grayColor18Bold, }}>Welcome</Text>
+                                    </View>
+                                </View>
+                            )} */}
+
+                            <View style={[styles.locationWrap, { marginTop: '8%' }]}>
+
+                                <TouchableOpacity style={styles.locationWrapper}>
+                                    <Ionicons name="ios-location-sharp" size={30} color={Colors.themeColor} />
+                                </TouchableOpacity>
+                                <Text style={{ ...Fonts.grayColor18Bold, marginLeft:10 }}>{userCurrentCity}</Text>
+
                             </View>
-                            {/* <Text style={{ ...Fonts.grayColor16Bold, }}>{location.lat}</Text>
-                            <Text style={{ ...Fonts.grayColor16Bold, }}>{location.long}</Text> */}
+                            <View style={[styles.locationWrap, { marginTop: '8%' }]}>
+
+                                <TouchableOpacity style={styles.locationWrapper}
+                                onPress={()=>{
+                                    navigation.navigate('Profile')
+                                }}>
+                                    {/* <Ionicons name="ios-location-sharp" size={30} color={Colors.themeColor} /> */}
+                                    <MaterialCommunityIcons name="account" color={Colors.themeColor} size={30} />
+                                </TouchableOpacity>
+                                
+
+                            </View>
+
                         </View>
 
-                        {appState.data && appState.data.user_image ? (
 
-                            <TouchableOpacity
-                                style={styles.imgShadow} onPress={() => {
-                                    navigation.navigate('Profile')
-                                }} >
+                        {/* Carousel */}
+                        <View style={styles.carousel}>
+                            <SliderBox
+                                images={SliderImage}
+                                sliderBoxHeight={100}
+                                autoplay={true}
+                                circleLoop={setTimeout(() => {true}, 2000)}
+                                
+                                dotColor="#FFEE58"
+                                style={styles.carouselimg}
+                                // style={{width:'100%',padding:10}}
+                                resizeMode={'contain'}
+                                inactiveDotColor="#90A4AE"
+                                dotStyle={{
+                                    width: 15,
+                                    height: 5,
+                                    borderRadius: 2,
+                                    marginHorizontal: 2,
+                                    padding: 0,
+                                    margin: 0
+                                }}
+                            />
+                        </View>
 
-                                <Image  style={[styles.iconImage, { borderRadius: 100, }]} source={{ uri: `data:image/jpeg;base64, ${appState.data.user_image}` }} />
+                        <View style={[styles.location, { justifyContent: 'space-between', }]}>
+                            <Text style={{ ...Fonts.blackColor20Bold, }}>
+                                Select Service
+                            </Text>
 
+                            <GlobalButton title={'See all'}
+                                onPress={() => { navigation.navigate("AllService") }} />
+
+                        </View>
+
+                        {/* Services */}
+
+                        <View style={styles.serviceType}>
+                            <TouchableOpacity onPress={() => { navigation.navigate('MaidService') }}>
+                                <View style={styles.iconCircle} >
+                                    <Image source={require('../../Assets/images/banner/Maid.png')} style={styles.iconImageBanner} />
+                                </View>
+                                <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Maid</Text>
                             </TouchableOpacity>
-                        ) : (
-
-                            <TouchableOpacity
-                                style={styles.imgShadow} onPress={() => {
-                                    navigation.navigate('Profile')
-                                }} >
-
-                                <Image source={require('../../Assets/images/banner/user.png')} style={[styles.iconImage, { borderRadius: 100, }]} />
+                            <TouchableOpacity onPress={() => { navigation.navigate('PlumberService') }}>
+                                <View style={styles.iconCircle} >
+                                    <Image source={require('../../Assets/images/banner/Plumber.png')} style={styles.iconImageBanner} />
+                                </View>
+                                <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Plumber</Text>
                             </TouchableOpacity>
-                        )}
-
-                    </View>
-
-
-                    {/* <TextInput
-                        style={styles.textInput}
-                        placeholder="Search"
-                        onChangeText={(text) => {
-                            setSearch(text)
-                        }}
-                        value={search}
-                        placeholderTextColor={'#000'}
-                    /> */}
-
-                    <View style={[styles.location, { justifyContent: 'space-between', }]}>
-                        <Text style={{ ...Fonts.blackColor20Bold, }}>
-                            Select Service
-                        </Text>
-                        <LinearGradient
-                            colors={['#F9B551', '#F87B2C']}
-                            style={styles.continueButtonStyle}>
-                            <TouchableOpacity
-                                onPress={() => {
-
-                                    // alert("all Service type will be available soon")
-                                    navigation.navigate("AllService")
-                                }}>
-                                <Text style={{ ...Fonts.whiteColor16Bold }}>See all</Text>
+                            <TouchableOpacity onPress={() => { navigation.navigate('ElectricianService') }}>
+                                <View style={styles.iconCircle} >
+                                    <Image source={require('../../Assets/images/banner/Electrician.png')} style={styles.iconImageBanner} />
+                                </View>
+                                <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Electrician</Text>
                             </TouchableOpacity>
-                        </LinearGradient>
+
+                        </View>
+
+                        {/* Banner */}
+                        {/* <Image source={require('../../Assets/images/banner/carousel2.png')} style={styles.imgBanner} resizeMode={'contain'} /> */}
+                        {/* <Image source={require('../../Assets/images/banner/action+banner1.png')} style={styles.imgBanner} resizeMode={'contain'} /> */}
+
+                        <Text style={{ ...Fonts.blackColor20Bold,marginVertical:20 }}>Best offers</Text>
+
+                        {/* Banner */}
+                        <Image source={require('../../Assets/images/banner/bnr.png')} style={styles.imgBanner} resizeMode={'contain'} />
+                        {/* <Image source={require('../../Assets/images/banner/newBanner.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                        <Image source={require('../../Assets/images/banner/newBanner2.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                        <Image source={require('../../Assets/images/banner/action+banner3.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
+                        <Image source={require('../../Assets/images/banner/action+banner4.jpg')} style={styles.imgBanner} resizeMode={'contain'} /> */}
                     </View>
+                </ScrollView>
 
-                    {/* Services */}
-
-                    <View style={styles.serviceType}>
-                        <TouchableOpacity onPress={() => { navigation.navigate('MaidService') }}>
-                            <Image source={require('../../Assets/images/banner/maidRound.jpg')} style={styles.iconImageBanner} />
-                            <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Maid</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { navigation.navigate('PlumberService') }}>
-                            <Image source={require('../../Assets/images/banner/plumbRound.jpg')} style={styles.iconImageBanner} />
-                            <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Plumber</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { navigation.navigate('ElectricianService') }}>
-                            <Image source={require('../../Assets/images/banner/ElectRound.jpg')} style={styles.iconImageBanner} />
-                            <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Electrician</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* Banner */}
-                    <Image source={require('../../Assets/images/banner/action+banner1.png')} style={styles.imgBanner} resizeMode={'contain'} />
-
-                    <Text style={{ ...Fonts.blackColor20Bold }}>Best offers</Text>
-
-                    {/* Banner */}
-                    <Image source={require('../../Assets/images/banner/action+banner2.png')} style={styles.imgBanner} resizeMode={'contain'} />
-                    <Image source={require('../../Assets/images/banner/newBanner.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                    <Image source={require('../../Assets/images/banner/newBanner2.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                    <Image source={require('../../Assets/images/banner/action+banner3.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                    <Image source={require('../../Assets/images/banner/action+banner4.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                </View>
-            </ScrollView>
+            )}
         </SafeAreaView>
     )
 }

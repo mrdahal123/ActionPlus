@@ -34,7 +34,8 @@ const MaidService = ({ route,navigation }) => {
   const getAllService = () => {
     setLoader(true)
     let data = {
-      "category_id": "62c4162acff13ea19b330b0e"
+      "category_id":  "62c4162acff13ea19b330b0e" 
+
     }
     console.log("data",data);
     ApiService.PostMethode('services/get_services_by_category_id', data)
@@ -107,13 +108,13 @@ const MaidService = ({ route,navigation }) => {
                     <TouchableOpacity onPress={() => {
                       if(item.service_name==="Deep Cleaning "){
                         navigation.navigate("DeepCleaning",{
-                          serviceName:item.service_name
+                          serviceName:item.service_name,catId:item.category_id
                           
                         })
                       }
                       else{
                         navigation.navigate("SlotBooking",{
-                          serviceName:item.service_name
+                          serviceName:item.service_name , catId:item.category_id
                         })
                       }
                     }} style={styles.card}>
