@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image, StatusBar, TouchableOpacity, FlatList } from 'react-native'
-import { Colors, Fonts } from '../../constant/style';
+import { Colors, Fonts } from '../../../constant/style';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
-import NavigationHeaders from '../../Components/NavigationHeaders';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import NavigationHeaders from '../../../Components/NavigationHeaders';
 import LinearGradient from 'react-native-linear-gradient';
+import GlobalButton from '../../../Components/GlobalButton';
 
-const DeepCleaning = ({ route, navigation }) => {
-    let serviceType = route.params.DeepCleaning
-    // let catId = route.params.catId
-    console.log(serviceType);
+const TermsAndCondi = ({ route, navigation }) => {
+    const [check, setCheck] = useState(false)
+    const AllData = route.params.data
+    console.log("AllData",AllData)
 
     const serviceInfo = [
         { type: "All rooms cobweb removal." },
@@ -36,7 +38,7 @@ const DeepCleaning = ({ route, navigation }) => {
             <StatusBar backgroundColor={Colors.themeColor} />
             <View style={styles.headerWrap}>
                 <AntDesign name="arrowleft" size={24} color="black" onPress={() => { navigation.goBack() }} />
-                <Text style={styles.text}>Deep Cleaning Service {"\n"} (with machine)</Text>
+                <Text style={styles.text}>Terms and Conditions {"\n"} (Of our Service)</Text>
             </View>
 
             <FlatList
@@ -53,25 +55,27 @@ const DeepCleaning = ({ route, navigation }) => {
                         </>
                     )
                 }} />
+            <View style={[styles.headerWrap, { justifyContent: 'space-between' }]}>
+                <Text style={Fonts.grayColor14Bold}>
+                    Agree to terms and Conditions
+                </Text>
+                <TouchableOpacity onPress={() => {
+                    setCheck(!check)
+                }} style={[styles.filterButton, { backgroundColor: check == true ? Colors.themeColor : null }]}>
 
-            <LinearGradient
-                colors={['#F9B551', '#F87B2C']}
-                style={styles.continueButtonStyle}>
-               
-            </LinearGradient>
-            <TouchableOpacity style={styles.TimeButton} onPress={() => {
-                navigation.navigate('SlotBooking', {
-                    serviceName: "Deep Cleaning"
-                })
-            }}>
+                    {check == true ?
+                        <FontAwesome5 name='check' size={20} color={'#fff'} /> : null}
+                </TouchableOpacity>
+            </View>
 
-                <Text style={[Fonts.blackColor16Bold, { color: '#fff' }]}>Continue</Text>
-            </TouchableOpacity>
+            {check == true ? (<GlobalButton title={"Proceed"} onPress={() => {
+                navigation.navigate("BookingInfo")
+            }} />) : null}
         </SafeAreaView>
     )
 }
 
-export default DeepCleaning
+export default TermsAndCondi
 
 const styles = StyleSheet.create({
     headerWrap: {
@@ -87,22 +91,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#000',
     },
-    TimeButton: {
-        padding: 15,
+
+    filterButton: {
+        width: 30,
+        height: 30,
+        borderRadius: 8,
+        backgroundColor: '#fff',
+        textAlign: 'center',
         alignItems: 'center',
-        marginVertical: 10,
-        marginHorizontal: 18,
-        // alignSelf: 'center',
-        backgroundColor: '#F9B551',
-        borderRadius: 10,
-        shadowColor: "#fff",
-        shadowOffset: {
-            width: 0,
-            height: 5,
-        },
-        shadowOpacity: 0.34,
-        shadowRadius: 2.27,
-        elevation: 5,
+        justifyContent: 'center',
+        borderWidth: 0.5,
     },
 
 })

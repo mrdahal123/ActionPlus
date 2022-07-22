@@ -25,10 +25,14 @@ import { string } from 'yup';
 
 const OtpScreen = ({ route, navigation }) => {
     const [Otp, setOTP] = useState('')
+    const [otpp, setOtpp] = useState('')
     const [loader, setLoader] = useState(false)
     let mobNum = route.params.num
     console.log(mobNum);
     const { authContext, AppUserData } = useContext(AuthContext);
+    const [time, setTime] = React.useState(30);
+    const timerRef = React.useRef(time);
+
     const VerifyOtp = () => {
         // setLoader(true)
         let data = {
@@ -71,44 +75,36 @@ const OtpScreen = ({ route, navigation }) => {
         }
     }
 
-
-    // getHash = () =>
-    //     RNOtpVerify.getHash()
-    //         .then(console.log)
-    //         .catch(console.log);
-
-    // startListeningForOtp = () =>
-    //     RNOtpVerify.getOtp()
-    //         .then(p => RNOtpVerify.addListener(otpHandler))
-    //         .catch(p => console.log(p));
-
-    // otpHandler = (message) => {
-    //     const otp = /(\d{4})/g.exec(message)[1];
-    //     this.setState({ otp });
-    // }
-
     const otpHandler = (message) => {
         console.log("message", message)
-        // const otp = /(\d{4})/g.exec(message)[1];
-        // console.log("Auto otp",otp)
-        // setOTP(otp)
+        const otp = /(\d{4})/g.exec(message)[1];
+        console.log("Auto otp", otp)
+        setOtpp(otp)
         RNOtpVerify.removeListener()
         Keyboard.dismiss();
     }
 
     useEffect(() => {
         RNOtpVerify.getHash()
-            .then(
-                Response =>
-                    console.log("sucess", Response))
-            .catch(console.log("error"));
+            .then(console.log)
+            .catch(console.log);
 
         RNOtpVerify.getOtp()
-            .then(p => RNOtpVerify.addListener(otpHandler()))
+            .then(p => RNOtpVerify.addListener(otpHandler))
             .catch(p => console.log(p));
 
-        return () => RNOtpVerify.removeListener()
-    })
+        const timerId = setInterval(() => {
+            timerRef.current -= 1;
+            if (timerRef.current < 0) {
+                clearInterval(timerId);
+            } else {
+                setTime(timerRef.current);
+            }
+        }, 1000);
+        return () => {
+            clearInterval(timerId);
+        };
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
@@ -146,7 +142,8 @@ const OtpScreen = ({ route, navigation }) => {
                             </Text>
 
                             <View style={styles.inputContainer}>
-                                {/* <TextInput> */}
+
+
                                 <SmoothPinCodeInput
                                     placeholder=""
                                     editable={true}
@@ -176,20 +173,27 @@ const OtpScreen = ({ route, navigation }) => {
                                     autoComplete={Otp}
                                     textStyle={{ color: Colors.themeColor, fontSize: 24 }}
                                 />
-                                {/* </TextInput> */}
+                                {/* </TextInput>
                             </View>
 
                             <View style={{ alignSelf: 'center', marginVertical: 10 }}>
                                 {/* <View style={{ flexDirection: 'column' }}> */}
-                                <Text style={Fonts.grayColor16Bold}>Didn’t receive the otp code! </Text>
-                                <TouchableOpacity onPress={() => {
-                                    navigation.navigate('LoginScreen');
-                                }}><Text style={{
-                                    ...Fonts.blackColor18Bold,
-                                    color: Colors.themeColor,
+                                <Text style={[Fonts.grayColor16Bold, { marginVertical: 10 }]}>Didn’t receive the otp code! </Text>
 
-                                    textAlign: 'center', marginVertical: 10
-                                }}>Resend</Text></TouchableOpacity>
+
+
+                                {time == 0 ? (
+
+                                    <TouchableOpacity onPress={() => {
+                                        navigation.navigate('LoginScreen');
+                                    }}>
+                                        <Text style={{
+                                            ...Fonts.blackColor18Bold,
+                                            color: Colors.themeColor,
+
+                                            textAlign: 'center', marginVertical: 10
+                                        }}>Resend</Text></TouchableOpacity>
+                                ) : <Text style={[Fonts.grayColor16Bold, { marginVertical: 10 }]}>Resend Otp in  {time}</Text>}
                                 {/* </View> */}
 
                                 <GlobalButton onPress={() => { moveTo() }} title="Verify" inlineStyle={{ alignSelf: 'center' }} />

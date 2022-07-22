@@ -1,40 +1,38 @@
 import React from 'react';
-import { Image, TouchableOpacity, StyleSheet, View } from 'react-native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import {Image, TouchableOpacity, StyleSheet, View} from 'react-native';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import HomeScreen from '../../screens/home/HomeScreen';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import Feather from 'react-native-vector-icons/Feather'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Booking from '../../screens/BookingDetails/Booking';
 import Profile from '../../screens/Profile/Profile';
-import { Fonts, Colors } from '../../constant/style';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {Fonts, Colors} from '../../constant/style';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import LinearGradient from 'react-native-linear-gradient';
-import { styles } from '../../screens/home/HomeScreen.style';
-
-
+import {styles} from '../../screens/home/HomeScreen.style';
 
 const Tab = createBottomTabNavigator();
 export const BottomTab = () => {
   return (
-
     <Tab.Navigator
-    style={{backgroundColor:'red'}}
+      style={{backgroundColor: 'red'}}
       initialRouteName="HomeScreen"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: Colors.themeColor,
-        tabBarInactiveTintColor:Colors.blackColor,
-        tabBarStyle: { 
+        tabBarInactiveTintColor: Colors.blackColor,
+        tabBarStyle: {
           height: 70,
           backgroundColor: '#fff',
-          borderTopLeftRadius: 35, 
+          borderTopLeftRadius: 35,
           borderTopRightRadius: 35,
           paddingBottom: 2,
-          borderTopWidth: 0 },
+          borderTopWidth: 0,
+        },
 
         // tabBarBackground:() =>(
-        //   <LinearGradient    
+        //   <LinearGradient
         //   colors={['#fff', '#000']} style={{
         //     height:50,
         //     // borderTopLeftRadius:15,
@@ -42,54 +40,65 @@ export const BottomTab = () => {
         //   }}/>
         // )
       }}>
-      <Tab.Screen name="HomeScreen" component={HomeScreen}
+      <Tab.Screen
+        name="HomeScreen"
+        component={HomeScreen}
         options={{
           tabBarLabel: '',
-          tabBarIcon: ({ color, size }) => (
-            <View style={{
-              width: 50,
-              height: 50,
-              marginTop:20,
-              borderRadius:100,
-              backgroundColor:Colors.grayLightColor,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <MaterialCommunityIcons name="home" color={color} size={25} />
+          tabBarIcon: ({color, size}) => (
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                marginTop: 20,
+                borderRadius: 100,
+                backgroundColor: Colors.grayLightColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <MaterialCommunityIcons name="home" color={color} size={25} />
             </View>
           ),
-        }} />
-      <Tab.Screen name="Booking" component={Booking}
+        }}
+      />
+      <Tab.Screen
+        name="Booking"
+        component={Booking}
         options={{
           tabBarLabel: '',
-          tabBarIcon: ({ color, size, style }) => (
-            <View style={{
-              width: 50,
-              height: 50,
-              marginTop:20,
-              borderRadius:100,
-              backgroundColor:Colors.grayLightColor,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          tabBarIcon: ({color, size, style}) => (
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                marginTop: 20,
+                borderRadius: 100,
+                backgroundColor: Colors.grayLightColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <FontAwesome name="calendar-check-o" color={color} size={25} />
             </View>
           ),
-        }} />
-      <Tab.Screen name="Profile" component={Profile}
-        options={{  
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
           tabBarLabel: '',
-          tabBarIcon: ({ color, size }) => (
-            <View style={{
-              width: 50,
-              height: 50,
-              marginTop:20,
-              borderRadius:100,
-              backgroundColor:Colors.grayLightColor,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Feather name="menu" color={color} size={25} />
+          tabBarIcon: ({color, size}) => (
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                marginTop: 20,
+                borderRadius: 100,
+                backgroundColor: Colors.grayLightColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Feather name="menu" color={color} size={25} />
             </View>
           ),
         }}
@@ -135,7 +144,7 @@ export const BottomTab = () => {
     //       />
     //     </Tab.Navigator>
   );
-}
+};
 
 // const styles = StyleSheet.create({
 //   wrapperIcon: {

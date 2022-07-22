@@ -13,35 +13,37 @@ import {
   FlatList,
   ActivityIndicator
 } from 'react-native'
-import React, { Component, useState, useEffect,useContext } from 'react'
+import React, { Component, useState, useEffect, useContext } from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
 import { FontAwesome } from '@expo/vector-icons';
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import Feather from 'react-native-vector-icons/Feather'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import LinearGradient from 'react-native-linear-gradient';
 import NavigationHeaders from '../../Components/NavigationHeaders';
 import axios from 'axios';
 import * as ApiService from '../../Utils/Utils';
 import AuthContext from '../../Context/AuthContext';
+import GlobalButton from '../../Components/GlobalButton';
 
-const MaidService = ({ route,navigation }) => {
-//  let maidId = route.params.maidId;
-// console.log("maidId",maidId);
+const MaidService = ({ route, navigation }) => {
+  let AddOnId = route.params.Add_ons;
+  console.log("AddOnId", AddOnId);
   const { authContext, appState } = useContext(AuthContext);
   const [loader, setLoader] = useState(false)
   const [serviceType, setServiceType] = useState('')
+  const [selectedServiceType, setSelectedServiceType] = useState('')
+  const [addOn, setAddOn] = useState([])
 
   const getAllService = () => {
     setLoader(true)
     let data = {
-      "category_id":  "62c4162acff13ea19b330b0e" 
-
+      "service_id": AddOnId
     }
-    console.log("data",data);
-    ApiService.PostMethode('services/get_services_by_category_id', data)
+    console.log("data", data);
+    ApiService.PostMethode('sub_services/get_sub_services_by_service_id', data)
       .then(response => {
         console.log(response);
-        console.log(response.data);
+        console.log("getAllService", response.data);
         setLoader(false)
         let apiValue = response.data
         setServiceType(apiValue)
@@ -51,43 +53,41 @@ const MaidService = ({ route,navigation }) => {
         console.log(error);
       })
   }
+
+  // const Brands = 
+  const multipleCheckBox = (item, index) => {
+
+    const newData = [...serviceType]
+    console.log("old", newData);
+    let selectedArr = [];
+    newData[index].isSelected = !newData[index].isSelected;
+    console.log("new", newData);
+    setServiceType(newData)
+    serviceType.forEach((item) => {
+      newData.forEach((element) => {
+        if (item._id == element._id && element.isSelected == true) {
+          selectedArr.push({
+            "serviceName": element.sub_service_name,
+            "ServiceId": element._id
+          })
+          setAddOn(selectedArr)
+          console.log("selectedArr", selectedArr)
+
+        }
+        else {
+          return
+        }
+      })
+
+    });
+  }
+
+
   useEffect(() => {
     getAllService()
+
   }, [])
-  const maidService = [
-    {
-      image: require('../../Assets/images/Services/full-home-cleaning.jpg'),
-      type: "Full Home Cleaning",
-    },
-    {
-      image: require('../../Assets/images/Services/car-cleaning.jpg'),
-      type: "Car Cleaning",
-    },
-    {
-      image: require('../../Assets/images/Services/bathroom-cleaning.jpg'),
-      type: "Bathroom Cleaning",
-    },
-    {
-      image: require('../../Assets/images/Services/kitchen-cleaning.jpg'),
-      type: "Kitchen Cleaning",
-    },
-    {
-      image: require('../../Assets/images/Services/carpet-cleaning.jpg'),
-      type: "Carpet Cleaning",
-    },
-    {
-      image: require('../../Assets/images/Services/sofa-cleaning.jpg'),
-      type: "Sofa Cleaning ",
-    },
-    {
-      image: require('../../Assets/images/Services/carpet-cleaning.jpg'),
-      type: "Carpet Cleaning",
-    },
-    {
-      image: require('../../Assets/images/Services/sofa-cleaning.jpg'),
-      type: "Sofa Cleaning ",
-    },
-  ]
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, }}>
       {loader == true ? (
@@ -96,37 +96,53 @@ const MaidService = ({ route,navigation }) => {
         </View>
       ) : (
         <>
-          <ScrollView nestedScrollEnabled={true} style={{flexGrow:1, paddingVertical: 20,}}>
+          <ScrollView nestedScrollEnabled={true} style={{ flexGrow: 1, paddingVertical: 20, }}>
             <NavigationHeaders onPress={() => { navigation.goBack() }} title="Professional Cleaning Service" />
             <View style={{ flex: 1, paddingVertical: 20, }}>
               <FlatList
                 data={serviceType}
+                ListEmptyComponent={() => {
+                  return (
+                    <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', marginTop: '30%' }}>
+                      <Image source={require('../../Assets/images/gif/notFound.gif')}
+                        style={{ width: 350, height: 350, resizeMode: 'contain', }} />
+                      <Text style={Fonts.blackColor18Bold}>You have no bookings available</Text>
+                    </View>
+                  )
+                }}
                 keyExtractor={({ item, index }) => index}
                 renderItem={({ item, index }) => {
                   return (
-
-                    <TouchableOpacity onPress={() => {
-                      if(item.service_name==="Deep Cleaning "){
-                        navigation.navigate("DeepCleaning",{
-                          serviceName:item.service_name,catId:item.category_id
-                          
-                        })
-                      }
-                      else{
-                        navigation.navigate("SlotBooking",{
-                          serviceName:item.service_name , catId:item.category_id
-                        })
-                      }
-                    }} style={styles.card}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        multipleCheckBox(item, index)
+                      }}
+                      style={styles.card}>
                       <Image source={require('../../Assets/images/banner/action.png')} style={styles.boxImage} />
                       <View style={{ width: '50%', }}>
-                        <Text style={{ ...Fonts.blackColor17Bold, textAlign: 'left' }}>{item.service_name}</Text>
+                        <Text style={{ color: item.isSelected ? Colors.themeColor : null }}>
+                          {item.sub_service_name}</Text>
                       </View>
-                      <Feather name="chevron-right" size={24} color="black" />
+
+                      <TouchableOpacity style={[styles.filterButton, { backgroundColor: item.isSelected ? Colors.themeColor : null }]}>
+
+                        {item.isSelected == true ?
+                          <FontAwesome5 name='check' size={20} color={'#fff'} /> : null}
+                      </TouchableOpacity>
                     </TouchableOpacity>
                   )
                 }}
               />
+              {
+                addOn.length > 0 ? (
+
+                  <GlobalButton title={"Continue"} inlineStyle={{ margin: 20 }} onPress={() => {
+                    navigation.navigate("SlotBooking", {
+                      data: addOn.length > 0 ? addOn : null
+                    })
+                  }} />
+                ) : null
+              }
             </View>
           </ScrollView>
         </>)}
@@ -161,5 +177,15 @@ const styles = StyleSheet.create({
     height: 60,
     resizeMode: 'contain',
     borderRadius: 10
-  }
+  },
+  filterButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 0.5,
+  },
 })

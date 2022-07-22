@@ -25,9 +25,9 @@ import NavigationHeaders from '../../Components/NavigationHeaders';
 import Slider from '@react-native-community/slider';
 import GlobalButton from '../../Components/GlobalButton';
 const SlotBooking = ({ route, navigation }) => {
-    const serviceType = route.params.serviceName
-    const serviceId = route.params.catId
-    console.log("serviceType", serviceType);
+
+
+
 
 
     const [bookingTime, setBookingTime] = useState('')
@@ -39,6 +39,33 @@ const SlotBooking = ({ route, navigation }) => {
     const [flatType, setFlatType] = useState([])
     const [price, setPrice] = useState('')
     const [gst, setGst] = useState('')
+    const [serviceData, setServiceData] = useState('')
+    const [serviceType, setServiceType] = useState([])
+
+
+    const serviceName = route.params.serviceName
+    const serviceTypeData = route.params.data
+    console.log(serviceTypeData);
+
+// useEffect(()=>{
+//     serviceTypeData.length>0 ?(
+//         serviceTypeData.map(item =>{
+//             setServiceType(item.serviceName)
+//             console.log(item.serviceName)
+//         })
+//     ):null
+// })
+    // useEffect(() => {
+    //     let data = []
+    //    serviceData && serviceData.length>0 ? (
+    //     serviceTypeData.map(item => {
+    //         data.push({...item })
+    //     })
+    //   ):null;
+    //     setServiceData(data)
+    //     console.log("serviceTypeData",data)
+    // }, [serviceTypeData])
+
     // const [DeepClean, setDeepClean] = useState('')
 
     // const [newTime, setNewTime] = useState()
@@ -50,16 +77,15 @@ const SlotBooking = ({ route, navigation }) => {
             let format = moment(bookingDate).format('L');
             navigation.navigate('SelectAdd', {
                 data: {
-                    serviceType,
+                    serviceTypeData,
                     bookingTime,
                     format,
                     flatType,
                     finalPrice,
                     squareFeet,
-                    serviceId
                 }
             })
-            console.log("your booking date and time is", bookingDate, bookingTime,)
+            console.log("your booking date and time is", serviceTypeData, bookingTime,)
         }
         else {
             alert("Please select all field")
@@ -169,7 +195,7 @@ const SlotBooking = ({ route, navigation }) => {
                 </View>
 
 
-                {serviceType === 'Deep Cleaning ' ? null : (
+                {serviceName === 'Deep Cleaning ' ? null : (
                     <View style={styles.sliderContainer}>
                         <Text style={{ ...Fonts.blackColor20Bold, padding: 15, textAlign: 'center' }}>Please complete your booking </Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '95%', alignItems: 'center', alignSelf: 'center', marginVertical: 15 }}>
@@ -203,7 +229,7 @@ const SlotBooking = ({ route, navigation }) => {
                 <View>
                     <Text style={{ ...Fonts.blackColor18Bold, padding: 15 }}>Please select your flat type</Text>
                     <FlatList
-                        data={serviceType === 'Deep Cleaning ' ? deepClean : flatData}
+                        data={serviceName === 'Deep Cleaning ' ? deepClean : flatData}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={({ item, index }) => index}
@@ -219,7 +245,7 @@ const SlotBooking = ({ route, navigation }) => {
                                                 setFlatType(arr)
                                                 setCheckedFlat(item)
                                                 console.log("item", arr)
-                                                serviceType === 'Deep Cleaning ' ? setFinalPrice(item.serviceCharge) : null
+                                                serviceName === 'Deep Cleaning ' ? setFinalPrice(item.serviceCharge) : null
                                             }}
                                         style={[styles.TimeButton, { backgroundColor: checkedFlat.flatType == item.flatType ? '#fff9fa' : Colors.grayLightColor, borderWidth: 0.5, borderColor: checkedFlat.flatType == item.flatType ? Colors.themeColor : Colors.grayLightColor }]}>
                                         <Text style={{ color: '#000' }}>{item.flatType}</Text>
@@ -234,7 +260,7 @@ const SlotBooking = ({ route, navigation }) => {
                     console.log(Element)
                     return (
                         <View style={[styles.TimeButton, { flexDirection: 'column' }]}>
-                            {serviceType === 'Deep Cleaning ' ? null: (
+                            {serviceName === 'Deep Cleaning ' ? null : (
                                 <>
                                     <View style={styles.priceContainer}>
                                         <Text style={{ ...Fonts.blackColor14Bold, }}>
@@ -257,7 +283,7 @@ const SlotBooking = ({ route, navigation }) => {
                                 <Text style={{ ...Fonts.blackColor14Bold, }}>
                                     Total Amount : </Text>
                                 <Text style={{ color: Colors.themeColor, }}>
-                                    {serviceType === 'Deep Cleaning ' ? Element.serviceCharge : finalPrice} ₹</Text>
+                                    {serviceName === 'Deep Cleaning ' ? Element.serviceCharge : finalPrice} ₹</Text>
                             </View>
                             <View style={styles.priceContainer}>
                                 <Text style={{ ...Fonts.blackColor14Bold, }}>

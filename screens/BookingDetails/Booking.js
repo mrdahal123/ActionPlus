@@ -24,8 +24,8 @@ import AuthContext from '../../Context/AuthContext';
 
 const Booking = ({ navigation }) => {
     const { appState } = useContext(AuthContext);
-    let userData =  appState.data.user_mobile_number;
-    console.log("userData",userData)
+    let userData = appState.data.user_mobile_number;
+    console.log("userData", userData)
     const [loader, setLoader] = useState(false)
     const [bookingData, setBookingData] = useState('');
     const [refreshing, setRefreshing] = React.useState(false);
@@ -41,8 +41,8 @@ const Booking = ({ navigation }) => {
     const BookingApi = useCallback(async () => {
         setLoader(true)
         try {
-            let response = await ApiService.PostMethode('bookings/get_bookings_by_customer_phone_number', { "phone_number": userData})
-            console.log("response",response);
+            let response = await ApiService.PostMethode('bookings/get_bookings_by_customer_phone_number', { "phone_number": userData })
+            console.log("response", response);
             setLoader(false)
             setBookingData(response.data)
         } catch (error) {
@@ -52,7 +52,7 @@ const Booking = ({ navigation }) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            
+
             const unsubscribe = BookingApi();
             return () => unsubscribe;
         }, [])
@@ -67,25 +67,26 @@ const Booking = ({ navigation }) => {
                 </View>
             ) : (
                 <>
-                 
+
                     {/* <ScrollView style={styles.wrapper} refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
                             onRefresh={onRefresh}
                         />
                     }> */}
-                    <View style={{marginVertical:20}}>
-                    <NavigationHeaders onPress={() => { navigation.goBack() }} title='Booking' />
+                    <View style={{ marginVertical: 20 }}>
+                        <NavigationHeaders onPress={() => { navigation.goBack() }} title='Booking' />
                     </View>
                     <View style={styles.wrapper}>
 
                         <FlatList
-                        showsVerticalScrollIndicator={false}
+                            showsVerticalScrollIndicator={false}
+                            style={{flexDirection:'column-reverse'}}
                             data={bookingData}
                             keyExtractor={({ item, index }) => index}
                             ListEmptyComponent={() => {
                                 return (
-                                    <View style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff',marginTop:'30%' }}>
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', marginTop: '30%' }}>
                                         <Image source={require('../../Assets/images/gif/notFound.gif')}
                                             style={{ width: 350, height: 350, resizeMode: 'contain', }} />
                                         <Text style={Fonts.blackColor18Bold}>You have no bookings available</Text>
@@ -95,9 +96,11 @@ const Booking = ({ navigation }) => {
                             renderItem={({ item, index }) => {
                                 return (
                                     <>
-                                        <TouchableOpacity style={styles.booking} onPress={() => { navigation.navigate('BookingDetails',{
-                                            data:item
-                                        }) }}>
+                                        <TouchableOpacity style={styles.booking} onPress={() => {
+                                            navigation.navigate('BookingDetails', {
+                                                data: item
+                                            })
+                                        }}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                                 <Text style={{ ...Fonts.blackColor16Bold, color: '#F9B551', }}>ID: #{item.b_c_service_id}</Text>
                                                 <View style={{ alignItems: 'center', flexDirection: 'row' }} >
@@ -121,7 +124,7 @@ const Booking = ({ navigation }) => {
                                 )
                             }}
                         />
-               </View>
+                    </View>
                 </>
             )}
         </SafeAreaView>
@@ -133,7 +136,7 @@ export default Booking
 const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
-        padding:20,
+        padding: 20,
         // marginVertical:20
     },
     booking: {
@@ -141,9 +144,9 @@ const styles = StyleSheet.create({
         width: '100%',
         padding: 15,
         backgroundColor: Colors.grayLightColor,
-        borderRadius:10,
-        margin:5,
-        alignSelf:'center'
+        borderRadius: 10,
+        margin: 5,
+        alignSelf: 'center'
 
 
     }

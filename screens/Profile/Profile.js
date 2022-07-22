@@ -20,6 +20,7 @@ import AuthContext from '../../Context/AuthContext';
 import NavigationHeaders from '../../Components/NavigationHeaders';
 import AuthService from '../Service/AuthService';
 import { useFocusEffect } from '@react-navigation/native';
+import GlobalButton from '../../Components/GlobalButton';
 const Profile = ({ route, navigation }) => {
   const { authContext, appState } = useContext(AuthContext);
   // const userProfile = route.params.data
@@ -172,18 +173,10 @@ useFocusEffect(
           <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>App Version 1.0</Text>
           <AntDesign name="right" size={24} color="#696969" />
         </TouchableOpacity>
-        <LinearGradient
-          colors={['#F9B551', '#F87B2C']}
-          style={styles.continueButtonStyle}>
-          <TouchableOpacity
-            style={{ flexDirection: 'row' }}
-            onPress={() => {
+        <GlobalButton title={'Logout'}  onPress={() => {
               LogOutAlertOccurred('Warning', 'Are You Sure?', 'yes', 'No');
-            }}>
-            <Ionicons name="log-out-outline" size={24} color="#fff" />
-            <Text style={{ ...Fonts.whiteColor16Bold }}>Logout</Text>
-          </TouchableOpacity>
-        </LinearGradient>
+            }} inlineStyle={{marginRight:20}}/>
+  
       </ScrollView>)}
     </SafeAreaView>
   )

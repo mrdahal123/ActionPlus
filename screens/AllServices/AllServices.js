@@ -38,7 +38,17 @@ const AllService = ({ navigation }) => {
                 console.log(response.data);
                 setLoader(false)
                 let apiValue = response.data
-                setServiceType(apiValue)
+                let arr =[]
+                apiValue.map(item => {
+                    console.log("status",item.category_status)
+                    if(item.category_status==1){
+                        arr.push(item)
+                    }
+                    else{
+                        return
+                    }
+                })
+                setServiceType(arr)
             })
             .catch(error => {
                 setLoader(false)
@@ -87,45 +97,48 @@ const AllService = ({ navigation }) => {
                                     return (
 
                                         <TouchableOpacity onPress={() => {
-                                            if (item.category_name === "Maid") {
-                                                navigation.navigate("MaidService", {
-                                                    maidId: item._id
-                                                })
-                                            }
-                                            else if (item.category_name === 'Plumbing') {
+                                            console.log("all service",item)
+                                            navigation.navigate('ComonService',
+                                                {servicetypeData :item})
+                                            // if (item.category_name === "Maid") {
+                                            //     navigation.navigate("ServiceType", {
+                                            //         maidId: item._id
+                                            //     })
+                                            // }
+                                            // else if (item.category_name === 'Plumbing') {
 
-                                                navigation.navigate("PlumberService", {
-                                                    plumberId: item._id
-                                                })
-                                            }
-                                            else if (item.category_name === 'Painter') {
+                                            //     navigation.navigate("PlumberService", {
+                                            //         plumberId: item._id
+                                            //     })
+                                            // }
+                                            // else if (item.category_name === 'Painter') {
 
-                                                navigation.navigate("Painter", {
-                                                    PainterId: item._id
-                                                })
-                                            }
-                                            else if (item.category_name === 'Painter') {
+                                            //     navigation.navigate("Painter", {
+                                            //         PainterId: item._id
+                                            //     })
+                                            // }
+                                            // else if (item.category_name === 'Painter') {
 
-                                                navigation.navigate("Painter", {
-                                                    PainterId: item._id
-                                                })
-                                            }
-                                            else if (item.category_name === 'Electricians') {
+                                            //     navigation.navigate("Painter", {
+                                            //         PainterId: item._id
+                                            //     })
+                                            // }
+                                            // else if (item.category_name === 'Electricians') {
 
-                                                navigation.navigate("ElectricianService", {
-                                                    ElectriciansId: item._id
-                                                })
-                                            }
-                                            else if (item.category_name === 'Carpenters') {
+                                            //     navigation.navigate("ElectricianService", {
+                                            //         ElectriciansId: item._id
+                                            //     })
+                                            // }
+                                            // else if (item.category_name === 'Carpenters') {
 
-                                                navigation.navigate("Carpenters", {
-                                                    CarpentersId: item._id
-                                                })
-                                            }
+                                            //     navigation.navigate("Carpenters", {
+                                            //         CarpentersId: item._id
+                                            //     })
+                                            // }
                                         }} style={styles.card}>
                                             <Image source={AllService[index]} style={styles.boxImage} />
                                             <View style={{ width: '50%', }}>
-                                                <Text style={{ ...Fonts.blackColor17Bold, textAlign: 'left' }}>{item.category_name}</Text>
+                                                <Text style={{ ...Fonts.blackColor17Bold, textAlign: 'left' }}>{ item.category_name}</Text>
                                             </View>
                                             <Feather name="chevron-right" size={24} color="black" />
                                         </TouchableOpacity>

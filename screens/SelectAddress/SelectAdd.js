@@ -40,7 +40,7 @@ const SelectAdd = ({ navigation, route }) => {
     console.log(userData);
 
     let bookingData = route.params.data
-    console.log("bookingData", bookingData);
+    console.log("All bookingData From selected", bookingData);
 
 
     const [IsModalVisible, setIsModalVisible] = useState(false);
@@ -131,7 +131,7 @@ const SelectAdd = ({ navigation, route }) => {
     }
     const editAddressApi = async (EditData) => {
         setLoader(true)
-       
+
         console.log("editAddressdata", EditData);
         try {
             const response = await ApiService.PostMethode('address/edit_customers_address', EditData)
@@ -193,6 +193,26 @@ const SelectAdd = ({ navigation, route }) => {
             })
     }
 
+
+    const allData = {
+        "b_c_name": existingData.first_name,
+        "b_c_time": bookingData.bookingTime,
+        "b_c_date": bookingData.format,
+        "service_provider_id": "",
+        "service_provider_name": "",
+        "b_c_service_id": bookingData.serviceTypeData,
+        "b_c_service_name": bookingData.serviceTypeData,
+        "b_c_seat_address": existingData.area,
+        "b_c_city": "hyderabad",
+        "b_c_pin_code": existingData.pin_code,
+        "b_c_floor": "5th",
+        "b_c_flat_number": existingData.house_number,
+        "b_c_state": "Telangana",
+        "b_c_phone_number": existingData.phone_number,
+        "b_c_amount": bookingData.finalPrice,
+        "b_c_status": "0"
+    }
+
     console.log("selectedAddress", selectedAddress);
     useEffect(() => {
         Address()
@@ -232,8 +252,12 @@ const SelectAdd = ({ navigation, route }) => {
                                     <>
                                         <TouchableOpacity
                                             onPress={() => {
-                                                BookingSuccess(item)
-                                                console.log("item", item)
+                                                setNewData(item)
+                                                navigation.navigate("TermsAndCondi", {
+                                                    data:allData
+                                                })
+                                                // BookingSuccess(item)
+                                                // console.log("item", item)
 
                                             }}
                                             style={styles.AddContainer}>
@@ -322,7 +346,7 @@ const SelectAdd = ({ navigation, route }) => {
                                     }}
                                     onSubmit={values => {
                                         if (values) {
-                                          
+
                                             let apiData = {
                                                 first_name: values.FirstName,
                                                 last_name: values.LastName,
@@ -349,14 +373,15 @@ const SelectAdd = ({ navigation, route }) => {
                                                 "id": selectedAddress._id,
 
                                             }
-                                           
+
                                             {
                                                 editText == "Add" ? (
 
                                                     AddAddress(apiData)
                                                 ) : (
-                                                editAddressApi(EditData)
-                                            )}
+                                                    editAddressApi(EditData)
+                                                )
+                                            }
                                         }
                                         else {
                                             alert("something went wrong")

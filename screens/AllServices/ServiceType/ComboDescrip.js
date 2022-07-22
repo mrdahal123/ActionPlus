@@ -1,15 +1,15 @@
 import React from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image, StatusBar, TouchableOpacity, FlatList } from 'react-native'
-import { Colors, Fonts } from '../../constant/style';
+import { Colors, Fonts } from '../../../constant/style';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
-import NavigationHeaders from '../../Components/NavigationHeaders';
+import NavigationHeaders from '../../../Components/NavigationHeaders';
 import LinearGradient from 'react-native-linear-gradient';
 
-const DeepCleaning = ({ route, navigation }) => {
-    let serviceType = route.params.DeepCleaning
-    // let catId = route.params.catId
-    console.log(serviceType);
+const ComboDescrip = ({ route, navigation }) => {
+    let serviceType = route.params.serviceName
+    let catId = route.params.catId
+    console.log(serviceType,catId);
 
     const serviceInfo = [
         { type: "All rooms cobweb removal." },
@@ -36,7 +36,7 @@ const DeepCleaning = ({ route, navigation }) => {
             <StatusBar backgroundColor={Colors.themeColor} />
             <View style={styles.headerWrap}>
                 <AntDesign name="arrowleft" size={24} color="black" onPress={() => { navigation.goBack() }} />
-                <Text style={styles.text}>Deep Cleaning Service {"\n"} (with machine)</Text>
+                <Text style={styles.text}>Combo Cleaning Service {"\n"} (with machine)</Text>
             </View>
 
             <FlatList
@@ -71,7 +71,7 @@ const DeepCleaning = ({ route, navigation }) => {
     )
 }
 
-export default DeepCleaning
+export default ComboDescrip
 
 const styles = StyleSheet.create({
     headerWrap: {

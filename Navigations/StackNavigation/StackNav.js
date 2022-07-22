@@ -27,6 +27,15 @@ import Carpenters from '../../screens/AllServices/Carpenters';
 import NavigationHeaders from '../../Components/NavigationHeaders';
 import DeepCleaning from '../../screens/AllServices/DeepCleaning';
 import Support from '../../screens/Profile/Support';
+import ServiceType from '../../screens/AllServices/ServiceType/ServiceType';
+import OneTime from '../../screens/AllServices/ServiceType/OneTime';
+import Subscription from '../../screens/AllServices/ServiceType/Subscription';
+import ComboDescrip from '../../screens/AllServices/ServiceType/ComboDescrip';
+import TermsAndCondi from '../../screens/AllServices/ServiceType/TermsAndCondi';
+import BookingInfo from '../../screens/AllServices/ServiceType/BookingInfo.js';
+import ComonService from '../../screens/AllServices/ComonService';
+import SelectService from '../../screens/AllServices/SelectService';
+// import BookingInfo from '../../screens/AllServices/ServiceType/BookingInfo.JS'; 
 
 const Stack = createNativeStackNavigator();
 
@@ -63,6 +72,15 @@ const StackNav = () => {
             <Stack.Screen name="NavigationHeaders" component={NavigationHeaders} />
             <Stack.Screen name="DeepCleaning" component={DeepCleaning} />
             <Stack.Screen name="Support" component={Support} />
+            <Stack.Screen name="ServiceType" component={ServiceType} />
+            <Stack.Screen name="OneTime" component={OneTime} />
+            <Stack.Screen name="Subscription" component={Subscription} />
+            <Stack.Screen name="ComboDescrip" component={ComboDescrip} />
+            <Stack.Screen name="TermsAndCondi" component={TermsAndCondi} />
+            <Stack.Screen name="BookingInfo" component={BookingInfo} />
+            <Stack.Screen name="ComonService" component={ComonService} />
+            <Stack.Screen name="SelectService" component={SelectService} />
+            {/* <Stack.Screen name="BookingInfo" component={BookingInfo} /> */}
 
 
         </Stack.Navigator>
