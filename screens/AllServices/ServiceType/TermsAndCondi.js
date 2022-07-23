@@ -4,14 +4,90 @@ import { Colors, Fonts } from '../../../constant/style';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import NavigationHeaders from '../../../Components/NavigationHeaders';
 import LinearGradient from 'react-native-linear-gradient';
 import GlobalButton from '../../../Components/GlobalButton';
+import * as ApiService from '../../../Utils/Utils';
+import AuthContext from '../../../Context/AuthContext';
+import { ActivityIndicator } from 'react-native-paper';
 
 const TermsAndCondi = ({ route, navigation }) => {
     const [check, setCheck] = useState(false)
-    const AllData = route.params.data
-    console.log("AllData",AllData)
+    const [loader, setLoader] = useState(false)
+    const Address = route.params.data.itemData
+    const BookingData = route.params.data.bookingData
+    const ServiceName = route.params.data.bookingData.serviceTypeData
+    let arr = []
+    // console.log("AllDataAddress", Address)
+    // console.log("BookingData", BookingData)
+    // console.log("ServiceName", ServiceName)
+    ServiceName && ServiceName.map(item => {
+        arr.push(item.serviceName)
+        // console.log("ServiceName",item.serviceName,item.ServiceId)
+    })
+    console.log("arr",arr)
+    // Address = AllData.itemData
+    // let data = {
+    //     "b_c_name": Address.first_name,
+    //     "b_c_time": BookingData.bookingTime,
+    //     "b_c_date": BookingData.format,
+    //     "service_provider_id": "",
+    //     "service_provider_name": "",
+    //     "b_c_service_id":"786545",
+    //     "b_c_service_name":ServiceName,
+    //     "b_c_seat_address": Address.area,
+    //     "b_c_city": Address.city,
+    //     "b_c_pin_code": Address.pin_code,
+    //     "b_c_floor": "5th",
+    //     "b_c_flat_number": Address.house_number,
+    //     "b_c_state": "Telangana",
+    //     "b_c_phone_number": Address.phone_number,
+    //     "b_c_amount": BookingData.finalPrice,
+    //     "b_c_status": "0"
+
+    // }
+    // console.log("data",data);
+
+
+
+    const BookingSuccess = () => {
+        setLoader(true)
+        let data = {
+            "b_c_name": Address.first_name,
+            "b_c_time": BookingData.bookingTime,
+            "b_c_date": BookingData.format,
+            "service_provider_id": "",
+            "service_provider_name": "",
+            "b_c_service_id": "786545",
+            "b_c_service_name": arr.toString(),
+            "b_c_seat_address": Address.area,
+            "b_c_city": Address.city,
+            "b_c_pin_code": Address.pin_code,
+            "b_c_floor": "5th",
+            "b_c_flat_number": Address.house_number,
+            "b_c_state": "Telangana",
+            "b_c_phone_number": Address.phone_number,
+            "b_c_amount": BookingData.finalPrice,
+            "b_c_status": "0"
+
+        }
+        console.log("data", data);
+        ApiService.PostMethode('bookings/add_bookings_customer', data)
+            .then(response => {
+                setLoader(false)
+                console.log("BookingSuccess", response.status);
+                if (response.status === "success") {
+                    navigation.navigate("BookingSuccess")
+                }
+                else {
+                    alert("something went wrong")
+                }
+            })
+            .catch(error => {
+                setLoader(false)
+                console.log(error);
+
+            })
+    }
 
     const serviceInfo = [
         { type: "All rooms cobweb removal." },
@@ -36,41 +112,51 @@ const TermsAndCondi = ({ route, navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, padding: 20 }}>
             <StatusBar backgroundColor={Colors.themeColor} />
-            <View style={styles.headerWrap}>
-                <AntDesign name="arrowleft" size={24} color="black" onPress={() => { navigation.goBack() }} />
-                <Text style={styles.text}>Terms and Conditions {"\n"} (Of our Service)</Text>
-            </View>
+            {loader == true ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+                    <ActivityIndicator size={30} color={Colors.themeColor} />
+                </View>
+            ) : (
+                <>
+                    <View style={styles.headerWrap}>
+                        <AntDesign name="arrowleft" size={24} color="black" onPress={() => { navigation.goBack() }} />
+                        <Text style={styles.text}>Terms and Conditions {"\n"} (Of our Service)</Text>
+                    </View>
 
-            <FlatList
-                data={serviceInfo}
-                showsVerticalScrollIndicator={false}
-                keyExtractor={({ item, index }) => index}
-                renderItem={({ item, index }) => {
-                    return (
-                        <>
-                            <View style={[styles.headerWrap, { width: '92%' }]}>
-                                <Feather name='check-circle' size={30} color={Colors.themeColor} />
-                                <Text style={[Fonts.blackColor14Bold, { marginLeft: 10 }]}>{item.type}</Text>
-                            </View>
-                        </>
-                    )
-                }} />
-            <View style={[styles.headerWrap, { justifyContent: 'space-between' }]}>
-                <Text style={Fonts.grayColor14Bold}>
-                    Agree to terms and Conditions
-                </Text>
-                <TouchableOpacity onPress={() => {
-                    setCheck(!check)
-                }} style={[styles.filterButton, { backgroundColor: check == true ? Colors.themeColor : null }]}>
+                    <FlatList
+                        data={serviceInfo}
+                        showsVerticalScrollIndicator={false}
+                        keyExtractor={({ item, index }) => index}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <>
+                                    <View style={[styles.headerWrap, { width: '92%' }]}>
+                                        <Feather name='check-circle' size={30} color={Colors.themeColor} />
+                                        <Text style={[Fonts.blackColor14Bold, { marginLeft: 10 }]}>{item.type}</Text>
+                                    </View>
+                                </>
+                            )
+                        }} />
+                    <View style={[styles.headerWrap, { justifyContent: 'space-between' }]}>
+                        <Text style={Fonts.grayColor14Bold}>
+                            Agree to terms and Conditions
+                        </Text>
+                        <TouchableOpacity onPress={() => {
+                            setCheck(!check)
+                        }} style={[styles.filterButton, { backgroundColor: check == true ? Colors.themeColor : null }]}>
 
-                    {check == true ?
-                        <FontAwesome5 name='check' size={20} color={'#fff'} /> : null}
-                </TouchableOpacity>
-            </View>
+                            {check == true ?
+                                <FontAwesome5 name='check' size={20} color={'#fff'} /> : null}
+                        </TouchableOpacity>
+                    </View>
 
-            {check == true ? (<GlobalButton title={"Proceed"} onPress={() => {
-                navigation.navigate("BookingInfo")
-            }} />) : null}
+                    {check == true ? (<GlobalButton title={"Proceed"} onPress={() => {
+                        BookingSuccess()
+                        // navigation.navigate("BookingInfo")
+                    }} />) : null}
+                </>
+            )}
+
         </SafeAreaView>
     )
 }

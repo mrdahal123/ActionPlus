@@ -131,11 +131,8 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     serviceType: {
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignSelf: 'center',
-        marginVertical:10
+        // padding:10,
+        marginVertical:10,
     },
     locationWrap:{ flexDirection: 'row',alignItems:'center',justifyContent:'center',}
 })

@@ -13,6 +13,7 @@ import {
   Alert,
   ActivityIndicator,
   RefreshControl,
+  FlatList,
 } from 'react-native';
 import React, { Component, useState, useEffect, useContext } from 'react';
 import { Colors, Fonts, Sizes } from '../../constant/style';
@@ -27,6 +28,7 @@ import AuthService from '../Service/AuthService';
 import { useFocusEffect } from '@react-navigation/native';
 import { SliderBox } from 'react-native-image-slider-box';
 import GlobalButton from '../../Components/GlobalButton';
+import * as ApiService from '../../Utils/Utils';
 
 export default function HomeScreen({ navigation }) {
   const { authContext, appState } = useContext(AuthContext);
@@ -45,6 +47,8 @@ export default function HomeScreen({ navigation }) {
   const [refreshing, setRefreshing] = React.useState(false);
   const [userCurrentAdd, setUserCurrentAdd] = useState('');
   const [userCurrentCity, setUserCurrentCity] = useState('');
+  const [serviceType, setServiceType] = useState('');
+  const [topData, setTopData] = useState('');
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   };
@@ -117,12 +121,13 @@ export default function HomeScreen({ navigation }) {
     let data = {}
     ApiService.PostMethode('category/get_all_category', data)
         .then(response => {
-            console.log(response.data);
+          console.log(JSON.stringify(response.data))
             setLoader(false)
             let apiValue = response.data
             let arr =[]
             apiValue.map(item => {
-                console.log("jhadvfayfdfc",item.category_status)
+                // console.log("jhadvfayfdfc",item.category_status)
+                // console.log(JSON.stringify(item.data))
                 if(item.category_status==1){
                     arr.push(item)
                 }
@@ -131,6 +136,19 @@ export default function HomeScreen({ navigation }) {
                 }
             })
             setServiceType(arr)
+
+            var sorted = arr.sort(function(a,b){
+              // Turn your strings into dates, and then subtract them
+              // to get a value that is either negative, positive, or zero.
+              return new Date(b.date) + new Date(a.date);
+            });
+            
+            var first_three_record = sorted.slice(0,3);
+
+            
+            setTopData(first_three_record)
+            console.log(first_three_record);
+            console.log(JSON.stringify(arr))
         })
         .catch(error => {
             setLoader(false)
@@ -138,9 +156,9 @@ export default function HomeScreen({ navigation }) {
         })
 }
 
-// useEffect(()=>{
-//   getAllService()
-// },[])
+useEffect(()=>{
+  getAllService()
+},[])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -160,6 +178,16 @@ export default function HomeScreen({ navigation }) {
     require('../../Assets/images/banner/action+banner3.jpg'), // Local image
     require('../../Assets/images/banner/action+banner4.jpg'), // Local image
   ];
+
+  const AllService = [
+    require('../../Assets/images/banner/maid.png'),
+    require('../../Assets/images/banner/maid.png'),
+    require('../../Assets/images/newServiceList/painter.jpg'),
+    require('../../Assets/images/newServiceList/elect.jpg'),
+    require('../../Assets/images/newServiceList/plumber.jpg'),
+    require('../../Assets/images/newServiceList/carPainter.jpg'),
+    require('../../Assets/images/newServiceList/driver.jpg'),
+]
 
   console.log('location', location);
   return (
@@ -237,8 +265,70 @@ export default function HomeScreen({ navigation }) {
               />
             </View>
             {/* Services */}
-            <View style={styles.serviceType}>
-              <TouchableOpacity
+            {/* <View  style={styles.serviceType}> */}
+
+                <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
+
+              {topData.map(item=>{
+                return(
+                  <TouchableOpacity
+                  style={styles.serviceType}
+                onPress={() => {
+                  
+                  navigation.navigate('ComonService',{
+                    servicetypeData:item
+                  });
+                }}>
+                <View style={styles.iconCircle}>
+                  <Image
+                    source={require('../../Assets/images/banner/maid.png')}
+                    style={styles.iconImageBanner}
+                  />
+                </View>
+                <Text
+                  style={{
+                    ...Fonts.grayColor18Bold,
+                    marginTop: 5,
+                    padding:10,
+                  }}>
+                  {item.category_name}
+                </Text>
+              </TouchableOpacity>
+                )
+              })}
+                </View>
+              {/* <FlatList
+              data={topData}
+           
+              keyExtractor={({item,index})=>index}
+              renderItem={({item,index})=>{
+                return(
+                  <TouchableOpacity
+                  style={styles.serviceType}
+                onPress={() => {
+                  
+                  navigation.navigate('ComonService',{
+                    servicetypeData:item
+                  });
+                }}>
+                <View style={styles.iconCircle}>
+                  <Image
+                    source={require('../../Assets/images/banner/maid.png')}
+                    style={styles.iconImageBanner}
+                  />
+                </View>
+                <Text
+                  style={{
+                    ...Fonts.grayColor18Bold,
+                    marginTop: 5,
+                    textAlign: 'center',
+                  }}>
+                  {item.category_name}
+                </Text>
+              </TouchableOpacity>
+                )
+              }}/> */}
+              {/* <TouchableOpacity
                 onPress={() => {
                   Alert.alert("Please Click on select All Button")
                   // navigation.navigate('MaidService');
@@ -257,8 +347,8 @@ export default function HomeScreen({ navigation }) {
                   }}>
                   Maid
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </TouchableOpacity> */}
+              {/* <TouchableOpacity
                 onPress={() => {
                   Alert.alert("Please Click on select All Button")
                   // navigation.navigate('PlumberService');
@@ -277,8 +367,8 @@ export default function HomeScreen({ navigation }) {
                   }}>
                   Plumber
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </TouchableOpacity> */}
+              {/* <TouchableOpacity
                 onPress={() => {
                   Alert.alert("Please Click on select All Button")
                   // navigation.navigate('ElectricianService');
@@ -297,8 +387,8 @@ export default function HomeScreen({ navigation }) {
                   }}>
                   Electrician
                 </Text>
-              </TouchableOpacity>
-            </View>
+              </TouchableOpacity> */}
+            {/* </View> */}
             {/* Banner */}
             {/* <Image source={require('../../Assets/images/banner/carousel2.png')} style={styles.imgBanner} resizeMode={'contain'} /> */}
             {/* <Image source={require('../../Assets/images/banner/action+banner1.png')} style={styles.imgBanner} resizeMode={'contain'} /> */}

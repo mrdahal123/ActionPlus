@@ -81,7 +81,7 @@ const Booking = ({ navigation }) => {
 
                         <FlatList
                             showsVerticalScrollIndicator={false}
-                            style={{flexDirection:'column-reverse'}}
+                            // style={{ flexDirection: 'column-reverse' }}
                             data={bookingData}
                             keyExtractor={({ item, index }) => index}
                             ListEmptyComponent={() => {
@@ -101,24 +101,25 @@ const Booking = ({ navigation }) => {
                                                 data: item
                                             })
                                         }}>
-                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                <Text style={{ ...Fonts.blackColor16Bold, color: '#F9B551', }}>ID: #{item.b_c_service_id}</Text>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' ,padding:10}}>
+                                                <Text style={{ ...Fonts.blackColor16Bold, color: '#F9B551', }}>ID: #{item._id.slice(0, 20)}</Text>
                                                 <View style={{ alignItems: 'center', flexDirection: 'row' }} >
                                                     <MaterialIcons name='loop' size={24} color='#FF0000' />
-                                                    <TouchableOpacity onPress={() => navigation.navigate('MaidService')}>
+                                                    <TouchableOpacity onPress={() => navigation.navigate('AllService')}>
                                                         <Text style={{ color: '#FF0000', fontSize: 16, fontWeight: '700' }}> Re-book</Text>
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>
-                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10,padding:10 }}>
 
                                                 <Text style={{ fontSize: 16, fontWeight: '700', color: '#000' }}>
                                                     {item.b_c_date}  At {item.b_c_time}
                                                 </Text>
-                                                <Text style={{ ...Fonts.blackColor16Bold, }}>{item.serviceBookedL}</Text>
+                                                <Text style={{ ...Fonts.blackColor16Bold, }}>{item.serviceBooked}</Text>
                                                 <Text><Text style={{ color: '#F9B551', }}>₹</Text> {item.b_c_amount}</Text>
                                             </View>
-                                            <Text>Service Type - {item.b_c_service_name}</Text>
+                                            <Text style={{padding:10}}>Service Type - {item.b_c_service_name}</Text>
+                                            {/* <Text>Service Type - {item.b_c_service_name.slice(0, 70)}</Text> */}
                                         </TouchableOpacity>
                                     </>
                                 )
@@ -135,7 +136,7 @@ export default Booking
 
 const styles = StyleSheet.create({
     wrapper: {
-        flex: 1,
+        flex:1,
         padding: 20,
         // marginVertical:20
     },

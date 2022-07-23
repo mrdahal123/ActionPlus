@@ -253,8 +253,13 @@ const SelectAdd = ({ navigation, route }) => {
                                         <TouchableOpacity
                                             onPress={() => {
                                                 setNewData(item)
+                                                let PageData ={
+                                                    itemData:item,
+                                                    bookingData:bookingData
+                                                }
                                                 navigation.navigate("TermsAndCondi", {
-                                                    data:allData
+
+                                                    data:PageData,
                                                 })
                                                 // BookingSuccess(item)
                                                 // console.log("item", item)

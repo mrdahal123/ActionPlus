@@ -23,9 +23,9 @@ const BookingSuccess = ({ route, navigation }) => {
             <Image source={require('../../Assets/images/banner/sign.png')} style={{ width: 120, height: 120, resizeMode: 'contain', alignSelf: 'center', position: 'absolute', top: '46%' }} />
 
             <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', position: 'absolute', top: '62%', alignSelf: 'center' }}>
-                <Text style={{ ...Fonts.blackColor20Bold, marginVertical: 5 }}>Booking Successful</Text>
+                <Text style={{ ...Fonts.blackColor20Bold, marginVertical: 15 }}>Booking Successful</Text>
                 {/* {responseApi && <Text style={{ ...Fonts.grayColor18Bold, marginVertical: 5, textAlign: 'center' }}>Your Booking Id is {"\n"} # {responseApi}</Text>} */}
-                <Text style={{ ...Fonts.blackColor16Bold, textAlign: 'center' }}>Our representative will contact your shortly</Text>
+                <Text style={{ ...Fonts.blackColor16Bold, textAlign: 'center',marginVertical: 5 }}>Our representative will contact your shortly</Text>
 
                 <GlobalButton inlineStyle={{ alignSelf:'center',marginVertical:10}} title={'Okay'} onPress={() => navigation.navigate('HomeScreen')} />
 
