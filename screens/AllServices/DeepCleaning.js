@@ -1,15 +1,20 @@
 import React from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, StatusBar, TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet,  View, SafeAreaView, Image, StatusBar, TouchableOpacity, FlatList } from 'react-native'
 import { Colors, Fonts } from '../../constant/style';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import NavigationHeaders from '../../Components/NavigationHeaders';
 import LinearGradient from 'react-native-linear-gradient';
+import Text from '../../Components/Text';
+import GlobalButton from '../../Components/GlobalButton';
 
 const DeepCleaning = ({ route, navigation }) => {
-    let serviceType = route.params.DeepCleaning
+
+    let serviceName = route.params.serviceType
+    let arr = []
+    arr.push(serviceName)
     // let catId = route.params.catId
-    console.log(serviceType);
+    console.log(serviceName);
 
     const serviceInfo = [
         { type: "All rooms cobweb removal." },
@@ -34,11 +39,9 @@ const DeepCleaning = ({ route, navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor, padding: 20 }}>
             <StatusBar backgroundColor={Colors.themeColor} />
-            <View style={styles.headerWrap}>
-                <AntDesign name="arrowleft" size={24} color="black" onPress={() => { navigation.goBack() }} />
-                <Text style={styles.text}>Deep Cleaning Service {"\n"} (with machine)</Text>
-            </View>
-
+            <View style={[styles.headerWrap,{ justifyContent:'space-around',marginRight:5}]}>
+                    <NavigationHeaders title={serviceName.serviceName} onPress={() => {navigation.goBack() }}/>
+                    </View>
             <FlatList
                 data={serviceInfo}
                 showsVerticalScrollIndicator={false}
@@ -47,26 +50,22 @@ const DeepCleaning = ({ route, navigation }) => {
                     return (
                         <>
                             <View style={[styles.headerWrap, { width: '92%' }]}>
-                                <Feather name='check-circle' size={30} color={Colors.themeColor} />
+                                <Feather name='check-circle' size={25} color={Colors.themeColor} />
                                 <Text style={[Fonts.blackColor14Bold, { marginLeft: 10 }]}>{item.type}</Text>
                             </View>
                         </>
                     )
                 }} />
 
-            <LinearGradient
-                colors={['#F9B551', '#F87B2C']}
-                style={styles.continueButtonStyle}>
-               
-            </LinearGradient>
-            <TouchableOpacity style={styles.TimeButton} onPress={() => {
+            <GlobalButton title={"Continue"} onPress={() => {
                 navigation.navigate('SlotBooking', {
-                    serviceName: "Deep Cleaning"
+                    data: arr
                 })
-            }}>
+            }}/>
+            {/* <TouchableOpacity style={styles.TimeButton} >
 
                 <Text style={[Fonts.blackColor16Bold, { color: '#fff' }]}>Continue</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </SafeAreaView>
     )
 }
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         flexDirection: 'row',
-        marginVertical: 10,
+        marginVertical: 5,
         paddingHorizontal: 5
     },
     text:

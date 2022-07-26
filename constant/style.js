@@ -44,7 +44,7 @@ export const Fonts = {
     blackColor18Bold: {
         color: '#000000',
         fontSize: 18,
-        fontWeight:'bold'
+        fontWeight:'500'
         // fontFamily: 'Montserrat_Bold',
     },
     blackColor18Medium: {
@@ -62,7 +62,7 @@ export const Fonts = {
 
     blackColor24Bold: {
         color: '#000000',
-        fontSize: 26,
+        fontSize: 24,
         fontWeight:'bold'
         // fontFamily: 'Montserrat_Bold',
     },
@@ -134,6 +134,11 @@ export const Fonts = {
     grayColor16Bold: {
         color: '#808080',
         fontSize: 16,
+        // fontFamily: 'Montserrat_Bold',
+    },
+    grayColor17Bold: {
+        color: '#696969',
+        fontSize: 17,
         // fontFamily: 'Montserrat_Bold',
     },
 

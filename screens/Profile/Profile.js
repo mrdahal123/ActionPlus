@@ -1,28 +1,28 @@
-import React, { Component, useState, useContext,useEffect } from 'react'
+import React, {Component, useState, useContext, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
-  Text,
   Image,
   TouchableOpacity,
   ScrollView,
   TextInput,
   StyleSheet,
   Alert,
-  ActivityIndicator
-} from 'react-native'
-import { Colors, Fonts, Sizes } from "../../constant/style";
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+  ActivityIndicator,
+} from 'react-native';
+import {Colors, Fonts, Sizes} from '../../constant/style';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import AuthContext from '../../Context/AuthContext';
 import NavigationHeaders from '../../Components/NavigationHeaders';
 import AuthService from '../Service/AuthService';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import GlobalButton from '../../Components/GlobalButton';
-const Profile = ({ route, navigation }) => {
-  const { authContext, appState } = useContext(AuthContext);
+import Text from '../../Components/Text';
+const Profile = ({route, navigation}) => {
+  const {authContext, appState} = useContext(AuthContext);
   // const userProfile = route.params.data
 
   // console.log("alldetails", userProfile)
@@ -42,71 +42,95 @@ const Profile = ({ route, navigation }) => {
       },
     ]);
   };
-  const [loader, setLoader] = useState(false)
-  const [userAllDetails, setUserAllDetails] = useState('')
+  const [loader, setLoader] = useState(false);
+  const [userAllDetails, setUserAllDetails] = useState('');
 
   const getProfileApi = async () => {
-        
-    setLoader(true)
-    let apiData={
-        "user_mobile_number":appState.data.user_mobile_number
-    }
-    console.log("getProfileApi", apiData);
+    setLoader(true);
+    let payloadData = {user_mobile_number: appState.data.user_mobile_number};
+    console.log('getProfileApi', payloadData);
     try {
-        let response = await AuthService.Post('get_user_by_phone_number', apiData);
-        console.log('getProfileApi response', response.data[0]);
-        setLoader(false)
-        setUserAllDetails(response.data[0])
+      let response = await AuthService.Post(
+        'get_user_by_phone_number',
+        payloadData,
+      );
+      console.log('getProfileApi response', response.data);
+      setLoader(false);
+      setUserAllDetails(response.data[0]);
     } catch (error) {
-        setLoader(false)
-        console.log("Data", error);
+      setLoader(false);
+      console.log('Data', error);
     }
-}
+  };
 
-useFocusEffect(
-  React.useCallback(() => {
-    const unsubscribe = getProfileApi();
-    return () => unsubscribe;
-  }, [])
-)
-
+  useFocusEffect(
+    React.useCallback(() => {
+      const unsubscribe = getProfileApi();
+      return () => unsubscribe;
+    }, []),
+  );
+  if (Object.values(userAllDetails).includes('image')) {
+    console.log('yes');
+  } else {
+    console.log('no');
+  }
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: Colors.whiteColor}}>
       {loader == true ? (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
-                <ActivityIndicator size={30} color={Colors.themeColor} />
-            </View>
-            ):(
-      <ScrollView style={{ flex: 1, marginBottom: 5 }}>
-        <AntDesign name="arrowleft" size={24} color="black" style={{ position: 'absolute', top: 20, left: 10, zIndex: 500 }} onPress={() => navigation.goBack()} />
-        {/* <NavigationHeaders onPress={()=> navigation.goBack()} title={"Profile"}/> */}
-        <View>
-          <Text style={{ ...Fonts.blackColor24Bold, textAlign: 'center', marginTop: 20 }}>Profile</Text>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size={30} color={Colors.themeColor} />
+        </View>
+      ) : (
+        <ScrollView style={{flex: 1, marginBottom: 5}}>
+          <AntDesign
+            name="arrowleft"
+            size={20}
+            color="black"
+            style={{position: 'absolute', top: 20, left: 10, zIndex: 500}}
+            onPress={() => navigation.goBack()}
+          />
+          {/* <NavigationHeaders onPress={()=> navigation.goBack()} title={"Profile"}/> */}
+          <View>
+            <Text
+              style={{
+                ...Fonts.blackColor20Bold,
+                textAlign: 'center',
+                marginTop: 30,
+              }}>
+              Profile
+            </Text>
 
-          {userAllDetails!=='' ? (
-
+            {Object.values(userAllDetails).includes('image') ? (
+              <TouchableOpacity style={styles.imgShadow}>
+                <Image
+                  style={[styles.profile, {borderRadius: 100}]}
+                  source={{
+                    uri: `data:image/jpeg;base64, ${userAllDetails.user_image}`,
+                  }}
+                />
+              </TouchableOpacity>
+            ) : (
+              <Image
+                source={require('../../Assets/images/banner/user.png')}
+                style={styles.profile}
+              />
+            )}
             <TouchableOpacity
-              style={styles.imgShadow}>
-
-              <Image style={[styles.profile, { borderRadius: 100, }]} source={{ uri: `data:image/jpeg;base64, ${userAllDetails.user_image}` }} />
-
+              onPress={() => {
+                navigation.navigate('EditProfile', {
+                  data: userAllDetails,
+                });
+              }}
+              style={styles.cameraIcon}>
+              <FontAwesome5
+                name="user-edit"
+                size={20}
+                color="#fff"
+                style={{marginLeft: 5}}
+              />
             </TouchableOpacity>
-          ) : (
 
-
-            <Image source={require('../../Assets/images/banner/user.png')} style={styles.profile} />
-
-          )}
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('EditProfile',{
-              data:userAllDetails
-            })
-          }} style={styles.cameraIcon}>
-            <FontAwesome5 name="user-edit" size={20} color="#fff" style={{ marginLeft: 5 }} />
-          </TouchableOpacity>
-
-
-          {/* {userProfile && userProfile.user_image ? (
+            {/* {userProfile && userProfile.user_image ? (
 
             <TouchableOpacity
               style={styles.imgShadow} onPress={() => {
@@ -126,62 +150,126 @@ useFocusEffect(
               <Image source={require('../../Assets/images/banner/user.png')} style={[styles.iconImage, { borderRadius: 100, }]} />
             </TouchableOpacity>
           )} */}
+          </View>
 
-        </View>
-
-        <TouchableOpacity style={styles.container}>
-        <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Favorites</Text>
-          {/* <Text style={styles.textBody}>Favorites</Text> */}
-          <AntDesign name="right" size={24} color="#696969" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.container}>
-          {/* <Text style={styles.textBody} >Notifications</Text> */}
-          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Notifications</Text>
-          <AntDesign name="right" size={24} color="#696969" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => { navigation.navigate("Booking") }} style={styles.container}>
-          {/* <Text style={styles.textBody}>Booking Details</Text> */}
-          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Booking Details</Text>
-          <AntDesign name="right" size={24} color="#696969" />
-        </TouchableOpacity>
-        {/* <Text style={styles.textHeader}>ABOUT</Text> */}
-        <Text style={[styles.textHeader,{ ...Fonts.grayColor18Bold, marginTop: 5,  }]}>ABOUT</Text>
-        <TouchableOpacity style={styles.container} onPress={() => { navigation.navigate("PrivacyPolicy") }}>
-          {/* <Text style={styles.textBody}>Privacy Policy</Text> */}
-          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Privacy Policy</Text>
-          <AntDesign name="right" size={24} color="#696969" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.container}>
-          {/* <Text style={styles.textBody}>Terms of use</Text> */}
-          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Terms of use</Text>
-          <AntDesign name="right" size={24} color="#696969" />
-        </TouchableOpacity>
-        {/* <Text style={styles.textHeader}>APP</Text> */}
-        <Text style={[styles.textHeader,{ ...Fonts.grayColor18Bold,   }]}>APP</Text>
-        <TouchableOpacity style={styles.container} onPress={() => { navigation.navigate("Support") }}>
-          {/* <Text style={styles.textBody}>Support </Text> */}
-          <Text style={{ ...Fonts.grayColor18Bold, textAlign: 'center' }}>Support</Text>
-          <AntDesign name="right" size={24} color="#696969" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.container}>
-          {/* <Text style={styles.textBody}>Report a Bug</Text> */}
-          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>Report a Bug</Text>
-          <AntDesign name="right" size={24} color="#696969" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.container}>
-          {/* <Text style={styles.textBody}>App Version 1.0</Text> */}
-          <Text style={{ ...Fonts.grayColor18Bold, marginTop: 5, textAlign: 'center' }}>App Version 1.0</Text>
-          <AntDesign name="right" size={24} color="#696969" />
-        </TouchableOpacity>
-        <GlobalButton title={'Logout'}  onPress={() => {
+          <TouchableOpacity style={styles.container}>
+            {/* <Text style={styles.textBody} >Notifications</Text> */}
+            <Text
+              style={{
+                ...Fonts.grayColor16Bold,
+               
+                textAlign: 'center',
+              }}>
+              Notifications
+            </Text>
+            <AntDesign name="right" size={20} color="#696969" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Booking');
+            }}
+            style={styles.container}>
+            {/* <Text style={styles.textBody}>Booking Details</Text> */}
+            <Text
+              style={{
+                ...Fonts.grayColor16Bold,
+                
+                textAlign: 'center',
+              }}>
+              Booking Details
+            </Text>
+            <AntDesign name="right" size={20} color="#696969" />
+          </TouchableOpacity>
+          {/* <Text style={styles.textHeader}>ABOUT</Text> */}
+          <Text
+            style={[
+              styles.textHeader,
+             
+            ]}>
+            ABOUT
+          </Text>
+          <TouchableOpacity
+            style={styles.container}
+            onPress={() => {
+              navigation.navigate('PrivacyPolicy');
+            }}>
+            {/* <Text style={styles.textBody}>Privacy Policy</Text> */}
+            <Text
+              style={{
+                ...Fonts.grayColor16Bold,
+              
+                textAlign: 'center',
+              }}>
+              Privacy Policy
+            </Text>
+            <AntDesign name="right" size={20} color="#696969" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('TermsOfUse');
+            }}
+            style={styles.container}>
+            {/* <Text style={styles.textBody}>Terms of use</Text> */}
+            <Text
+              style={{
+                ...Fonts.grayColor16Bold,
+                
+                textAlign: 'center',
+              }}>
+              Terms of use
+            </Text>
+            <AntDesign name="right" size={20} color="#696969" />
+          </TouchableOpacity>
+          {/* <Text style={styles.textHeader}>APP</Text> */}
+          <Text style={[styles.textHeader, ]}>
+            APP
+          </Text>
+          <TouchableOpacity
+            style={styles.container}
+            onPress={() => {
+              navigation.navigate('Support');
+            }}>
+            {/* <Text style={styles.textBody}>Support </Text> */}
+            <Text style={{...Fonts.grayColor16Bold, textAlign: 'center'}}>
+              Support
+            </Text>
+            <AntDesign name="right" size={20} color="#696969" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.container}>
+            {/* <Text style={styles.textBody}>Report a Bug</Text> */}
+            <Text
+              style={{
+                ...Fonts.grayColor16Bold,
+                textAlign: 'center',
+              }}>
+              Report A Bug
+            </Text>
+            <AntDesign name="right" size={20} color="#696969" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.container}>
+            {/* <Text style={styles.textBody}>App Version 1.0</Text> */}
+            <Text
+              style={{
+                ...Fonts.grayColor16Bold,
+                
+                textAlign: 'center',
+              }}>
+              App Version 1.0
+            </Text>
+            <AntDesign name="right" size={20} color="#696969" />
+          </TouchableOpacity>
+          <GlobalButton
+            title={'Logout'}
+            onPress={() => {
               LogOutAlertOccurred('Warning', 'Are You Sure?', 'yes', 'No');
-            }} inlineStyle={{marginRight:20}}/>
-  
-      </ScrollView>)}
+            }}
+            inlineStyle={{marginRight: 30,marginTop:50}}
+          />
+        </ScrollView>
+      )}
     </SafeAreaView>
-  )
-}
-
+  );
+};
 
 const styles = StyleSheet.create({
   profile: {
@@ -189,12 +277,12 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 100,
     alignSelf: 'center',
-    marginVertical: 20
+    marginVertical: 20,
   },
   cameraIcon: {
     width: 45,
     height: 45,
-    position: "absolute",
+    position: 'absolute',
     justifyContent: 'center',
     alignSelf: 'center',
     alignItems: 'center',
@@ -208,31 +296,24 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.themeColor,
   },
   container: {
-    width: '90%',
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: "space-between",
-    borderBottomWidth: 0.6,
-    paddingVertical: 10,
-    alignSelf: 'center'
+    justifyContent: 'space-between',
+    paddingHorizontal:25,
+    paddingVertical: 6,
+    alignSelf: 'center',
   },
-  continueButtonStyle: {
-    marginTop: 20,
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    alignItems: 'center',
-    backgroundColor: Colors.primaryColor,
-    minWidth: '30%',
-    alignSelf: "flex-end",
-    borderRadius: 25,
-    justifyContent: 'center',
-    marginHorizontal: Sizes.fixPadding * 2.0,
-  },
+
   textHeader: {
-    ...Fonts.blackColor16Bold, padding: 18, color: '#696969'
+    ...Fonts.blackColor20Bold,
+    paddingVertical: 15,
+    paddingHorizontal:25,
+    color: '#000',
+    textTransform:'capitalize'
   },
   textBody: {
-    ...Fonts.blackColor14Bold, color: '#696969'
-  }
-})
-export default Profile
+    ...Fonts.blackColor14Bold,
+    color: '#696969',
+  },
+});
+export default Profile;

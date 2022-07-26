@@ -2,7 +2,7 @@ import {
     SafeAreaView,
     StatusBar,
     View,
-    Text,
+
     StyleSheet,
     Image,
     TouchableOpacity,
@@ -23,6 +23,7 @@ import NavigationHeaders from '../../Components/NavigationHeaders';
 import axios from 'axios';
 import * as ApiService from '../../Utils/Utils';
 import AuthContext from '../../Context/AuthContext';
+import Text from '../../Components/Text';
 
 const AllService = ({ navigation }) => {
 
@@ -100,45 +101,10 @@ const AllService = ({ navigation }) => {
                                             console.log("all service",item)
                                             navigation.navigate('ComonService',
                                                 {servicetypeData :item})
-                                            // if (item.category_name === "Maid") {
-                                            //     navigation.navigate("ServiceType", {
-                                            //         maidId: item._id
-                                            //     })
-                                            // }
-                                            // else if (item.category_name === 'Plumbing') {
-
-                                            //     navigation.navigate("PlumberService", {
-                                            //         plumberId: item._id
-                                            //     })
-                                            // }
-                                            // else if (item.category_name === 'Painter') {
-
-                                            //     navigation.navigate("Painter", {
-                                            //         PainterId: item._id
-                                            //     })
-                                            // }
-                                            // else if (item.category_name === 'Painter') {
-
-                                            //     navigation.navigate("Painter", {
-                                            //         PainterId: item._id
-                                            //     })
-                                            // }
-                                            // else if (item.category_name === 'Electricians') {
-
-                                            //     navigation.navigate("ElectricianService", {
-                                            //         ElectriciansId: item._id
-                                            //     })
-                                            // }
-                                            // else if (item.category_name === 'Carpenters') {
-
-                                            //     navigation.navigate("Carpenters", {
-                                            //         CarpentersId: item._id
-                                            //     })
-                                            // }
                                         }} style={styles.card}>
                                             <Image source={AllService[index]} style={styles.boxImage} />
                                             <View style={{ width: '50%', }}>
-                                                <Text style={{ ...Fonts.blackColor17Bold, textAlign: 'left' }}>{ item.category_name}</Text>
+                                                <Text style={{ ...Fonts.blackColor16Bold, textAlign: 'left' }}>{ item.category_name}</Text>
                                             </View>
                                             <Feather name="chevron-right" size={24} color="black" />
                                         </TouchableOpacity>

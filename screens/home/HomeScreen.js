@@ -2,36 +2,32 @@ import {
   SafeAreaView,
   StatusBar,
   View,
-  Text,
-  StyleSheet,
   Image,
   TouchableOpacity,
-  BackHandler,
   ScrollView,
-  ImageBackground,
-  TextInput,
-  Alert,
   ActivityIndicator,
   RefreshControl,
   FlatList,
 } from 'react-native';
-import React, { Component, useState, useEffect, useContext } from 'react';
-import { Colors, Fonts, Sizes } from '../../constant/style';
+import React, {Component, useState, useEffect, useContext} from 'react';
+import {Colors, Fonts, Sizes} from '../../constant/style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import LinearGradient from 'react-native-linear-gradient';
-import { styles } from './HomeScreen.style';
-import CustomTextInput from '../../Components/CustomTextInput';
+// import LinearGradient from 'react-native-linear-gradient';
+import {styles} from './HomeScreen.style';
+// import CustomTextInput from '../../Components/CustomTextInput';
 import Geolocation from '@react-native-community/geolocation';
 import AuthContext from '../../Context/AuthContext';
 import AuthService from '../Service/AuthService';
-import { useFocusEffect } from '@react-navigation/native';
-import { SliderBox } from 'react-native-image-slider-box';
+import {useFocusEffect} from '@react-navigation/native';
+import {SliderBox} from 'react-native-image-slider-box';
 import GlobalButton from '../../Components/GlobalButton';
 import * as ApiService from '../../Utils/Utils';
+import Text from '../../Components/Text';
+import CarouselCards from '../../Components/Carousel';
 
-export default function HomeScreen({ navigation }) {
-  const { authContext, appState } = useContext(AuthContext);
+export default function HomeScreen({navigation}) {
+  const {authContext, appState} = useContext(AuthContext);
   // const userProfile = appState.data
   // console.log("appState,homescreen", appState)
   // console.log("alldetails", appState.data)
@@ -64,7 +60,7 @@ export default function HomeScreen({ navigation }) {
         console.log('position', position.coords);
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
-        let locValue = { lat: latitude, long: longitude };
+        let locValue = {lat: latitude, long: longitude};
         let cordinets = {
           latitude: latitude,
           longitude: longitude,
@@ -72,8 +68,6 @@ export default function HomeScreen({ navigation }) {
         GetCurrentLocation(cordinets);
         setLocation(locValue);
       },
-      // error => Alert.alert('Error', JSON.stringify(error)),
-      // { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
       error => console.error('Error', JSON.stringify(error)),
     );
   };
@@ -115,50 +109,45 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
-
   const getAllService = () => {
-    setLoader(true)
-    let data = {}
+    setLoader(true);
+    let data = {};
     ApiService.PostMethode('category/get_all_category', data)
-        .then(response => {
-          console.log(JSON.stringify(response.data))
-            setLoader(false)
-            let apiValue = response.data
-            let arr =[]
-            apiValue.map(item => {
-                // console.log("jhadvfayfdfc",item.category_status)
-                // console.log(JSON.stringify(item.data))
-                if(item.category_status==1){
-                    arr.push(item)
-                }
-                else{
-                    return
-                }
-            })
-            setServiceType(arr)
+      .then(response => {
+        console.log(JSON.stringify(response.data));
+        setLoader(false);
+        let apiValue = response.data;
+        let arr = [];
+        apiValue.map(item => {
+          if (item.category_status == 1) {
+            arr.push(item);
+          } else {
+            return;
+          }
+        });
+        setServiceType(arr);
 
-            var sorted = arr.sort(function(a,b){
-              // Turn your strings into dates, and then subtract them
-              // to get a value that is either negative, positive, or zero.
-              return new Date(b.date) + new Date(a.date);
-            });
-            
-            var first_three_record = sorted.slice(0,3);
+        var sorted = arr.sort(function (a, b) {
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return new Date(b.date) + new Date(a.date);
+        });
 
-            
-            setTopData(first_three_record)
-            console.log(first_three_record);
-            console.log(JSON.stringify(arr))
-        })
-        .catch(error => {
-            setLoader(false)
-            console.log(error);
-        })
-}
+        var first_three_record = sorted.slice(0, 3);
 
-useEffect(()=>{
-  getAllService()
-},[])
+        setTopData(first_three_record);
+        console.log(first_three_record);
+        console.log(JSON.stringify(arr));
+      })
+      .catch(error => {
+        setLoader(false);
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getAllService();
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -173,28 +162,18 @@ useEffect(()=>{
     // "https://source.unsplash.com/1024x768/?water",
     // "https://source.unsplash.com/1024x768/?girl",
     // "https://source.unsplash.com/1024x768/?tree", // Network image
-    require('../../Assets/images/banner/carousel1.png'), // Local
+    require('../../Assets/images/banner/newBanner.jpg'), // Local
     require('../../Assets/images/banner/newBanner2.jpg'), // Local image
     require('../../Assets/images/banner/action+banner3.jpg'), // Local image
     require('../../Assets/images/banner/action+banner4.jpg'), // Local image
   ];
-
-  const AllService = [
-    require('../../Assets/images/banner/maid.png'),
-    require('../../Assets/images/banner/maid.png'),
-    require('../../Assets/images/newServiceList/painter.jpg'),
-    require('../../Assets/images/newServiceList/elect.jpg'),
-    require('../../Assets/images/newServiceList/plumber.jpg'),
-    require('../../Assets/images/newServiceList/carPainter.jpg'),
-    require('../../Assets/images/newServiceList/driver.jpg'),
-]
 
   console.log('location', location);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={Colors.themeColor} />
       {loader == true ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <ActivityIndicator size={30} color={Colors.themeColor} />
         </View>
       ) : (
@@ -203,8 +182,8 @@ useEffect(()=>{
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
           <View style={styles.wrapper}>
-            <View style={[styles.location, { justifyContent: 'space-between' }]}>
-              <View style={[styles.locationWrap, { marginTop: '8%' }]}>
+            <View style={[styles.location, {justifyContent: 'space-between', height:60,paddingHorizontal:5}]}>
+              <View style={[styles.locationWrap, {marginTop: '8%'}]}>
                 <TouchableOpacity style={styles.locationWrapper}>
                   <Ionicons
                     name="ios-location-sharp"
@@ -212,17 +191,16 @@ useEffect(()=>{
                     color={Colors.themeColor}
                   />
                 </TouchableOpacity>
-                <Text style={{ ...Fonts.grayColor18Bold, marginLeft: 10 }}>
+                <Text style={{...Fonts.grayColor18Bold, marginLeft: 10}}>
                   {userCurrentCity}
                 </Text>
               </View>
-              <View style={[styles.locationWrap, { marginTop: '8%' }]}>
+              <View style={[styles.locationWrap, {marginTop: '8%'}]}>
                 <TouchableOpacity
                   style={styles.locationWrapper}
                   onPress={() => {
                     navigation.navigate('Profile');
                   }}>
-                  {/* <Ionicons name="ios-location-sharp" size={30} color={Colors.themeColor} /> */}
                   <MaterialCommunityIcons
                     name="account"
                     color={Colors.themeColor}
@@ -231,32 +209,12 @@ useEffect(()=>{
                 </TouchableOpacity>
               </View>
             </View>
-            {/* Carousel */}
-            <View style={styles.carousel}>
-              <SliderBox
-                images={SliderImage}
-                sliderBoxHeight={100}
-                autoplay={true}
-                circleLoop={setTimeout(() => {
-                  true;
-                }, 2000)}
-                dotColor="#FFEE58"
-                style={styles.carouselimg}
-                // style={{width:'100%',padding:10}}
-                resizeMode={'contain'}
-                inactiveDotColor="#90A4AE"
-                dotStyle={{
-                  width: 15,
-                  height: 5,
-                  borderRadius: 2,
-                  marginHorizontal: 2,
-                  padding: 0,
-                  margin: 0,
-                }}
-              />
-            </View>
-            <View style={[styles.location, { justifyContent: 'space-between' }]}>
-              <Text style={{ ...Fonts.blackColor20Bold }}> Select Service </Text>
+
+
+              <CarouselCards/>
+
+            <View style={[styles.location, {justifyContent: 'space-between',paddingHorizontal:5}]}>
+              <Text style={{...Fonts.blackColor20Bold}}> Select Service </Text>
               <GlobalButton
                 title={'See all'}
                 onPress={() => {
@@ -264,147 +222,60 @@ useEffect(()=>{
                 }}
               />
             </View>
-            {/* Services */}
-            {/* <View  style={styles.serviceType}> */}
+            <View
+              style={{justifyContent: 'space-evenly',width:'100%', alignItems: 'center'}}>
+              <FlatList
+                data={topData}
+                horizontal
+                keyExtractor={(item, index) => index}
+                ItemSeparatorComponent={() => (
+                  <View
+                    style={{
+                      height: 40,
+                      width: 35,
+                    }}
+                  />
+                )}
+                renderItem={({item, index}) => {
+                  return (
+                    <View style={{marginTop: 10}}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate('ComonService', {
+                            servicetypeData: item,
+                          });
+                        }}
+                        style={styles.circleContainer}>
+                        <View style={styles.iconCircle}>
+                          <Image
+                            source={require('../../Assets/images/banner/action.png')}
+                            style={{
+                              height: 50,
+                              width: 50,
+                              resizeMode: 'contain',
+                              alignSelf: 'center',
+                            }}
+                          />
+                        </View>
+                        <Text style={{marginTop: 10, ...Fonts.grayColor18Bold,paddingHorizontal:10}}>
+                          {item.category_name}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                }}
+              />
+            </View>
 
-                <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
-
-              {topData.map(item=>{
-                return(
-                  <TouchableOpacity
-                  style={styles.serviceType}
-                onPress={() => {
-                  
-                  navigation.navigate('ComonService',{
-                    servicetypeData:item
-                  });
-                }}>
-                <View style={styles.iconCircle}>
-                  <Image
-                    source={require('../../Assets/images/banner/maid.png')}
-                    style={styles.iconImageBanner}
-                  />
-                </View>
-                <Text
-                  style={{
-                    ...Fonts.grayColor18Bold,
-                    marginTop: 5,
-                    padding:10,
-                  }}>
-                  {item.category_name}
-                </Text>
-              </TouchableOpacity>
-                )
-              })}
-                </View>
-              {/* <FlatList
-              data={topData}
-           
-              keyExtractor={({item,index})=>index}
-              renderItem={({item,index})=>{
-                return(
-                  <TouchableOpacity
-                  style={styles.serviceType}
-                onPress={() => {
-                  
-                  navigation.navigate('ComonService',{
-                    servicetypeData:item
-                  });
-                }}>
-                <View style={styles.iconCircle}>
-                  <Image
-                    source={require('../../Assets/images/banner/maid.png')}
-                    style={styles.iconImageBanner}
-                  />
-                </View>
-                <Text
-                  style={{
-                    ...Fonts.grayColor18Bold,
-                    marginTop: 5,
-                    textAlign: 'center',
-                  }}>
-                  {item.category_name}
-                </Text>
-              </TouchableOpacity>
-                )
-              }}/> */}
-              {/* <TouchableOpacity
-                onPress={() => {
-                  Alert.alert("Please Click on select All Button")
-                  // navigation.navigate('MaidService');
-                }}>
-                <View style={styles.iconCircle}>
-                  <Image
-                    source={require('../../Assets/images/banner/maid.png')}
-                    style={styles.iconImageBanner}
-                  />
-                </View>
-                <Text
-                  style={{
-                    ...Fonts.grayColor18Bold,
-                    marginTop: 5,
-                    textAlign: 'center',
-                  }}>
-                  Maid
-                </Text>
-              </TouchableOpacity> */}
-              {/* <TouchableOpacity
-                onPress={() => {
-                  Alert.alert("Please Click on select All Button")
-                  // navigation.navigate('PlumberService');
-                }}>
-                <View style={styles.iconCircle}>
-                  <Image
-                    source={require('../../Assets/images/banner/plumber.png')}
-                    style={styles.iconImageBanner}
-                  />
-                </View>
-                <Text
-                  style={{
-                    ...Fonts.grayColor18Bold,
-                    marginTop: 5,
-                    textAlign: 'center',
-                  }}>
-                  Plumber
-                </Text>
-              </TouchableOpacity> */}
-              {/* <TouchableOpacity
-                onPress={() => {
-                  Alert.alert("Please Click on select All Button")
-                  // navigation.navigate('ElectricianService');
-                }}>
-                <View style={styles.iconCircle}>
-                  <Image
-                    source={require('../../Assets/images/banner/electrician.png')}
-                    style={styles.iconImageBanner}
-                  />
-                </View>
-                <Text
-                  style={{
-                    ...Fonts.grayColor18Bold,
-                    marginTop: 5,
-                    textAlign: 'center',
-                  }}>
-                  Electrician
-                </Text>
-              </TouchableOpacity> */}
-            {/* </View> */}
-            {/* Banner */}
-            {/* <Image source={require('../../Assets/images/banner/carousel2.png')} style={styles.imgBanner} resizeMode={'contain'} /> */}
-            {/* <Image source={require('../../Assets/images/banner/action+banner1.png')} style={styles.imgBanner} resizeMode={'contain'} /> */}
-            <Text style={{ ...Fonts.blackColor20Bold, marginVertical: 20 }}>
+            <Text style={{...Fonts.blackColor20Bold, marginVertical: 20,paddingHorizontal:10}}>
               Best offers
             </Text>
-            {/* Banner */}
+
             <Image
               source={require('../../Assets/images/banner/bnr.png')}
               style={styles.imgBanner}
               resizeMode={'contain'}
             />
-            {/* <Image source={require('../../Assets/images/banner/newBanner.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                                                                                                                                                                    <Image source={require('../../Assets/images/banner/newBanner2.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                                                                                                                                                                    <Image source={require('../../Assets/images/banner/action+banner3.jpg')} style={styles.imgBanner} resizeMode={'contain'} />
-                                                                                                                                                                    <Image source={require('../../Assets/images/banner/action+banner4.jpg')} style={styles.imgBanner} resizeMode={'contain'} /> */}
           </View>
         </ScrollView>
       )}

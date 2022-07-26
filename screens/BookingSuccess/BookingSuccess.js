@@ -1,9 +1,10 @@
 
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet,  View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import GlobalButton from '../../Components/GlobalButton';
 import { Colors, Fonts, Sizes } from "../../constant/style";
+import Text from '../../Components/Text';
 
 const BookingSuccess = ({ route, navigation }) => {
     const [userId, seUsertId] = useState('')
@@ -25,7 +26,7 @@ const BookingSuccess = ({ route, navigation }) => {
             <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', position: 'absolute', top: '62%', alignSelf: 'center' }}>
                 <Text style={{ ...Fonts.blackColor20Bold, marginVertical: 15 }}>Booking Successful</Text>
                 {/* {responseApi && <Text style={{ ...Fonts.grayColor18Bold, marginVertical: 5, textAlign: 'center' }}>Your Booking Id is {"\n"} # {responseApi}</Text>} */}
-                <Text style={{ ...Fonts.blackColor16Bold, textAlign: 'center',marginVertical: 5 }}>Our representative will contact your shortly</Text>
+                <Text style={{ ...Fonts.blackColor16Bold, textAlign: 'center',marginVertical: 5 }}>Our representative will contact you shortly .</Text>
 
                 <GlobalButton inlineStyle={{ alignSelf:'center',marginVertical:10}} title={'Okay'} onPress={() => navigation.navigate('HomeScreen')} />
 

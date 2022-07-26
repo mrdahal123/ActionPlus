@@ -2,7 +2,7 @@ import {
     SafeAreaView,
     StatusBar,
     View,
-    Text,
+
     StyleSheet,
     Image,
     TouchableOpacity,
@@ -23,6 +23,7 @@ import NavigationHeaders from '../../Components/NavigationHeaders';
 import axios from 'axios';
 import * as ApiService from '../../Utils/Utils';
 import AuthContext from '../../Context/AuthContext';
+import Text from '../../Components/Text';
 
 const ComonService = ({ route, navigation }) => {
     const servicetypeData = route.params.servicetypeData._id
@@ -99,7 +100,7 @@ const ComonService = ({ route, navigation }) => {
                                         }} style={styles.card}>
                                             <Image source={require("../../Assets/images/newServiceList/maid.jpg")} style={styles.boxImage} />
                                             <View style={{ width: '50%', }}>
-                                                <Text style={{ ...Fonts.blackColor17Bold, textAlign: 'left' }}>{item.service_type_name}</Text>
+                                                <Text style={{ ...Fonts.blackColor16Bold, textAlign: 'left' }}>{item.service_type_name}</Text>
                                             </View>
                                             <Feather name="chevron-right" size={24} color="black" />
                                         </TouchableOpacity>

@@ -1,8 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, StatusBar } from 'react-native'
+import { StyleSheet, View, SafeAreaView, Image, StatusBar } from 'react-native'
 import { Colors, Fonts } from '../../../constant/style';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import NavigationHeaders from '../../../Components/NavigationHeaders';
+import Text from '../../../Components/Text';
 
 const BookingInfo = ({navigation}) => {
   return (

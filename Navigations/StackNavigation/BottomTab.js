@@ -14,6 +14,7 @@ import {styles} from '../../screens/home/HomeScreen.style';
 
 const Tab = createBottomTabNavigator();
 export const BottomTab = () => {
+  const [color , setColor]= React.useState(false)
   return (
     <Tab.Navigator
       style={{backgroundColor: 'red'}}
@@ -25,8 +26,7 @@ export const BottomTab = () => {
         tabBarStyle: {
           height: 70,
           backgroundColor: '#fff',
-          borderTopLeftRadius: 35,
-          borderTopRightRadius: 35,
+         
           paddingBottom: 2,
           borderTopWidth: 0,
         },
@@ -47,6 +47,7 @@ export const BottomTab = () => {
           tabBarLabel: '',
           tabBarIcon: ({color, size}) => (
             <View
+            
               style={{
                 width: 50,
                 height: 50,

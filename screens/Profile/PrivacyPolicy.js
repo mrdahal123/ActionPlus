@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native'
+import { StyleSheet, View, SafeAreaView, ScrollView } from 'react-native'
 import React from 'react'
 import { Colors, Fonts, Sizes } from "../../constant/style";
+import Text from '../../Components/Text';
 
 const PrivacyPolicy = () => {
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.wrapper}>
+            <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
                 <Text style={{ ...Fonts.blackColor18Bold, marginBottom: 10 }}>Welcome to Action Plus Company's Privacy policy .</Text>
                 <Text style={{ ...Fonts.blackColor14Bold, lineHeight: 25, letterSpacing: 0.5, textAlign: 'left' }}>
                     Action Plus consider the privacy and protection of our client’s data, both corporate and personal,
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     },
     wrapper: {
         padding: 20,
-        // paddingVertical:25,
+        flexGrow:1,
         marginVertical: 20,
         backgroundColor: Colors.whiteColor,
         shadowColor: "#000",
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.5,
         shadowRadius: 6.27,
-        elevation: 10,
+        elevation: 2,
         borderRadius: 10
     }
 })

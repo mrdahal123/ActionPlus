@@ -2,17 +2,17 @@ import {
     SafeAreaView,
     StatusBar,
     View,
-    Text,
+ 
     StyleSheet,
     Image,
     TouchableOpacity,
-    BackHandler,
+
     ScrollView,
-    ImageBackground,
+
     TextInput,
     FlatList,
     Modal,
-    Pressable,
+
     ActivityIndicator
 } from 'react-native'
 import React, { Component, useState, useEffect, useContext } from 'react'
@@ -32,12 +32,13 @@ import AuthContext from '../../Context/AuthContext';
 import * as ApiService from '../../Utils/Utils';
 import NavigationHeaders from '../../Components/NavigationHeaders';
 import GlobalButton from '../../Components/GlobalButton';
+import Text from '../../Components/Text';
 const SelectAdd = ({ navigation, route }) => {
 
     const { authContext, appState } = useContext(AuthContext);
     console.log(appState.data)
     const userData = appState.data.user_mobile_number
-    console.log(userData);
+    console.log("userData",userData);
 
     let bookingData = route.params.data
     console.log("All bookingData From selected", bookingData);

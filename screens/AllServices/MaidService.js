@@ -2,7 +2,6 @@ import {
   SafeAreaView,
   StatusBar,
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -24,6 +23,7 @@ import axios from 'axios';
 import * as ApiService from '../../Utils/Utils';
 import AuthContext from '../../Context/AuthContext';
 import GlobalButton from '../../Components/GlobalButton';
+import Text from '../../Components/Text';
 
 const MaidService = ({ route, navigation }) => {
   let AddOnId = route.params.Add_ons;
@@ -120,11 +120,13 @@ const MaidService = ({ route, navigation }) => {
                       style={styles.card}>
                       <Image source={require('../../Assets/images/banner/action.png')} style={styles.boxImage} />
                       <View style={{ width: '50%', }}>
-                        <Text style={{ color: item.isSelected ? Colors.themeColor : null }}>
+                        <Text style={{ color: item.isSelected ? Colors.themeColor : '#000' }}>
                           {item.sub_service_name}</Text>
                       </View>
 
-                      <TouchableOpacity style={[styles.filterButton, { backgroundColor: item.isSelected ? Colors.themeColor : null }]}>
+                      <TouchableOpacity style={[styles.filterButton, { backgroundColor: item.isSelected ? Colors.themeColor : null }]}  onPress={() => {
+                        multipleCheckBox(item, index)
+                      }}>
 
                         {item.isSelected == true ?
                           <FontAwesome5 name='check' size={20} color={'#fff'} /> : null}
